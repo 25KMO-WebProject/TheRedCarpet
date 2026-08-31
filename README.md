@@ -16,6 +16,7 @@ The open-data API to be used is [The Movie Database](https://developer.themovied
 
 # Documentation
 
+<img width="961" height="912" alt="Tilakaavio" src="https://github.com/user-attachments/assets/7f7d2255-12c5-4aec-aec2-6de43230c11e" />
 
 ## Tech stack / application architecture
 REST API - Node.js/Express\
