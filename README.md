@@ -9,16 +9,23 @@ The open-data API to be used is [The Movie Database](https://developer.themovied
 # Tools
 - Swagger
 - pgAdmin
+- Github:
+- Visual Studio Code:
+- PostgreSQL
 
 
 # Documentation
 
+<img width="961" height="912" alt="Tilakaavio" src="https://github.com/user-attachments/assets/7f7d2255-12c5-4aec-aec2-6de43230c11e" />
 
-## Tech stack
+## Tech stack / application architecture
 REST API - Node.js/Express\
 Frontend - JS React\
 Database - PostgreSQL
 
+## Deployment diagram
+
+<img width="1204" height="607" alt="Diagram - Page 3" src="https://github.com/user-attachments/assets/bbd7ac37-d261-4c71-ae2a-a076521b8ee0" />
 
 ## Login requirements
 - User email works as an username
