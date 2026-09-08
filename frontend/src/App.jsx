@@ -1,71 +1,62 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import "./App.css";
+import { useState } from 'react'
+import './App.css'
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [query, setQuery] = useState('')
+  const [movies, setMovies] = useState([])
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
+  const searchMovies = async (event) => {
+    event.preventDefault()
+
+    if (!query.trim()) {
+      return
+    }
 
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/`);
-      setData(response.data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const response = await fetch(
+        `http://localhost:3000/api/tmdb/search?query=${encodeURIComponent(query)}`
+      )
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+      const data = await response.json()
+
+      setMovies(data.results || [])
+    } catch (error) {
+      console.error('Search failed:', error)
+    }
+  }
 
   return (
     <>
-      <h1>Docker Sample</h1>
-      <div className="card">
-        {loading && <p>Loading...</p>}
+      <div>
+        <h1>Movie Search</h1>
 
-        {data && (
-          <div
-            style={{
-              marginTop: "20px",
-              padding: "10px",
-              background: "#f0f0f0",
-            }}
-          >
-            <h3>Data from Backend:</h3>
-            <ul style={{ textAlign: "left", margin: "10px 0" }}>
-              {data.map((item) => (
-                <li key={item.id} style={{ marginBottom: "10px" }}>
-                  {`ID: ${item.id} - ${item.description}`}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <form onSubmit={searchMovies}>
+          <input
+            type="text"
+            placeholder="Search movie..."
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
 
-        {error && (
-          <div
-            style={{
-              marginTop: "20px",
-              padding: "10px",
-              background: "#ffebee",
-              color: "red",
-            }}
-          >
-            <h3>Error:</h3>
-            <p>{error}</p>
-          </div>
-        )}
+          <button type="submit">
+            Search
+          </button>
+        </form>
+
+        <div>
+          {movies.map((movie) => (
+            <div key={movie.id}>
+              <h3>{movie.title}</h3>
+
+              {<p>
+                Release date: {movie.release_date || 'Unknown'}
+              </p>}
+            </div>
+          ))}
+        </div>
       </div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
