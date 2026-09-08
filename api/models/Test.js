@@ -1,9 +1,13 @@
 import { pool } from "./db.js";
 
-const getAllTests = async () => {
+const getAllAccounts = async () => {
   const result = await pool.query("SELECT * FROM account");
   return result;
 };
 
-export { getAllTests };
+const getAllMovies = async () => {
+  const result = await pool.query("SELECT * FROM movie");
+  return result;
+};
 
+export { getAllAccounts, getAllMovies };
