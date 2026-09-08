@@ -1,0 +1,154 @@
+# Docker Compose Configuration for Full Stack Application
+# Frontend (React/Vite) + Backend (Express/Node.js) + Database (PostgreSQL)
+#
+# Basic Commands:
+# 
+# Build and start all services:
+# docker compose up --build
+#
+# Start services in background:
+# docker compose up -d
+#
+# Stop all services:
+# docker compose down
+#
+# Stop and remove volumes:
+# docker compose down -v
+#
+# Build specific service:
+# docker compose build backend
+# docker compose build frontend
+#
+# View running services:
+# docker compose ps
+#
+# View logs:
+# docker compose logs -f
+#
+# Access points:
+# Frontend: http://localhost:${FRONTEND_EXPOSED_PORT}
+# Backend API: http://localhost:${BACKEND_EXPOSED_PORT}
+# Database: localhost:${DB_EXPOSED_PORT}
+#
+# Note: Docker Compose automatically loads .env file for variable substitution
+# Copy .env.example to .env or create .env with required variables
+
+services:
+
+  database:
+    build:
+      context: ./database/
+      dockerfile: Dockerfile
+
+    env_file:
+      - .env
+
+    ports:
+      - "${DB_EXPOSED_PORT}:${DB_PORT}"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+
+    env_file:
+      - .env
+
+    ports:
+      - "${BACKEND_EXPOSED_PORT}:${PORT}"
+
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "1000"
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:${PORT}/api/health || exit 1"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+    develop:
+      watch:
+        - action: sync
+          path: ./api
+          target: /app
+          ignore:
+            - node_modules/
+
+        - action: rebuild
+          path: ./api/package.json
+
+        - action: rebuild
+          path: ./api/package-lock.json
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    env_file:
+      - .env
+
+    ports:
+      - "${FRONTEND_EXPOSED_PORT}:${FRONTEND_PORT}"
+
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+            - api/
+            - database/
+            - .git/
+            - output.log
+
+        - action: rebuild
+          path: ./package.json
+
+        - action: rebuild
+          path: ./package-lock.json
+
+
+volumes:
+  postgres_data:
