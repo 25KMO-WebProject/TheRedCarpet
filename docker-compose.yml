@@ -37,8 +37,8 @@ services:
 
   database:
     build:
-      context: ./database/
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: ./database/Dockerfile
 
     env_file:
       - .env
@@ -134,20 +134,16 @@ services:
     develop:
       watch:
         - action: sync
-          path: .
+          path: ./frontend
           target: /app
           ignore:
             - node_modules/
-            - api/
-            - database/
-            - .git/
-            - output.log
 
         - action: rebuild
-          path: ./package.json
+          path: ./frontend/package.json
 
         - action: rebuild
-          path: ./package-lock.json
+          path: ./frontend/package-lock.json
 
 
 volumes:
