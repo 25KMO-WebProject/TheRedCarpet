@@ -19,6 +19,18 @@ REST API - Node.js/Express\
 Frontend - JS React\
 Database - PostgreSQL
 
+## API
+
+```mermaid
+graph LR
+    B["API (localhost:3000/)"]
+    B --> C["/users"]
+    B --> D["/movies"]
+    C <--> E["DB query"]
+    D <--> E
+    E <--> G[DB]
+```
+
 
 ## Login requirements
 - User email works as an username
