@@ -32,7 +32,7 @@ Database - PostgreSQL
 ```mermaid
 graph LR
     B["API (localhost:3000/)"]
-    B --> C["/users"]
+    B --> C["/accounts"]
     B --> D["/movies"]
     C <--> E["DB query"]
     D <--> E
