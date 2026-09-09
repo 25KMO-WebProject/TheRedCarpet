@@ -1,42 +1,186 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  color: var(--dark-foreground-color);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+*,*::before,*::after {
+  box-sizing: border-box;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+header {
+  display: inherit;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+header h1 {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+div#container {
+  display: flex;
+  flex-direction: column;
+  margin: var(--general-margin);
+}
+
+/*NAV-ELEMENTIT*/
+
+nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 60px;
+  padding: 15px 30px;
+  border-bottom: 2px solid black;
+
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+nav h1 {
+  margin: 0;
+  line-height: 1;
+
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 35px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
   }
-  to {
-    transform: rotate(360deg);
+
+nav li {
+  display: flex;
+  align-items: center;
+  width: auto;
+  margin: 0;
+}
+/*HAKU*/
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.search input {
+  width: 280px;
+  padding: 10px 14px;
+  font-size: 20px;
+  border-radius: 5px 0 0 5px;
+  border: 1px solid grey;
+}
+
+
+
+/*Linkit*/
+
+a {
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+}
+a:hover {
+  font-weight: bold;
+}
+/*Kuvat*/
+article div img {
+  height: 500px;
+  width: 100%;
+  object-fit: cover;
+  object-position: bottom;
+}
+
+/*Kirjautumis ja rekisteröitymis napit*/
+.signup, .signin {
+  background-color: grey;
+  color: white;
+  font-size: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 150px;
+  height: 50px;
+  margin: 0;
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+  line-height: 1;
+}
+
+#content section {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+/*RESPONSIIVISUUS*/
+
+/*Kannettavat*/
+@media only screen and (max-width: 1200px) {
+  #content {
+    flex-direction: column;
+  }
+
+}
+/* tabletin näyttö*/
+@media only screen and (max-width: 992px) {
+  div#content section{
+    display: flex;
+    flex-direction: column;
+  }
+
+  #content img {
+    max-width: 100%;
+    height: auto;
   }
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/*Puhelimen näyttö*/
+@media only screen and (max-width: 600px) {
+  nav {
+    flex-direction: column;
+    gap: 20px;
   }
-}
+  nav ul {
+    flex-direction: column;
+    margin: 0;
+    gap: 15px; 
+  }
+  nav li {
+    margin-left: 0;
+  }
+  nav a {
+    font-size: 20px;
+  }
 
-.card {
-  padding: 2em;
-}
+  .search input {
+    width: 250px;
+    height: 42px;
+    font-size: 20px;
+    margin-top: 5px;
+  }
 
-.read-the-docs {
-  color: #888;
+  .signin, .signup {
+    margin-left: 5px;
+  }
 }
