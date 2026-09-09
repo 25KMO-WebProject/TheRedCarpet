@@ -27,9 +27,18 @@ REST API - Node.js/Express\
 Frontend - JS React\
 Database - PostgreSQL
 
-## Deployment diagram
+## API
 
-<img width="1204" height="607" alt="Diagram - Page 3" src="https://github.com/user-attachments/assets/bbd7ac37-d261-4c71-ae2a-a076521b8ee0" />
+```mermaid
+graph LR
+    B["API (localhost:3000/)"]
+    B --> C["/accounts"]
+    B --> D["/movies"]
+    C <--> E["DB query"]
+    D <--> E
+    E <--> G[DB]
+```
+
 
 ## Login requirements
 - User email works as an username
