@@ -82,6 +82,19 @@ nav li {
 }
 
 
+/* HAKUTULOKSET YMS */
+.main-content {
+  padding: 30px 50px;
+}
+
+.search-results {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.search-results h2 {
+  margin-bottom: 20px;
+}
 
 /*Linkit*/
 
