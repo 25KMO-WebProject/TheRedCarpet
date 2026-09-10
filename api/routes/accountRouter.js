@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { getAccounts, getMovies } from "../controllers/TestController.js";
+import { getAccounts } from "../controllers/accountController.js";
 
 const router = Router();
 
 router.get("/accounts", getAccounts);
-router.get("/movies", getMovies);
 
 export default router;
