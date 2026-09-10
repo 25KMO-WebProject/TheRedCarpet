@@ -1,21 +1,39 @@
 import { useState } from 'react'
 import './App.css'
 
+import SearchForm from './components/SearchForm'
+import SearchResults from './components/SearchResults'
+
 function App() {
   const [query, setQuery] = useState('')
+  const [type, setType] = useState('all')
+  const [year, setYear] = useState('')
   const [movies, setMovies] = useState([])
 
   const searchMovies = async (event) => {
-    event.preventDefault()
+  event.preventDefault()
 
-    if (!query.trim()) {
-      return
-    }
+  if (!query.trim()) {
+    return
+  }
 
-    try {
+  try {
+      const params = new URLSearchParams({
+        query,
+        type
+      })
+
+      if (year) {
+        params.set('year', year)
+      }
+
       const response = await fetch(
-        `http://localhost:3000/api/tmdb/search?query=${encodeURIComponent(query)}`
+        `http://localhost:3000/api/tmdb/search?${params}`
       )
+
+      if (!response.ok) {
+        throw new Error('Search failed')
+      }
 
       const data = await response.json()
 
@@ -26,36 +44,22 @@ function App() {
   }
 
   return (
-    <>
-      <div>
-        <h1>Movie Search</h1>
+    <div>
+      <h1>Movie Search</h1>
 
-        <form onSubmit={searchMovies}>
-          <input
-            type="text"
-            placeholder="Search movie..."
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
+      <SearchForm
+        query={query}
+        setQuery={setQuery}
+        type={type}
+        setType={setType}
+        year={year}
+        setYear={setYear}
+        onSearch={searchMovies}
+        clearResults={() => setMovies([])}
+      />
 
-          <button type="submit">
-            Search
-          </button>
-        </form>
-
-        <div>
-          {movies.map((movie) => (
-            <div key={movie.id}>
-              <h3>{movie.title}</h3>
-
-              {<p>
-                Release date: {movie.release_date || 'Unknown'}
-              </p>}
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
+      <SearchResults results={movies} />
+    </div>
   )
 }
 
