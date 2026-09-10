@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Navbar from './components/Navbar.jsx'
 import axios from 'axios'
 import './App.css'
 
@@ -27,29 +28,8 @@ function App() {
 
   return (
     <>
-      <nav>
-      <div class="nav-left">
-         <h1>The<br/>RedCarpet</h1>
+      <Navbar/>
 
-        <form class="search">
-          <input type="search" placeholder='Hakukenttä' aria-label="Hae"></input>
-        </form>
-      </div>
-        <ul>
-          <li><a href="#">Ryhmäsivu</a></li>
-          <li><a href="#">Arvostelut</a></li>
-          <li><a href="#">Suosikit/SuosikkiLista</a></li>
-          <li><button class="signup">Rekisteröidy</button></li>
-          <li><button class="signin">Kirjaudu</button></li>
-        </ul>
-      </nav>
-      <div id="content">
-        <article>
-          <div>
-            
-          </div>
-        </article>
-      </div>
       <div className="card">
         {loading && <p>Loading...</p>}
         
