@@ -1,7 +1,10 @@
-import express from "express";
+import { Router } from "express";
+import { getMovies, getMovieFromName } from "../controllers/movieController.js";
 
-const router = express.Router();
+const router = Router();
 
+router.get("/movies", getMovies);
+router.get("/movies/name/:name", getMovieFromName);
 router.get("/nowplaying", async (req, res) => {
   const response = await fetch(
     "https://api.themoviedb.org/3/movie/now_playing?language=fi-FI&region=FI",

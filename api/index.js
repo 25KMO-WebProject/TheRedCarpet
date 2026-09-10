@@ -1,9 +1,10 @@
-import 'dotenv/config'
-import express from 'express'
-import cors from 'cors'
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import errorHandler from "./middleware/errorHandler.js";
 
-import errorHandler from './middleware/errorHandler.js'
-import testRouter from './routes/testRouter.js'
+import movieRouter from "./routes/movieRouter.js";
+import accountRouter from "./routes/accountRouter.js";
 import searchRouter from './routes/searchRouter.js'
 import movieRouter from './routes/movieRouter.js'
 
@@ -17,9 +18,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
-app.use('/', testRouter)
-app.use('/api/tmdb', searchRouter)
-app.use('/api/movies', movieRouter)
+app.use("/", movieRouter);
+app.use("/", accountRouter);
+app.use("/movies/:name", movieRouter);
+
+app.use('/tmdb', searchRouter)
+app.use('/movies', movieRouter)
 
 
 // Health check
@@ -56,7 +60,3 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
   console.log("Backend hot reload is working!");
 });
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`)
-})
