@@ -47,7 +47,7 @@ router.get('/search', async (req, res) => {
 
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
         accept: 'application/json'
       }
     })
