@@ -1,8 +1,10 @@
-import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import errorHandler from "./middleware/errorHandler.js";
-import testRouter from "./routes/testRouter.js";
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+
+import errorHandler from './middleware/errorHandler.js'
+import testRouter from './routes/testRouter.js'
+import searchRouter from './routes/searchRouter.js'
 
 const port = process.env.PORT || 3000;
 
@@ -12,13 +14,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/", testRouter);
+// Routes
+app.use('/', testRouter)
+app.use('/api/tmdb', searchRouter)
 
-// Health check endpoint for database connectivity
-app.get("/api/health", async (req, res) => {
+// Health check
+app.get('/api/health', async (req, res) => {
   try {
-    const { pool } = await import("./models/db.js");
-    await pool.query("SELECT 1");
+    const { pool } = await import('./models/db.js')
+
+    await pool.query('SELECT 1')
+
     res.status(200).json({
       status: "healthy",
       database: "connected",
@@ -47,3 +53,6 @@ app.listen(port, () => {
   console.log("Backend hot reload is working!");
 });
 
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`)
+})
