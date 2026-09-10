@@ -5,6 +5,8 @@ import cors from 'cors'
 import errorHandler from './middleware/errorHandler.js'
 import testRouter from './routes/testRouter.js'
 import searchRouter from './routes/searchRouter.js'
+import movieRouter from './routes/movieRouter.js'
+
 
 const port = process.env.PORT || 3000;
 
@@ -17,6 +19,8 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use('/', testRouter)
 app.use('/api/tmdb', searchRouter)
+app.use('/api/movies', movieRouter)
+
 
 // Health check
 app.get('/api/health', async (req, res) => {
