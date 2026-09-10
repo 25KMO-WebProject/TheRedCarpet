@@ -1,3 +1,4 @@
+/*Root-elementit*/
 * {
   margin: 0;
   padding: 0;
@@ -6,23 +7,6 @@
 
 *,*::before,*::after {
   box-sizing: border-box;
-}
-
-header {
-  display: inherit;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-}
-
-header h1 {
-  font-family: 'Times New Roman', Times, serif;
-}
-
-div#container {
-  display: flex;
-  flex-direction: column;
-  margin: var(--general-margin);
 }
 
 /*NAV-ELEMENTIT*/
@@ -151,21 +135,40 @@ article div img {
 
 /*Kannettavat*/
 @media only screen and (max-width: 1200px) {
-  #content {
-    flex-direction: column;
-  }
+    nav {
+        gap: 30px;
+        padding: 15px 20px;
+    }
 
+    .nav-left {
+        gap: 25px;
+    }
+
+    nav ul {
+        gap: 20px;
+    }
+
+    .search input {
+        width: 220px;
+    }
 }
 /* tabletin näyttö*/
 @media only screen and (max-width: 992px) {
-  div#content section{
-    display: flex;
+  nav {
     flex-direction: column;
+    gap: 20px;
   }
 
-  #content img {
-    max-width: 100%;
-    height: auto;
+  .nav-left {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  nav ul {
+    justify-content: center;
+    flex-wrap: flex;
+    margin: 0;
+    gap: 15px
   }
 }
 /*Puhelimen näyttö*/

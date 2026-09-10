@@ -20,13 +20,6 @@ export default function Navbar() {
           <li><button class="signin">Kirjaudu</button></li>
         </ul>
       </nav>
-      <div id="content">
-        <article>
-          <div>
-            
-          </div>
-        </article>
-      </div>
     </>
     )
 }
