@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS public.member_list
 (
     id serial NOT NULL,
     group_id integer NOT NULL,
+	account_id integer NOT NULL,
     join_date timestamp with time zone,
 
     CONSTRAINT member_list_pkey
@@ -53,7 +54,16 @@ CREATE TABLE IF NOT EXISTS public.member_list
         FOREIGN KEY (group_id)
         REFERENCES public."group" (id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+	CONSTRAINT member_list_account_fk
+		FOREIGN KEY (account_id)
+		REFERENCES public.account (id)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+
+	CONSTRAINT member_list_unique
+		UNIQUE (group_id, account_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.join_request
@@ -76,7 +86,10 @@ CREATE TABLE IF NOT EXISTS public.join_request
         FOREIGN KEY (account_id)
         REFERENCES public.account (id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+	CONSTRAINT join_request_unique
+		UNIQUE (group_id, account_id)
 );
 
 COMMENT ON TABLE public.join_request
