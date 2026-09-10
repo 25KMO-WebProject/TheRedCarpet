@@ -2,8 +2,12 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import errorHandler from "./middleware/errorHandler.js";
+
 import movieRouter from "./routes/movieRouter.js";
 import accountRouter from "./routes/accountRouter.js";
+import searchRouter from './routes/searchRouter.js'
+import movieRouter from './routes/movieRouter.js'
+
 
 const port = process.env.PORT || 3000;
 
@@ -13,15 +17,22 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Routes
 app.use("/", movieRouter);
 app.use("/", accountRouter);
 app.use("/movies/:name", movieRouter);
 
-// Health check endpoint for database connectivity
-app.get("/api/health", async (req, res) => {
+app.use('/tmdb', searchRouter)
+app.use('/movies', movieRouter)
+
+
+// Health check
+app.get('/api/health', async (req, res) => {
   try {
-    const { pool } = await import("./models/db.js");
-    await pool.query("SELECT 1");
+    const { pool } = await import('./models/db.js')
+
+    await pool.query('SELECT 1')
+
     res.status(200).json({
       status: "healthy",
       database: "connected",
