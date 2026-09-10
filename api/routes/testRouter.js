@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { getTests } from "../controllers/TestController.js";
+import { getAccounts, getMovies } from "../controllers/TestController.js";
 
 const router = Router();
 
-router.get("/", getTests);
+router.get("/accounts", getAccounts);
+router.get("/movies", getMovies);
 
 export default router;
-

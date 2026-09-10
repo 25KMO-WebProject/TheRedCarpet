@@ -1,14 +1,22 @@
-import { getAllTests } from '../models/Test.js'
+import { getAllAccounts, getAllMovies } from "../models/Test.js";
 
-const getTests = async (req, res, next) => {
+const getAccounts = async (req, res, next) => {
   try {
-    const result = await getAllTests()
-    res.status(200).json(result.rows || [])
-  } catch (error) {
-    next(error) 
+    const result = await getAllAccounts();
+    res.status(200).json(result.rows || []);
+  } catch (err) {
+    next(err);
   }
-}
+};
 
-export {
-  getTests
-}
+const getMovies = async (req, res, next) => {
+  try {
+    const result = await getAllMovies();
+    res.status(200).json(result.rows || []);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { getAccounts, getMovies };
+
