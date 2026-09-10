@@ -31,7 +31,7 @@ function App() {
 
             <h2>{movie.title}</h2>
 
-            <p>⭐ {movie.vote_average?.toFixed(1)}</p>
+            <p>⭐ {(movie.vote_average / 2).toFixed(1)} / 5</p>
 
             <p>{movie.release_date}</p>
 
