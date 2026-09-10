@@ -31,12 +31,19 @@ Database - PostgreSQL
 
 ```mermaid
 graph LR
-    B["API (localhost:3000/)"]
-    B --> C["/accounts"]
-    B --> D["/movies"]
-    C <--> E["DB query"]
-    D <--> E
-    E <--> G[DB]
+    A("API (localhost:3000)")
+
+    A --> acc["/accounts"]
+
+    A --> mov["/movies"]
+    mov --> all["GET all movies"]
+
+    mov --> searchRoute["GET /movies/:title"]
+
+    acc <--> dbq["DB query"]
+    all <--> dbq
+    searchRoute <--> dbq
+    dbq <--> db[("DB")]
 ```
 
 
