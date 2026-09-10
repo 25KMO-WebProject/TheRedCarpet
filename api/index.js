@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
@@ -6,13 +5,6 @@ import errorHandler from './middleware/errorHandler.js'
 import testRouter from './routes/testRouter.js'
 import movieRouter from './routes/movieRouter.js'
 
-=======
-import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import errorHandler from "./middleware/errorHandler.js";
-import testRouter from "./routes/testRouter.js";
->>>>>>> origin
 
 const port = process.env.PORT || 3000;
 
@@ -22,14 +14,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-<<<<<<< HEAD
 app.use('/', testRouter)
 app.use('/api/movies', movieRouter)
 
 
-=======
-app.use("/", testRouter);
->>>>>>> origin
 
 // Health check endpoint for database connectivity
 app.get("/api/health", async (req, res) => {
