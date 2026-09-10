@@ -3,68 +3,43 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/`);
-      setData(response.data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    fetchData();
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/api/movies/nowplaying`)
+      .then((response) => {
+        setMovies(response.data);
+      });
   }, []);
 
   return (
-    <>
-      <h1>Docker Sample</h1>
-      <div className="card">
-        {loading && <p>Loading...</p>}
+    <main>
+      <h1>Now at Theaters</h1>
 
-        {data && (
-          <div
-            style={{
-              marginTop: "20px",
-              padding: "10px",
-              background: "#f0f0f0",
-            }}
-          >
-            <h3>Data from Backend:</h3>
-            <ul style={{ textAlign: "left", margin: "10px 0" }}>
-              {data.map((item) => (
-                <li key={item.id} style={{ marginBottom: "10px" }}>
-                  {`ID: ${item.id} - ${item.description}`}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      <div className="movie-grid">
+        {movies.map((movie) => (
+          <div className="movie-card" key={movie.id}>
+            {movie.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+              />
+            ) : (
+              <div className="no-poster">No poster</div>
+            )}
 
-        {error && (
-          <div
-            style={{
-              marginTop: "20px",
-              padding: "10px",
-              background: "#ffebee",
-              color: "red",
-            }}
-          >
-            <h3>Error:</h3>
-            <p>{error}</p>
+            <h2>{movie.title}</h2>
+
+            <p>⭐ {movie.vote_average?.toFixed(1)}</p>
+
+            <p>{movie.release_date}</p>
+
+            <p>{movie.genres.join(", ")}</p>
           </div>
-        )}
+        ))}
       </div>
-    </>
+    </main>
   );
 }
 
