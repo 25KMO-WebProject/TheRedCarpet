@@ -18,8 +18,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use('/', testRouter)
-app.use('/api/tmdb', searchRouter)
-app.use('/api/movies', movieRouter)
+app.use('/tmdb', searchRouter)
+app.use('/movies', movieRouter)
 
 
 // Health check

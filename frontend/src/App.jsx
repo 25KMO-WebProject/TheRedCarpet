@@ -57,7 +57,7 @@ function App() {
       }
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/tmdb/search?${params}`
+        `${import.meta.env.VITE_API_URL}/tmdb/search?${params}`
       )
 
       if (!response.ok) {
