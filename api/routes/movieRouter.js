@@ -7,7 +7,7 @@ router.get("/nowplaying", async (req, res) => {
     "https://api.themoviedb.org/3/movie/now_playing?language=fi-FI&region=FI",
     {
       headers: {
-        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+        Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
         accept: "application/json",
       },
     }
@@ -19,7 +19,7 @@ router.get("/nowplaying", async (req, res) => {
     "https://api.themoviedb.org/3/genre/movie/list?language=fi-FI",
     {
       headers: {
-        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+        Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
         accept: "application/json",
       },
     }
