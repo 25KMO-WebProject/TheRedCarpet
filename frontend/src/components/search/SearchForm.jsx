@@ -42,6 +42,17 @@ function SearchForm({
         }}
       />
 
+      <button
+        type="button"
+        onClick={() => {
+          setType('all')
+          setYear('')
+          clearResults()
+        }}
+      >
+        Tyhjennä suodattimet
+      </button>
+
       <button type="submit">Search</button>
     </form>
   )

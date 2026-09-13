@@ -4,8 +4,7 @@ import './App.css'
 
 import NowPlaying from "./components/NowPlaying";
 import Navbar from './components/Navbar.jsx'
-import SearchForm from './components/SearchForm'
-import SearchResults from './components/SearchResults'
+import SearchResults from './components/search/SearchResults'
 
 function App() {
   const [data, setData] = useState([])
@@ -16,6 +15,9 @@ function App() {
   const [type, setType] = useState('all')
   const [year, setYear] = useState('')
   const [movies, setMovies] = useState([])
+
+  const [hasSearched, setHasSearched] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(false)
 
   const fetchData = async () => {
     setLoading(true)
@@ -38,13 +40,20 @@ function App() {
     fetchData()
   }, [])
 
-  // search Movies
+  const clearSearchResults = () => {
+    setMovies([])
+    setHasSearched(false)
+  }
+
   const searchMovies = async (event) => {
     event.preventDefault()
 
     if (!query.trim()) {
       return
     }
+
+    setSearchLoading(true)
+    setHasSearched(true)
 
     try {
       const params = new URLSearchParams({
@@ -69,6 +78,9 @@ function App() {
       setMovies(searchData.results || [])
     } catch (err) {
       console.error('Search failed:', err)
+      setMovies([])
+    } finally {
+      setSearchLoading(false)
     }
   }
 
@@ -82,19 +94,30 @@ function App() {
         year={year}
         setYear={setYear}
         onSearch={searchMovies}
-        clearResults={() => setMovies([])}
+        clearResults={clearSearchResults}
       />
 
       <main className="main-content">
-              <NowPlaying />
         <section className="search-results">
-          {movies.length > 0 && (
+          {searchLoading && (
+            <p>Haetaan...</p>
+          )}
+
+          {!searchLoading && movies.length > 0 && (
             <>
-              <h2>Hakutulokset</h2>
+              <h2>
+                Hakutulokset haulle "{query}" ({movies.length})
+              </h2>
+
               <SearchResults results={movies} />
             </>
           )}
+
+          {!searchLoading && hasSearched && movies.length === 0 && (
+            <p>Hakutuloksia ei löytynyt.</p>
+          )}
         </section>
+              <NowPlaying />
       </main>
     </>
   )
