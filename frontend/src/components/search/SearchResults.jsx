@@ -2,7 +2,7 @@ import SearchResult from './SearchResult'
 
 function SearchResults({ results }) {
   return (
-    <div>
+    <div className="search-results-grid">
       {results.map((item) => (
         <SearchResult
           key={`${item.media_type}-${item.id}`}
