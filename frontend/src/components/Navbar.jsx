@@ -16,8 +16,8 @@ export default function Navbar(props) {
       <ul>
         <li><a href="#">Ryhmäsivu</a></li>
         <li><a href="#">Arvostelut</a></li>
-        <li><a href="#">Suosikit/SuosikkiLista</a></li>
-        <li><button className="signup">Rekisteröidy</button></li>
+        <li><a href="#">SuosikkiLista</a></li>
+        <li><button type="button" className="signup" onClick={onSignupClick}>Rekisteröidy</button></li>
         <li><button className="signin">Kirjaudu</button></li>
       </ul>
     </nav>
