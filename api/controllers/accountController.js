@@ -46,24 +46,26 @@ const deleteAccountController = async (req, res, next) => {
 
 const loginController = async (req, res, next) => {
   console.log("User trying to log in..");
+  console.log("Request body:", req.body);
   try {
-    const account = req.body.user?.email?.trim();
-    const password = req.body.user?.password;
-    if (!email || !password) {
+    const account = req.body.account?.trim().toLowerCase();
+    const password = req.body.password;
+
+    if (!account || !password) {
       const error = new Error("Email/Username and password are required");
       error.status = 400;
       return next(error);
     }
     const result = await loginModel(account);
-    const dbUser = res.rows[0];
+    const dbUser = result.rows[0];
     if (!dbUser || !(await compare(password, dbUser.password))) {
       const error = new Error("Invalid email/username or password");
       error.status = 401;
       return next(error);
     }
-    const token = sign(
+    const token = jwt.sign(
       { userId: dbUser.id, email: dbUser.email },
-      process.env.JWT_SECRET_KEY,
+      process.env.JWT_SECRET,
       { expiresIn: "1h" },
     );
     return res.status(200).json({ id: dbUser.id, email: dbUser.email, token });

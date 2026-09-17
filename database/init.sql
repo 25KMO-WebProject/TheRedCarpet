@@ -32,8 +32,26 @@ CREATE TABLE IF NOT EXISTS public.account
     email character varying(64) NOT NULL,
     password character varying(64) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE (id)
+    UNIQUE (id),
+	UNIQUE (username)
 );
+
+-- Trigger function to make sure username and email will always be lowercased.
+CREATE OR REPLACE FUNCTION lowercase_username_email()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.username := LOWER(NEW.username);
+    NEW.email := LOWER(NEW.email);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger
+CREATE TRIGGER trigger_lowercase_username_email
+    BEFORE INSERT OR UPDATE ON public.account
+    FOR EACH ROW
+    EXECUTE FUNCTION lowercase_username_email();
+
 
 DROP TABLE IF EXISTS public."group";
 

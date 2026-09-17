@@ -12,6 +12,6 @@ router.get("/accounts", getAllAccountsController);
 router.get("/accounts/id/:id", getAccountFromIdController);
 router.delete("/accounts", deleteAccountController);
 
-router.post("/signin", loginController);
+router.post("/login", loginController);
 
 export default router;
