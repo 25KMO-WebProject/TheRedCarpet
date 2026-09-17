@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./SignUpModal.css"
 
-function SignUpModal({ isOpen, onClose }) {
+function SignInModal({ isOpen, onClose }) {
     useEffect(() => {
         function handleEsc(event) {
             if (event.key === "Escape") {
@@ -23,17 +23,15 @@ function SignUpModal({ isOpen, onClose }) {
     if (!isOpen) {
         return null
     }
-    //Käsittelee Rekistöröitymisen
-    function handleSignUp(event) {
+    function handleSignIn(event) {
         event.preventDefault();
 
         const formData = new FormData(event.target)
 
-        const username = formData.get("username")
-        const email = formData.get("email")
+        const identifier = formData.get("identifier") 
         const password = formData.get("password")
     }
-    
+    //Käsitelle mitä käyttäjä painaa
     function handleOverlayClick(event) {
         if (event.target == event.currentTarget) {
             onClose()
@@ -58,55 +56,39 @@ function SignUpModal({ isOpen, onClose }) {
                         &times;
                     </button>
 
-                    <h2>Title</h2>
-                    <form onSubmit={handleSignUp}>
-                        <label htmlFor="username">
-                            Username
-                        </label>
-                        <input
-                        id="username"
-                        name="username"
-                        type="text"
-                        placeholder="test"
-                        maxLength={64}
-                        required
-                        />
+                    <h2>Title-Kirjaudu</h2>
+                    <form onSubmit={handleSignIn}>
                         /*Kohdat mihin kirjoitetaan email ja salasana rajoituksineen*/
-                        <label htmlFor="email">
+                        <label htmlFor="signin-identifier">
                             email
                         </label>
                         <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="test@foo.com"
-                        maxLength={64}
+                        id="signin-identifier"
+                        name="identifier"
+                        type="text"
+                        placeholder="email/username"
                         required
                         />
 
-                        <label htmlFor="password">
+                        <label htmlFor="signin-password">
                             password
                         </label>
                         <input
-                        id="password"
+                        id="signin-password"
                         name="password"
                         type="password"
                         placeholder="password"
-                        minLength={8}
-                        maxLength={64}
-                        pattern="(?=.*[A-Z])(?=.*[0-9]).{8,64}"
-                        /*Tähän voisi lisätä titlen niin käyttäjä huomaa vaatimukset*/
                         required
                         />
                         <button 
                         type="submit"
                         className="submit"
                         >
-                            Register
+                            SignIn
                         </button>
                     </form>
             </section>
         </div>
     )
 }
-export default SignUpModal
+export default SignInModal
