@@ -41,7 +41,7 @@ erDiagram
 
     GROUP {
         SERIAL id PK
-        INTEGER owner_id FK
+        INTEGER id_owner FK
         VARCHAR_64 group_name
         VARCHAR_255 group_descr
         TIMESTAMPTZ creation_date
@@ -107,20 +107,20 @@ erDiagram
 ## API
 
 ```mermaid
-graph LR
+graph TD
     A("API (localhost:3000)")
 
     A --> acc["/accounts"]
+    acc --> accId["GET /accounts/id/:id"]
+    acc --> accAll["GET /accounts/"]
+    acc --> accLogin["POST /accounts/login/"]
 
     A --> mov["/movies"]
-    mov --> all["GET all movies"]
+    mov --> movAll["GET /movies/"]
 
-    mov --> searchRoute["GET /movies/:title"]
+    mov --> movId["GET /movies/title/:title"]
 
-    acc <--> dbq["DB query"]
-    all <--> dbq
-    searchRoute <--> dbq
-    dbq <--> db[("DB")]
+
 ```
 
 

@@ -18,10 +18,8 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use("/", movieRouter);
 app.use("/", accountRouter);
-app.use("/movies/:title", movieRouter);
 
 app.use("/tmdb", searchRouter);
-app.use("/movies", movieRouter);
 
 // Health check
 app.get("/api/health", async (req, res) => {
