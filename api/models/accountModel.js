@@ -5,4 +5,10 @@ const getAllAccounts = async () => {
   return result;
 };
 
-export { getAllAccounts };
+const deleteAccount = async (id) => {
+  const result = await pool.query(
+    "DELETE FROM account WHERE id = $1", [id]);
+    return result;
+};
+
+export { getAllAccounts, deleteAccount };
