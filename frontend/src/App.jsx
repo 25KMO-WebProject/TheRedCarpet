@@ -5,7 +5,8 @@ import './App.css'
 import NowPlaying from "./components/NowPlaying";
 import Navbar from './components/Navbar.jsx'
 import SearchResults from './components/search/SearchResults'
-import SignUpModal from "./components/SignUpModal"
+import SignUpModal from "./components/SignUpModal.jsx";
+import SignInModal from "./components/SignInModal.jsx";
 
 function App() {
   const [data, setData] = useState([])
@@ -22,6 +23,7 @@ function App() {
 
   //Rekistöröityminen
   const [SignUpOpen, setSignUpOpen] = useState(false)
+  const [SignInOpen, setSignInOpen] = useState(false)
 
   const fetchData = async () => {
     setLoading(true)
@@ -101,7 +103,8 @@ function App() {
         clearResults={clearSearchResults}
 
         /* Rekistöröitymis nappiin*/
-        onSignupClick={() => setSignUpOpen(true)}
+        onSignUpClick={() => setSignUpOpen(true)}
+        onSignInClick={() => setSignInOpen(true)}
       />
 
       <main className="main-content">
@@ -126,10 +129,17 @@ function App() {
         </section>
               <NowPlaying />
       </main>
+
       <SignUpModal
         isOpen={SignUpOpen}
         onClose={() => setSignUpOpen(false)}
         />
+      <SignInModal
+        isOpen={SignInOpen}
+        onClose={() => setSignInOpen(false)}
+        />
+
+
     </>
   )
 }

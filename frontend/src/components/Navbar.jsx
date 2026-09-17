@@ -1,7 +1,7 @@
 import "./Navbar.css"
 import SearchBar from './search/SearchBar'
 
-export default function Navbar({ onSignupClick, props}) {
+export default function Navbar({ onSignUpClick, onSignInClick, props}) {
 
   return (
     <nav>
@@ -17,8 +17,8 @@ export default function Navbar({ onSignupClick, props}) {
         <li><a href="#">Ryhmäsivu</a></li>
         <li><a href="#">Arvostelut</a></li>
         <li><a href="#">SuosikkiLista</a></li>
-        <li><button type="button" className="signup" onClick={onSignupClick}>Rekisteröidy</button></li>
-        <li><button className="signin">Kirjaudu</button></li>
+        <li><button type="button" className="signup" onClick={onSignUpClick}>Rekisteröidy</button></li> 
+        <li><button type="button" className="signin" onClick={onSignInClick}>Kirjaudu</button></li>
       </ul>
     </nav>
   )
