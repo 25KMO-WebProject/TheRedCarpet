@@ -96,7 +96,7 @@ VALUES
 INSERT INTO public."group"
 (
     id,
-    owner_id,
+    id_owner,
     group_name,
     group_descr,
     creation_date
