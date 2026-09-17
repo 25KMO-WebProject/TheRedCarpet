@@ -27,6 +27,83 @@ REST API - Node.js/Express\
 Frontend - JS React\
 Database - PostgreSQL
 
+## ERD
+
+```mermaid
+erDiagram
+
+    ACCOUNT {
+        SERIAL id PK
+        VARCHAR_16 username
+        VARCHAR_64 email
+        VARCHAR_64 password
+    }
+
+    GROUP {
+        SERIAL id PK
+        INTEGER owner_id FK
+        VARCHAR_64 group_name
+        VARCHAR_255 group_descr
+        TIMESTAMPTZ creation_date
+
+        UNIQUE group_name_owner_id
+    }
+
+    MEMBER_LIST {
+        INTEGER id_account PK,FK
+        INTEGER id_group PK,FK
+        TIMESTAMPTZ join_date
+    }
+
+    JOIN_REQUEST {
+        INTEGER id_account PK,FK
+        INTEGER id_group PK,FK
+        VARCHAR_8 status
+    }
+
+    MOVIE {
+        SERIAL id PK
+        VARCHAR_255 title
+        TEXT description
+        INTERVAL duration
+        VARCHAR_ARRAY genre
+        DATE release_date
+    }
+
+    FAVOURITE_MOVIES {
+        INTEGER id_account PK,FK
+        INTEGER id_movie PK,FK
+    }
+
+    REVIEW {
+        INTEGER id_account PK,FK
+        INTEGER id_movie PK,FK
+        SMALLINT rating
+        VARCHAR_512 description
+        TIMESTAMPTZ date
+    }
+
+
+    %% Group ownership
+    ACCOUNT ||--o{ GROUP : owns
+
+    %% Memberships
+    ACCOUNT ||--o{ MEMBER_LIST : has_membership
+    GROUP ||--o{ MEMBER_LIST : contains_member
+
+    %% Join requests
+    ACCOUNT ||--o{ JOIN_REQUEST : submits
+    GROUP ||--o{ JOIN_REQUEST : receives
+
+    %% Favourite movies
+    ACCOUNT ||--o{ FAVOURITE_MOVIES : favorites
+    MOVIE ||--o{ FAVOURITE_MOVIES : favorited_by
+
+    %% Reviews
+    ACCOUNT ||--o{ REVIEW : writes
+    MOVIE ||--o{ REVIEW : receives
+```
+
 ## API
 
 ```mermaid

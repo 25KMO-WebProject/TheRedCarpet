@@ -7,6 +7,7 @@ import Navbar from './components/Navbar.jsx'
 import SearchResults from './components/search/SearchResults'
 import MediaDetailsModal from './components/search/MediaDetailsModal'
 import FavoritesPage from './components/favorites/FavoritesPage.jsx'
+import SignUpModal from "./components/SignUpModal"
 
 function App() {
   const [data, setData] = useState([])
@@ -23,6 +24,9 @@ function App() {
 
   const [selectedMedia, setSelectedMedia] = useState(null)
   const [currentView, setCurrentView] = useState('home')
+  
+  //Rekistöröityminen
+  const [SignUpOpen, setSignUpOpen] = useState(false)
 
   const fetchData = async () => {
     setLoading(true)
@@ -106,6 +110,9 @@ function App() {
         onHomeClick={() => {
           setCurrentView('home')
         }}
+
+        /* Rekistöröitymis nappiin*/
+        onSignupClick={() => setSignUpOpen(true)}
       />
 
       {currentView === 'favorites' ? (
@@ -139,6 +146,10 @@ function App() {
             <NowPlaying />
         </main>
       )}
+      <SignUpModal
+        isOpen={SignUpOpen}
+        onClose={() => setSignUpOpen(false)}
+      />
       
       <MediaDetailsModal
         item={selectedMedia}
