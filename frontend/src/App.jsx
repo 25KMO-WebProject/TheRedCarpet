@@ -5,6 +5,8 @@ import './App.css'
 import NowPlaying from "./components/NowPlaying";
 import Navbar from './components/Navbar.jsx'
 import SearchResults from './components/search/SearchResults'
+import MediaDetailsModal from './components/search/MediaDetailsModal'
+import FavoritesPage from './components/favorites/FavoritesPage.jsx'
 
 function App() {
   const [data, setData] = useState([])
@@ -18,6 +20,9 @@ function App() {
 
   const [hasSearched, setHasSearched] = useState(false)
   const [searchLoading, setSearchLoading] = useState(false)
+
+  const [selectedMedia, setSelectedMedia] = useState(null)
+  const [currentView, setCurrentView] = useState('home')
 
   const fetchData = async () => {
     setLoading(true)
@@ -95,30 +100,50 @@ function App() {
         setYear={setYear}
         onSearch={searchMovies}
         clearResults={clearSearchResults}
+        onFavoritesClick={() => {
+          setCurrentView('favorites')
+        }}
+        onHomeClick={() => {
+          setCurrentView('home')
+        }}
       />
 
-      <main className="main-content">
-        <section className="search-results">
-          {searchLoading && (
-            <p>Haetaan...</p>
-          )}
+      {currentView === 'favorites' ? (
+        <FavoritesPage
+          isAuthenticated={false}
+        />
+      ) : (
+        <main className="main-content">
+          <section className="search-results">
+            {searchLoading && (
+              <p>Haetaan...</p>
+            )}
 
-          {!searchLoading && movies.length > 0 && (
-            <>
-              <h2>
-                Hakutulokset haulle "{query}" ({movies.length})
-              </h2>
+            {!searchLoading && movies.length > 0 && (
+              <>
+                <h2>
+                  Hakutulokset haulle "{query}" ({movies.length})
+                </h2>
 
-              <SearchResults results={movies} />
-            </>
-          )}
+                <SearchResults
+                  results={movies}
+                  onSelect={setSelectedMedia}
+                />
+              </>
+            )}
 
-          {!searchLoading && hasSearched && movies.length === 0 && (
-            <p>Hakutuloksia ei löytynyt.</p>
-          )}
-        </section>
-              <NowPlaying />
-      </main>
+            {!searchLoading && hasSearched && movies.length === 0 && (
+              <p>Hakutuloksia ei löytynyt.</p>
+            )}
+          </section>
+            <NowPlaying />
+        </main>
+      )}
+      
+      <MediaDetailsModal
+        item={selectedMedia}
+        onClose={() => setSelectedMedia(null)}
+      />
     </>
   )
 }

@@ -1,22 +1,41 @@
 import "./Navbar.css"
 import SearchBar from './search/SearchBar'
 
-export default function Navbar(props) {
-
+export default function Navbar({
+  onFavoritesClick,
+  onHomeClick,
+  ...searchProps
+}) {
   return (
     <nav>
       <div className="nav-left">
-        <h1>
-          The<br />RedCarpet
-        </h1>
+        <button
+          type="button"
+          className="brand-button"
+          onClick={onHomeClick}
+        >
+          <h1>
+            The<br />RedCarpet
+          </h1>
+        </button>
 
-        <SearchBar {...props} />
+        <SearchBar {...searchProps} />
       </div>
 
       <ul>
         <li><a href="#">Ryhmäsivu</a></li>
         <li><a href="#">Arvostelut</a></li>
-        <li><a href="#">Suosikit/SuosikkiLista</a></li>
+        <li>
+          <a
+            href="#"
+            onClick={(event) => {
+              event.preventDefault()
+              onFavoritesClick()
+            }}
+          >
+            Suosikit
+          </a>
+        </li>
         <li><button className="signup">Rekisteröidy</button></li>
         <li><button className="signin">Kirjaudu</button></li>
       </ul>

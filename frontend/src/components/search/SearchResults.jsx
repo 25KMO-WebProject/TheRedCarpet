@@ -1,12 +1,16 @@
 import SearchResult from './SearchResult'
 
-function SearchResults({ results }) {
+function SearchResults({
+  results,
+  onSelect
+}) {
   return (
     <div className="search-results-grid">
-      {results.map((item) => (
+      {results.map(item => (
         <SearchResult
           key={`${item.media_type}-${item.id}`}
           item={item}
+          onSelect={onSelect}
         />
       ))}
     </div>

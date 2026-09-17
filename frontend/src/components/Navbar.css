@@ -50,6 +50,17 @@ nav li {
   width: auto;
   margin: 0;
 }
+
+.brand-button {
+  padding: 0;
+
+  background: transparent;
+
+  border: none;
+
+  cursor: pointer;
+}
+
 /* HAKU */
 
 .search-container {

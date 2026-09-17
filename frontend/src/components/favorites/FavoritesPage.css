@@ -1,0 +1,111 @@
+.favorites-page {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+.favorites-page > h1 {
+  margin-bottom: 30px;
+}
+
+.favorites-empty {
+  max-width: 520px;
+
+  margin: 70px auto;
+  padding: 40px;
+
+  text-align: center;
+
+  background: #202020;
+
+  border: 1px solid #555;
+  border-radius: 12px;
+}
+
+.favorites-heart {
+  margin-bottom: 16px;
+
+  font-size: 64px;
+  line-height: 1;
+}
+
+.favorites-empty h2 {
+  margin-bottom: 12px;
+}
+
+.favorites-empty p {
+  margin-bottom: 24px;
+
+  line-height: 1.5;
+  color: #bbb;
+}
+
+.favorites-empty button {
+  padding: 10px 20px;
+
+  cursor: pointer;
+
+  border: 1px solid #666;
+  border-radius: 6px;
+}
+
+.favorites-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(200px, 1fr));
+
+  gap: 24px;
+}
+
+.favorite-card {
+  padding: 0;
+
+  overflow: hidden;
+
+  text-align: left;
+
+  background: #202020;
+
+  border: 1px solid #555;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+.favorite-card img {
+  display: block;
+
+  width: 100%;
+  aspect-ratio: 2 / 3;
+
+  object-fit: cover;
+}
+
+.favorite-card div {
+  padding: 14px;
+}
+
+.favorites-empty,
+.favorites-empty h2,
+.favorites-empty p,
+.favorites-empty .favorites-heart {
+  color: #f2f2f2;
+}
+
+.favorites-empty p {
+  color: #d0d0d0;
+}
+
+.favorites-empty button {
+  color: #f2f2f2;
+  background: transparent;
+
+  border: 1px solid #777;
+}
+
+.favorites-empty button:hover {
+  background: #333;
+}
