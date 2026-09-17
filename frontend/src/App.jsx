@@ -5,6 +5,7 @@ import './App.css'
 import NowPlaying from "./components/NowPlaying";
 import Navbar from './components/Navbar.jsx'
 import SearchResults from './components/search/SearchResults'
+import SignUpModal from "./components/SignUpModal"
 
 function App() {
   const [data, setData] = useState([])
@@ -18,6 +19,9 @@ function App() {
 
   const [hasSearched, setHasSearched] = useState(false)
   const [searchLoading, setSearchLoading] = useState(false)
+
+  //Rekistöröityminen
+  const [SignUpOpen, setSignUpOpen] = useState(false)
 
   const fetchData = async () => {
     setLoading(true)
@@ -95,6 +99,9 @@ function App() {
         setYear={setYear}
         onSearch={searchMovies}
         clearResults={clearSearchResults}
+
+        /* Rekistöröitymis nappiin*/
+        onSignupClick={() => setSignUpOpen(true)}
       />
 
       <main className="main-content">
@@ -119,6 +126,10 @@ function App() {
         </section>
               <NowPlaying />
       </main>
+      <SignUpModal
+        isOpen={SignUpOpen}
+        onClose={() => setSignUpOpen(false)}
+        />
     </>
   )
 }

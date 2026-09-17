@@ -1,7 +1,7 @@
 import "./Navbar.css"
 import SearchBar from './search/SearchBar'
 
-export default function Navbar(props) {
+export default function Navbar({ onSignupClick, props}) {
 
   return (
     <nav>
