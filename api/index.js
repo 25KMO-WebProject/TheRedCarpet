@@ -6,6 +6,8 @@ import errorHandler from "./middleware/errorHandler.js";
 import accountRouter from "./routes/accountRouter.js";
 import movieRouter from "./routes/movieRouter.js";
 import searchRouter from "./routes/searchRouter.js";
+import registerRouter from "./routes/registerRouter.js";
+
 
 const port = process.env.PORT || 3000;
 
@@ -22,6 +24,7 @@ app.use("/movies/:name", movieRouter);
 
 app.use("/tmdb", searchRouter);
 app.use("/movies", movieRouter);
+app.use("/", registerRouter);
 
 // Health check
 app.get("/api/health", async (req, res) => {

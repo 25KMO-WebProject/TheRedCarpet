@@ -15,7 +15,7 @@ function NowPlaying() {
 
   return (
     <main>
-      <h1>Now at Theaters</h1>
+      <h1>Nyt elokuvateattereissa</h1>
 
       <div className="movie-grid">
         {movies.map((movie) => (
