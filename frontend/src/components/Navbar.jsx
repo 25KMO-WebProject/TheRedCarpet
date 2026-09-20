@@ -1,7 +1,11 @@
 import "./Navbar.css"
 import SearchBar from './search/SearchBar'
+import { useState } from "react"
+import DeleteAccountButton from "./DeleteAccount"
 
-export default function Navbar({ onSignUpClick, onSignInClick, props}) {
+export default function Navbar({ onSignUpClick, onSignInClick, apiUrl, user, props}) {
+
+const [menuOpen, setMenu] = useState(false)
 
   return (
     <nav>
@@ -19,6 +23,14 @@ export default function Navbar({ onSignUpClick, onSignInClick, props}) {
         <li><a href="#">SuosikkiLista</a></li>
         <li><button type="button" className="signup" onClick={onSignUpClick}>Rekisteröidy</button></li> 
         <li><button type="button" className="signin" onClick={onSignInClick}>Kirjaudu</button></li>
+        <li><button type="button" className="profile" onClick={() => setMenu(!menuOpen)}>Profiili</button>
+        {menuOpen && (
+          <div className="dropdown-menu">
+            <button>Kirjaudu ulos</button>
+            <DeleteAccountButton apiUrl={apiUrl} user={user} />
+          </div>
+        )}
+      </li>
       </ul>
     </nav>
   )

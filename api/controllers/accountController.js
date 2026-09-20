@@ -11,7 +11,7 @@ const getAccounts = async (req, res, next) => {
 
 const removeAccount = async (req, res, next) => {
   try {
-    const { id } = req.user //Pittää muuttaa aukentoinin tullessa
+    const  id  = req.account.id
     const result = await deleteAccount(id)
     console.log(`Delete account with id: ${id}`)
 
