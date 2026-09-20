@@ -4,15 +4,16 @@ import FavoriteButton from '../favorites/FavoriteButton.jsx'
 
 export default function MediaDetailsModal({
   item,
-  onClose
+  onClose,
+  isAuthenticated,
+  isFavorite,
+  onToggleFavorite
 }) {
   const [details, setDetails] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // For future favorite feature
-  const [favorite, setFavorite] = useState(false)
-
+  // Fetch details for the selected TMDB movie or TV show.
   useEffect(() => {
     if (!item) {
       return
@@ -128,9 +129,9 @@ export default function MediaDetailsModal({
 
                 <div className="media-modal-actions">
                   <FavoriteButton
-                    isAuthenticated={false}
-                    isFavorite={false}
-                    onToggle={() => {}}
+                    isAuthenticated={isAuthenticated}
+                    isFavorite={isFavorite}
+                    onToggle={onToggleFavorite}
                   />
 
                   <button

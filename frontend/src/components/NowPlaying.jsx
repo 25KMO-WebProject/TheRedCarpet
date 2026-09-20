@@ -7,7 +7,7 @@ function NowPlaying() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/movies/nowplaying`)
+      .get(`${import.meta.env.VITE_API_URL}/nowplaying`)
       .then((response) => {
         setMovies(response.data);
       });

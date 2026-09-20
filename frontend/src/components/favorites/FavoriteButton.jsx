@@ -3,6 +3,7 @@ export default function FavoriteButton({
   isFavorite,
   onToggle
 }) {
+  // Favorites are available only for authenticated users.
   const handleClick = () => {
     if (!isAuthenticated) {
       alert('Kirjaudu sisään lisätäksesi suosikkeihin.')
@@ -20,9 +21,11 @@ export default function FavoriteButton({
       }`}
       onClick={handleClick}
       title={
-        isAuthenticated
-          ? 'Lisää suosikkeihin'
-          : 'Kirjaudu sisään lisätäksesi suosikkeihin'
+        !isAuthenticated
+          ? 'Kirjaudu sisään lisätäksesi suosikkeihin'
+          : isFavorite
+            ? 'Poista suosikeista'
+            : 'Lisää suosikkeihin'
       }
     >
       {isFavorite ? '♥' : '♡'}

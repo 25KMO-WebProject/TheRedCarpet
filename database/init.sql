@@ -92,17 +92,38 @@ CREATE TABLE IF NOT EXISTS public.join_request
 COMMENT ON TABLE public.join_request
     IS 'List of users, who have requested to join the group';
 
+-- Favorites store TMDB identifiers directly instead of local movie ids.
+-- media_type is required because movie and TV ids can overlap in TMDB.
 DROP TABLE IF EXISTS public.favourite_movies;
 
 CREATE TABLE IF NOT EXISTS public.favourite_movies
 (
     id_account integer NOT NULL,
-    id_movie integer NOT NULL,
-    CONSTRAINT "Only 1 movie id per account id" PRIMARY KEY (id_account, id_movie)
+    tmdb_id integer NOT NULL,
+    media_type character varying(5) NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT favourite_movies_pk
+        PRIMARY KEY (id_account, tmdb_id, media_type),
+
+    CONSTRAINT favourite_movies_media_type_check
+        CHECK (media_type IN ('movie', 'tv')),
+
+    CONSTRAINT favourite_movies_account_fk
+        FOREIGN KEY (id_account)
+        REFERENCES public.account (id)
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
 );
 
-COMMENT ON CONSTRAINT "Only 1 movie id per account id" ON public.favourite_movies
-    IS 'User cannot add same movie to the favorite list twice. ';
+COMMENT ON TABLE public.favourite_movies
+    IS 'Stores users favourite TMDB movies and TV shows.';
+
+ALTER TABLE IF EXISTS public.favourite_movies
+    ADD FOREIGN KEY (id_account)
+    REFERENCES public.account (id)
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE;
 
 DROP TABLE IF EXISTS public.movie;
 
@@ -168,21 +189,6 @@ ALTER TABLE IF EXISTS public.join_request
     ON DELETE CASCADE
     NOT VALID;
 
-
-ALTER TABLE IF EXISTS public.favourite_movies
-    ADD FOREIGN KEY (id_account)
-    REFERENCES public.account (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.favourite_movies
-    ADD FOREIGN KEY (id_movie)
-    REFERENCES public.movie (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE
-    NOT VALID;
 
 
 ALTER TABLE IF EXISTS public.review
