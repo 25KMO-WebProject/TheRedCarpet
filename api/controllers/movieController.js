@@ -1,21 +1,24 @@
-import { getAllMovies, getMovieByName } from "../models/movieModel.js";
+import {
+  getAllMoviesModel,
+  getMovieByTitleModel,
+} from "../models/movieModel.js";
 
-const getMovies = async (req, res, next) => {
+const getAllMoviesController = async (req, res, next) => {
   try {
-    const result = await getAllMovies();
+    const result = await getAllMoviesModel();
     res.status(200).json(result || []);
   } catch (err) {
     next(err);
   }
 };
 
-const getMovieFromName = async (req, res, next) => {
+const getMovieByTitleController = async (req, res, next) => {
   try {
-    const result = await getMovieByName(req.params.name);
+    const result = await getMovieByTitleModel(req.params.title);
     res.status(200).json(result || []);
   } catch (err) {
     next(err);
   }
 };
 
-export { getMovies, getMovieFromName };
+export { getAllMoviesController, getMovieByTitleController };

@@ -8,7 +8,7 @@ function SignUpModal({ isOpen, onClose }) {
                 onClose()
             }
         }
-
+        //Kuuntelee, mitä näppäimiä painetaan, esim tuleeko se Esc-näppäin
         if (isOpen) {
             document.addEventListener("keydown", handleEsc)
             document.body.style.overflow = "hidden"
@@ -23,7 +23,7 @@ function SignUpModal({ isOpen, onClose }) {
     if (!isOpen) {
         return null
     }
-
+    //Käsittelee Rekistöröitymisen
     async function handleSignUp(event) {
         event.preventDefault();
 
@@ -49,7 +49,7 @@ function SignUpModal({ isOpen, onClose }) {
         }
         catch (error) {console.error('Rekisteröinti epäonnistui:', error); alert(error.message);}
     }
-
+    
     function handleOverlayClick(event) {
         if (event.target == event.currentTarget) {
             onClose()
