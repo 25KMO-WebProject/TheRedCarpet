@@ -1,94 +1,123 @@
-import { useEffect } from "react";
-import "./SignUpModal.css"
+import { useEffect, useState } from "react";
+import "./SignInModal.css";
+import axios from "axios";
 
 function SignInModal({ isOpen, onClose }) {
-    useEffect(() => {
-        function handleEsc(event) {
-            if (event.key === "Escape") {
-                onClose()
-            }
-        }
-        //Kuuntelee, mitä näppäimiä painetaan, esim tuleeko se Esc-näppäin
-        if (isOpen) {
-            document.addEventListener("keydown", handleEsc)
-            document.body.style.overflow = "hidden"
-        }
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-        return () => {
-            document.removeEventListener("keydown", handleEsc)
-            document.body.style.overflow = ""
-        }
-    }, [isOpen, onClose])
-
-    if (!isOpen) {
-        return null
+  useEffect(() => {
+    function handleEsc(event) {
+      if (event.key === "Escape") {
+        clearError();
+        onClose();
+      }
     }
-    function handleSignIn(event) {
-        event.preventDefault();
-
-        const formData = new FormData(event.target)
-
-        const identifier = formData.get("identifier") 
-        const password = formData.get("password")
+    //Kuuntelee, mitä näppäimiä painetaan, esim tuleeko se Esc-näppäin
+    if (isOpen) {
+      document.addEventListener("keydown", handleEsc);
+      document.body.style.overflow = "hidden";
     }
-    //Käsitelle mitä käyttäjä painaa
-    function handleOverlayClick(event) {
-        if (event.target == event.currentTarget) {
-            onClose()
-        }
+
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) {
+    return null;
+  }
+  async function handleSignIn(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    const account = formData.get("identifier");
+    const password = formData.get("password");
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/login`,
+        {
+          account,
+          password,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+
+      const userData = response.data;
+      setUser(userData);
+      sessionStorage.setItem("user", JSON.stringify(userData));
+
+      onClose();
+    } catch (err) {
+      if (err.response?.status === 401) {
+        setError("Virheellinen käyttäjänimi tai salasana.");
+      } else {
+        setError("Virhe kirjautumisessa. Tarkista tiedot.");
+        console.error(err);
+      }
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
-    //Itse etusivu näkymä
-    return (
-        <div className="overlay-modal"
-        onClick={handleOverlayClick}
+  }
+  //Käsitelle mitä käyttäjä painaa
+  function handleOverlayClick(event) {
+    if (event.target == event.currentTarget) {
+      onClose();
+    }
+  }
+
+  function clearError() {
+    setError("");
+  }
+
+  //Itse etusivu näkymä
+  return (
+    <div className="overlay-modal" onClick={handleOverlayClick}>
+      <section className="SignUp-modal" role="dialog">
+        {/*Sulkemis näppäin*/}
+        <button
+          type="button"
+          className="close-button"
+          onClick={onClose}
+          aria-label="X"
         >
-            <section 
-             className="SignUp-modal"
-             role="dialog"
-             >
-                /*Sulkemis näppäin*/
-                <button
-                    type="button"
-                    className="close-button"
-                    onClick={onClose}
-                    aria-label="X"
-                    >
-                        &times;
-                    </button>
-
-                    <h2>Title-Kirjaudu</h2>
-                    <form onSubmit={handleSignIn}>
-                        /*Kohdat mihin kirjoitetaan email ja salasana rajoituksineen*/
-                        <label htmlFor="signin-identifier">
-                            email
-                        </label>
-                        <input
-                        id="signin-identifier"
-                        name="identifier"
-                        type="text"
-                        placeholder="email/username"
-                        required
-                        />
-
-                        <label htmlFor="signin-password">
-                            password
-                        </label>
-                        <input
-                        id="signin-password"
-                        name="password"
-                        type="password"
-                        placeholder="password"
-                        required
-                        />
-                        <button 
-                        type="submit"
-                        className="submit"
-                        >
-                            SignIn
-                        </button>
-                    </form>
-            </section>
-        </div>
-    )
+          &times;
+        </button>
+        <h2>Sisäänkirjautuminen</h2>
+        <form onSubmit={handleSignIn}>
+          {/*Kohdat mihin kirjoitetaan email ja salasana rajoituksineen*/}
+          <label htmlFor="signin-identifier">Sähköposti / Käyttäjänimi</label>
+          <input
+            id="signin-identifier"
+            name="identifier"
+            type="text"
+            placeholder="Sähköposti / Käyttäjänimi"
+            onFocus={clearError}
+            required
+          />
+          <label htmlFor="signin-password">Salasana</label>
+          <input
+            id="signin-password"
+            name="password"
+            type="password"
+            placeholder="********"
+            required
+          />
+          <button type="submit" className="submit">
+            Kirjaudu sisään
+          </button>
+          {error && <p className="error">{error}</p>}
+        </form>
+      </section>
+    </div>
+  );
 }
-export default SignInModal
+export default SignInModal;
+
