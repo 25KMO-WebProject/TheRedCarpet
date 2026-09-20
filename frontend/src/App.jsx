@@ -7,7 +7,8 @@ import Navbar from './components/Navbar.jsx'
 import SearchResults from './components/search/SearchResults'
 import MediaDetailsModal from './components/search/MediaDetailsModal'
 import FavoritesPage from './components/favorites/FavoritesPage.jsx'
-import SignUpModal from "./components/SignUpModal"
+import SignUpModal from "./components/SignUpModal.jsx";
+import SignInModal from "./components/SignInModal.jsx";
 
 function App() {
   const [data, setData] = useState([])
@@ -27,6 +28,7 @@ function App() {
   
   //Rekistöröityminen
   const [SignUpOpen, setSignUpOpen] = useState(false)
+  const [SignInOpen, setSignInOpen] = useState(false)
 
   const fetchData = async () => {
     setLoading(true)
@@ -112,7 +114,8 @@ function App() {
         }}
 
         /* Rekistöröitymis nappiin*/
-        onSignupClick={() => setSignUpOpen(true)}
+        onSignUpClick={() => setSignUpOpen(true)}
+        onSignInClick={() => setSignInOpen(true)}
       />
 
       {currentView === 'favorites' ? (
@@ -149,6 +152,10 @@ function App() {
       <SignUpModal
         isOpen={SignUpOpen}
         onClose={() => setSignUpOpen(false)}
+      />
+      <SignInModal
+        isOpen={SignInOpen}
+        onClose={() => setSignInOpen(false)}
       />
       
       <MediaDetailsModal

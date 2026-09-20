@@ -32,20 +32,38 @@ CREATE TABLE IF NOT EXISTS public.account
     email character varying(64) NOT NULL,
     password character varying(64) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE (id)
+    UNIQUE (id),
+	UNIQUE (username)
 );
+
+-- Trigger function to make sure username and email will always be lowercased.
+CREATE OR REPLACE FUNCTION lowercase_username_email()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.username := LOWER(NEW.username);
+    NEW.email := LOWER(NEW.email);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger
+CREATE TRIGGER trigger_lowercase_username_email
+    BEFORE INSERT OR UPDATE ON public.account
+    FOR EACH ROW
+    EXECUTE FUNCTION lowercase_username_email();
+
 
 DROP TABLE IF EXISTS public."group";
 
 CREATE TABLE IF NOT EXISTS public."group"
 (
     id serial NOT NULL,
-    owner_id integer NOT NULL,
+    id_owner integer NOT NULL,
     group_name character varying(64) NOT NULL,
     group_descr character varying(255),
     creation_date timestamp with time zone NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE (group_name, owner_id)
+    UNIQUE (group_name, id_owner)
 );
 
 COMMENT ON TABLE public."group"
@@ -112,10 +130,10 @@ CREATE TABLE IF NOT EXISTS public.review
 );
 
 ALTER TABLE IF EXISTS public."group"
-    ADD FOREIGN KEY (owner_id)
+    ADD FOREIGN KEY (id_owner)
     REFERENCES public.account (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -123,7 +141,7 @@ ALTER TABLE IF EXISTS public.member_list
     ADD FOREIGN KEY (id_group)
     REFERENCES public."group" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -131,7 +149,7 @@ ALTER TABLE IF EXISTS public.member_list
     ADD FOREIGN KEY (id_account)
     REFERENCES public.account (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -139,7 +157,7 @@ ALTER TABLE IF EXISTS public.join_request
     ADD FOREIGN KEY (id_group)
     REFERENCES public."group" (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -147,7 +165,7 @@ ALTER TABLE IF EXISTS public.join_request
     ADD FOREIGN KEY (id_account)
     REFERENCES public.account (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -155,7 +173,7 @@ ALTER TABLE IF EXISTS public.favourite_movies
     ADD FOREIGN KEY (id_account)
     REFERENCES public.account (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -163,7 +181,7 @@ ALTER TABLE IF EXISTS public.favourite_movies
     ADD FOREIGN KEY (id_movie)
     REFERENCES public.movie (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
@@ -171,15 +189,15 @@ ALTER TABLE IF EXISTS public.review
     ADD FOREIGN KEY (id_account)
     REFERENCES public.account (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 
 ALTER TABLE IF EXISTS public.review
     ADD FOREIGN KEY (id_movie)
-    REFERENCES public.movie (id) MATCH SIMPLE
+	REFERENCES public.movie (id) MATCH SIMPLE
     ON UPDATE NO ACTION
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     NOT VALID;
 
 END;
