@@ -90,7 +90,7 @@ function SignUpModal({ isOpen, onClose }) {
             maxLength={64}
             required
           />
-          <label htmlFor="password">password</label>
+          <label htmlFor="password">Salasana</label>
           <input
             id="password"
             name="password"
