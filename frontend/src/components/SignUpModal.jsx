@@ -80,7 +80,7 @@ function SignUpModal({ isOpen, onClose }) {
             maxLength={64}
             required
           />
-          /*Kohdat mihin kirjoitetaan email ja salasana rajoituksineen*/
+          {/* Kohdat mihin kirjoitetaan email ja salasana rajoituksineen */}
           <label htmlFor="email">email</label>
           <input
             id="email"
