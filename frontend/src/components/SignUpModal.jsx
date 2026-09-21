@@ -81,7 +81,7 @@ function SignUpModal({ isOpen, onClose }) {
             required
           />
           {/* Kohdat mihin kirjoitetaan email ja salasana rajoituksineen */}
-          <label htmlFor="email">email</label>
+          <label htmlFor="email">Sähköposti</label>
           <input
             id="email"
             name="email"
