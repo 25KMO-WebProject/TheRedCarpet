@@ -93,7 +93,7 @@ function SignUpModal({ isOpen, onClose }) {
           <label htmlFor="password">Salasana</label>
           <input
             id="password"
-            name="password"
+            name="********"
             type="password"
             placeholder="password"
             minLength={8}
