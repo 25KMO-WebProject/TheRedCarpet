@@ -7,6 +7,8 @@ import accountRouter from "./routes/accountRouter.js";
 import movieRouter from "./routes/movieRouter.js";
 import searchRouter from "./routes/searchRouter.js";
 import favoriteRouter from "./routes/favoriteRouter.js";
+import registerRouter from "./routes/registerRouter.js";
+
 
 const port = process.env.PORT || 3000;
 
@@ -21,6 +23,8 @@ app.use("/", movieRouter);
 app.use("/", accountRouter);
 
 app.use("/tmdb", searchRouter);
+app.use("/movies", movieRouter);
+app.use("/", registerRouter);
 
 app.use("/", favoriteRouter);
 
