@@ -69,7 +69,7 @@ function SignUpModal({ isOpen, onClose }) {
         >
           &times;
         </button>
-        <h2>Title</h2>
+        <h2>Rekistöröityminen</h2>
         <form onSubmit={handleSignUp}>
           <label htmlFor="username">Username</label>
           <input
