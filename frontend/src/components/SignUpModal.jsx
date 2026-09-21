@@ -8,6 +8,18 @@ function SignUpModal({ isOpen, onClose }) {
         onClose();
       }
     }
+        //Kuuntelee, mitä näppäimiä painetaan, esim tuleeko se Esc-näppäin
+    if (isOpen) {
+      document.addEventListener("keydown", handleEsc);
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, onClose]);
+
     //Käsittelee Rekistöröitymisen
     async function handleSignUp(event) {
         event.preventDefault();
@@ -32,32 +44,12 @@ function SignUpModal({ isOpen, onClose }) {
             event.target.reset();
             onClose();
         }
-        catch (error) {console.error('Rekisteröinti epäonnistui:', error); alert(error.message);}
-    //Kuuntelee, mitä näppäimiä painetaan, esim tuleeko se Esc-näppäin
-    if (isOpen) {
-      document.addEventListener("keydown", handleEsc);
-      document.body.style.overflow = "hidden";
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = "";
-    };
-  }, [isOpen, onClose]);
+        catch (error) {console.error('Rekisteröinti epäonnistui:', error); alert(error.message);}}
 
   if (!isOpen) {
     return null;
   }
-  //Käsittelee Rekistöröitymisen
-  async function handleSignUp(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-
-    const username = formData.get("username");
-    const email = formData.get("email");
-    const password = formData.get("password");
-  }
+  
 
   function handleOverlayClick(event) {
     if (event.target == event.currentTarget) {
