@@ -71,7 +71,7 @@ function SignUpModal({ isOpen, onClose }) {
         </button>
         <h2>Rekistöröityminen</h2>
         <form onSubmit={handleSignUp}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Käyttäjänimi</label>
           <input
             id="username"
             name="username"
