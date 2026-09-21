@@ -1,11 +1,11 @@
 import { pool } from "./db.js";
 
-const getAllMovies = async () => {
+const getAllMoviesModel = async () => {
   const result = await pool.query("SELECT * FROM movie");
   return result.rows;
 };
 
-const getMovieByName = async (input) => {
+const getMovieByTitleModel = async (input) => {
   console.log("Searching for:", JSON.stringify(input));
   const result = await pool.query("SELECT * FROM movie WHERE title ILIKE $1", [
     `%${input}%`,
@@ -13,4 +13,4 @@ const getMovieByName = async (input) => {
   return result.rows;
 };
 
-export { getAllMovies, getMovieByName };
+export { getAllMoviesModel, getMovieByTitleModel };
