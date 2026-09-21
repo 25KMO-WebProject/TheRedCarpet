@@ -1,20 +1,22 @@
 import axios from 'axios'
-import { deleteAccount } from '../../../api/models/accountModel';
 
-const DeleteAccountButton = ({ apiUrl, user}) => {
-const deleteAccount = () => {
-    const headers = {
-        headers: {
-            Authorization: `Bearer ${user.token}`
+const DeleteAccountButton = ({ account }) => {
+  const deleteAccount = async () => {
+    try {
+      await axios.delete(
+        `${VITE_API_URL}/accounts/id/:id`,
+        {
+          headers: {
+            Authorization: `Bearer ${account.token}`,
+          },
         }
-    };
+      );
 
-    axios.delete(`${apiUrl}/accounts`, headers)
-    .catch(error => {
-        alert(error.response ? error.response.data.error.message : error)
-      })
+      alert("Tili poistettu");
+    } catch (error) {
+      alert(error.response?.data?.error?.message || error.message);
     }
-
+  };      
 
 return (
      <button type="button" className="delete-account" onClick={deleteAccount}>Poista tili</button>

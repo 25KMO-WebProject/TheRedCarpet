@@ -3,7 +3,7 @@ import SearchBar from './search/SearchBar'
 import { useState } from "react"
 import DeleteAccountButton from "./DeleteAccount"
 
-export default function Navbar({ onSignUpClick, onSignInClick, apiUrl, user, props}) {
+export default function Navbar({ onSignUpClick, onSignInClick, account, props}) {
 
 const [menuOpen, setMenu] = useState(false)
 
@@ -27,7 +27,7 @@ const [menuOpen, setMenu] = useState(false)
         {menuOpen && (
           <div className="dropdown-menu">
             <button>Kirjaudu ulos</button>
-            <DeleteAccountButton apiUrl={apiUrl} user={user} />
+            <DeleteAccountButton account={account} />
           </div>
         )}
       </li>
