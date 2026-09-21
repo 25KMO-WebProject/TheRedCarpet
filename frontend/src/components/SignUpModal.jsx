@@ -60,7 +60,7 @@ function SignUpModal({ isOpen, onClose }) {
   return (
     <div className="overlay-modal" onClick={handleOverlayClick}>
       <section className="SignUp-modal" role="dialog">
-        /*Sulkemis näppäin*/
+        {/* Sulkemis näppäin */}
         <button
           type="button"
           className="close-button"
