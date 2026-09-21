@@ -8,7 +8,7 @@ function SignUpModal({ isOpen, onClose }) {
         onClose();
       }
     }
-    //Kuuntelee, mitä näppäimiä painetaan, esim tuleeko se Esc-näppäin
+        //Kuuntelee, mitä näppäimiä painetaan, esim tuleeko se Esc-näppäin
     if (isOpen) {
       document.addEventListener("keydown", handleEsc);
       document.body.style.overflow = "hidden";
@@ -20,19 +20,36 @@ function SignUpModal({ isOpen, onClose }) {
     };
   }, [isOpen, onClose]);
 
+    //Käsittelee Rekistöröitymisen
+    async function handleSignUp(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        const username = formData.get("username");
+        const email = formData.get("email");
+        const password = formData.get("password");
+
+        try{
+            const reponse = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+            const data = await reponse.json();
+            if (!reponse.ok) { throw new Error(data.message || 'Rekisteröinti ei onnisunut'); }
+            console.log('Rekisteröinti onnistui:', data);
+            event.target.reset();
+            onClose();
+        }
+        catch (error) {console.error('Rekisteröinti epäonnistui:', error); alert(error.message);}}
+
   if (!isOpen) {
     return null;
   }
-  //Käsittelee Rekistöröitymisen
-  async function handleSignUp(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-
-    const username = formData.get("username");
-    const email = formData.get("email");
-    const password = formData.get("password");
-  }
+  
 
   function handleOverlayClick(event) {
     if (event.target == event.currentTarget) {
@@ -43,7 +60,7 @@ function SignUpModal({ isOpen, onClose }) {
   return (
     <div className="overlay-modal" onClick={handleOverlayClick}>
       <section className="SignUp-modal" role="dialog">
-        /*Sulkemis näppäin*/
+        {/* Sulkemis näppäin */}
         <button
           type="button"
           className="close-button"
@@ -52,9 +69,9 @@ function SignUpModal({ isOpen, onClose }) {
         >
           &times;
         </button>
-        <h2>Title</h2>
+        <h2>Rekistöröityminen</h2>
         <form onSubmit={handleSignUp}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Käyttäjänimi</label>
           <input
             id="username"
             name="username"
@@ -63,8 +80,8 @@ function SignUpModal({ isOpen, onClose }) {
             maxLength={64}
             required
           />
-          /*Kohdat mihin kirjoitetaan email ja salasana rajoituksineen*/
-          <label htmlFor="email">email</label>
+          {/* Kohdat mihin kirjoitetaan email ja salasana rajoituksineen */}
+          <label htmlFor="email">Sähköposti</label>
           <input
             id="email"
             name="email"
@@ -73,10 +90,10 @@ function SignUpModal({ isOpen, onClose }) {
             maxLength={64}
             required
           />
-          <label htmlFor="password">password</label>
+          <label htmlFor="password">Salasana</label>
           <input
             id="password"
-            name="password"
+            name="********"
             type="password"
             placeholder="password"
             minLength={8}

@@ -7,7 +7,7 @@ function NowPlaying() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/movies/nowplaying`)
+      .get(`${import.meta.env.VITE_API_URL}/nowplaying`)
       .then((response) => {
         setMovies(response.data);
       });
@@ -15,7 +15,7 @@ function NowPlaying() {
 
   return (
     <main>
-      <h1>Now at Theaters</h1>
+      <h1>Nyt elokuvateattereissa</h1>
 
       <div className="movie-grid">
         {movies.map((movie) => (

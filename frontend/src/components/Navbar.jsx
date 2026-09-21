@@ -1,24 +1,69 @@
 import "./Navbar.css"
 import SearchBar from './search/SearchBar'
 
-export default function Navbar({ onSignUpClick, onSignInClick, props}) {
-
+export default function Navbar({
+  onSignUpClick,
+  onSignInClick,
+  onFavoritesClick,
+  onHomeClick,
+  ...searchProps
+}) {
   return (
     <nav>
       <div className="nav-left">
-        <h1>
-          The<br />RedCarpet
-        </h1>
+        <button
+          type="button"
+          className="brand-button"
+          onClick={onHomeClick}
+        >
+          <h1>
+            The<br />RedCarpet
+          </h1>
+        </button>
 
-        <SearchBar {...props} />
+        <SearchBar {...searchProps} />
       </div>
 
       <ul>
-        <li><a href="#">Ryhmäsivu</a></li>
-        <li><a href="#">Arvostelut</a></li>
-        <li><a href="#">SuosikkiLista</a></li>
-        <li><button type="button" className="signup" onClick={onSignUpClick}>Rekisteröidy</button></li> 
-        <li><button type="button" className="signin" onClick={onSignInClick}>Kirjaudu</button></li>
+        <li>
+          <a href="#">Ryhmäsivu</a>
+        </li>
+
+        <li>
+          <a href="#">Arvostelut</a>
+        </li>
+
+        <li>
+          <a
+            href="#"
+            onClick={(event) => {
+              event.preventDefault()
+              onFavoritesClick()
+            }}
+          >
+            Suosikit
+          </a>
+        </li>
+
+        <li>
+          <button
+            type="button"
+            className="signup"
+            onClick={onSignUpClick}
+          >
+            Rekisteröidy
+          </button>
+        </li>
+
+        <li>
+          <button
+            type="button"
+            className="signin"
+            onClick={onSignInClick}
+          >
+            Kirjaudu
+          </button>
+        </li>
       </ul>
     </nav>
   )

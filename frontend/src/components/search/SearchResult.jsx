@@ -1,8 +1,13 @@
-function SearchResult({ item }) {
+function SearchResult({
+  item,
+  onSelect
+}) {
   const name = item.title || item.name
 
   const year =
-    (item.release_date || item.first_air_date || '')
+    (item.release_date ||
+      item.first_air_date ||
+      '')
       .substring(0, 4)
 
   const type =
@@ -15,11 +20,31 @@ function SearchResult({ item }) {
     : null
 
   const rating = item.vote_average
-    ? (item.vote_average / 2) .toFixed(1)
+    ? (item.vote_average / 2).toFixed(1)
     : null
 
+  const openDetails = () => {
+    onSelect(item)
+  }
+
+  const handleKeyDown = (event) => {
+    if (
+      event.key === 'Enter' ||
+      event.key === ' '
+    ) {
+      event.preventDefault()
+      openDetails()
+    }
+  }
+
   return (
-    <article className="search-result-card">
+    <article
+      className="search-result-card"
+      onClick={openDetails}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex="0"
+    >
       {posterUrl ? (
         <img
           className="search-result-poster"
