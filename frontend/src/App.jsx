@@ -275,6 +275,11 @@ function App() {
       <SignInModal
         isOpen={SignInOpen}
         onClose={() => setSignInOpen(false)}
+        onLogin={(newToken) => {
+          localStorage.setItem('token', newToken)
+          setToken(newToken)
+          setFavorites([])
+        }}
       />
 
       <MediaDetailsModal
