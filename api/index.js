@@ -23,7 +23,7 @@ app.use("/", movieRouter);
 app.use("/", accountRouter);
 
 app.use("/tmdb", searchRouter);
-app.use("/movies", movieRouter);
+app.use("/", movieRouter);
 app.use("/", registerRouter);
 
 app.use("/", favoriteRouter);
