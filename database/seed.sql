@@ -165,19 +165,21 @@ VALUES
 -- FAVOURITE MOVIES
 -- =====================================================
 
+-- Example TMDB favorites for seeded test accounts.
 INSERT INTO public.favourite_movies
 (
     id_account,
-    id_movie
+    tmdb_id,
+    media_type
 )
 VALUES
-(1, 1),
-(1, 2),
-(2, 2),
-(2, 4),
-(3, 3),
-(4, 4),
-(5, 5);
+    (1, 603, 'movie'),
+    (1, 27205, 'movie'),
+    (2, 27205, 'movie'),
+    (2, 157336, 'movie'),
+    (3, 155, 'movie'),
+    (4, 157336, 'movie'),
+    (5, 120, 'movie');
 
 -- =====================================================
 -- REVIEWS

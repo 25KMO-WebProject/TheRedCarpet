@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./SignInModal.css";
 import axios from "axios";
 
-function SignInModal({ isOpen, onClose }) {
+function SignInModal({ isOpen, onClose, onLogin }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -49,9 +49,13 @@ function SignInModal({ isOpen, onClose }) {
         },
       );
 
-      const userData = response.data;
+      // Authentication is handled with the JWT in App.jsx
+      // Storing the full user object in sessionStorage is not currently needed.
+      /* const userData = response.data;
       setUser(userData);
-      sessionStorage.setItem("user", JSON.stringify(userData));
+      sessionStorage.setItem("user", JSON.stringify(userData)); */
+
+      onLogin(response.data.token)
 
       onClose();
     } catch (err) {
