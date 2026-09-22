@@ -93,9 +93,9 @@ function SignUpModal({ isOpen, onClose }) {
           <label htmlFor="password">Salasana</label>
           <input
             id="password"
-            name="********"
+            name="password"
             type="password"
-            placeholder="password"
+            placeholder="********"
             minLength={8}
             maxLength={64}
             pattern="(?=.*[A-Z])(?=.*[0-9]).{8,64}"

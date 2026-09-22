@@ -250,7 +250,7 @@ nav li {
 a {
   font-size: 20px;
   text-decoration: none;
-  color: rgb(245, 237, 237);
+  color: rgb(0, 0, 0);
 }
 a:hover {
   font-weight: bold;
@@ -264,7 +264,7 @@ article div img {
 }
 
 /*Kirjautumis ja rekisteröitymis napit*/
-.signup, .signin {
+.signup, .signin, .profile {
   background-color: grey;
   color: white;
   font-size: 20px;
@@ -284,6 +284,18 @@ article div img {
   line-height: 1;
 }
 
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropdown button {
+  background-color: grey;
+  color: white;
+}
+
 #content section {
   display: flex;
   flex-direction: row;
@@ -294,13 +306,6 @@ article div img {
   display: flex;
   flex-direction: row;
   gap: 20px;
-}
-
-.dropdown-menu {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  align-items: stretch;
 }
 
 /*RESPONSIIVISUUS*/

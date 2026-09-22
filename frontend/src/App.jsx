@@ -23,6 +23,13 @@ function App() {
 
   const [SignUpOpen, setSignUpOpen] = useState(false)
   const [SignInOpen, setSignInOpen] = useState(false)
+  const [account, setAccount] = useState(null);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    setAccount(null)
+    setToken(null)
+  }
 
   // Favorites use the token for authenticated API requests.
   const [token, setToken] = useState(
@@ -226,8 +233,10 @@ function App() {
           setCurrentView('home')
         }}
 
+        account={account}
         onSignUpClick={() => setSignUpOpen(true)}
         onSignInClick={() => setSignInOpen(true)}
+        onLogout={handleLogout}
       />
 
       {currentView === 'favorites' ? (
@@ -278,6 +287,10 @@ function App() {
         onLogin={(newToken) => {
           localStorage.setItem('token', newToken)
           setToken(newToken)
+          setAccount({ 
+            id: response.data.id,
+            token: newToken
+          })
           setFavorites([])
         }}
       />

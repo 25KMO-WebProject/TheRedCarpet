@@ -4,7 +4,7 @@ const DeleteAccountButton = ({ account }) => {
   const deleteAccount = async () => {
     try {
       await axios.delete(
-        `${VITE_API_URL}/accounts/id/:id`,
+        `${import.meta.env.VITE_API_URL}/accounts/id/${account.id}`,
         {
           headers: {
             Authorization: `Bearer ${account.token}`,

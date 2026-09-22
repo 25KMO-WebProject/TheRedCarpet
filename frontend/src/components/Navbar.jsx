@@ -1,17 +1,19 @@
+import DeleteAccountButton from "./DeleteAccount"
 import "./Navbar.css"
 import SearchBar from './search/SearchBar'
 import { useState } from "react"
-import DeleteAccountButton from "./DeleteAccount"
 
-export default function Navbar({ onSignUpClick, onSignInClick, account, props}) {
 
 export default function Navbar({
   onSignUpClick,
   onSignInClick,
   onFavoritesClick,
   onHomeClick,
+  account,
+  onLogout,
   ...searchProps
 }) {
+  const [menuOpen, setMenu] = useState(false)
   return (
     <nav>
       <div className="nav-left">
@@ -48,7 +50,8 @@ export default function Navbar({
             Suosikit
           </a>
         </li>
-
+        {!account && ( 
+        <>
         <li>
           <button
             type="button"
@@ -68,6 +71,23 @@ export default function Navbar({
             Kirjaudu
           </button>
         </li>
+        </>
+        )}
+        {account && (
+          <li>
+            <button type="button" className="profile" onClick={() => setMenu(!menuOpen)}>
+              Profiili
+            </button>
+            {menuOpen && (
+              <div className="dropdown">
+                <button type="button" onClick={onLogout}>
+                  Kirjaudu ulos
+                </button>
+                <DeleteAccountButton account={account} />
+              </div>
+            )}
+          </li>
+        )}
       </ul>
     </nav>
   )
