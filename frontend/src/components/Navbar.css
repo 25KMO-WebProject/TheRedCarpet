@@ -250,7 +250,7 @@ nav li {
 a {
   font-size: 20px;
   text-decoration: none;
-  color: black;
+  color: rgb(0, 0, 0);
 }
 a:hover {
   font-weight: bold;
@@ -264,7 +264,7 @@ article div img {
 }
 
 /*Kirjautumis ja rekisteröitymis napit*/
-.signup, .signin {
+.signup, .signin, .profile {
   background-color: grey;
   color: white;
   font-size: 20px;
@@ -282,6 +282,18 @@ article div img {
   border: none;
   border-radius: 5px;
   line-height: 1;
+}
+
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropdown button {
+  background-color: grey;
+  color: white;
 }
 
 #content section {
