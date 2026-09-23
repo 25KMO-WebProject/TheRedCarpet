@@ -213,6 +213,8 @@ function App() {
     }
   }
 
+  console.log("App: ", account)
+
   return (
     <>
       <Navbar
@@ -284,12 +286,12 @@ function App() {
       <SignInModal
         isOpen={SignInOpen}
         onClose={() => setSignInOpen(false)}
-        onLogin={(newToken) => {
-          localStorage.setItem('token', newToken)
-          setToken(newToken)
+        onLogin={(data) => {
+          localStorage.setItem('token', data.token)
+          setToken(data.token)
           setAccount({ 
-            id: response.data.id,
-            token: newToken
+            id: data.id,
+            token: data.token
           })
           setFavorites([])
         }}

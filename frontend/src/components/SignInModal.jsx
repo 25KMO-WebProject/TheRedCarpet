@@ -55,7 +55,7 @@ function SignInModal({ isOpen, onClose, onLogin }) {
       setUser(userData);
       sessionStorage.setItem("user", JSON.stringify(userData)); */
 
-      onLogin(response.data.token)
+      onLogin(response.data)
 
       onClose();
     } catch (err) {
