@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const DeleteAccountButton = ({ account }) => {
+const DeleteAccountButton = ({ account, onLogout }) => {
   const deleteAccount = async () => {
     try {
       await axios.delete(
@@ -13,6 +13,7 @@ const DeleteAccountButton = ({ account }) => {
       );
 
       alert("Tili poistettu");
+      onLogout()
     } catch (error) {
       alert(error.response?.data?.error?.message || error.message);
     }

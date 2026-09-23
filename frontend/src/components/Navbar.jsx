@@ -84,7 +84,7 @@ export default function Navbar({
                 <button type="button" onClick={onLogout}>
                   Kirjaudu ulos
                 </button>
-                <DeleteAccountButton account={account} />
+                <DeleteAccountButton account={account} onLogout={onLogout} />
               </div>
             )}
           </li>

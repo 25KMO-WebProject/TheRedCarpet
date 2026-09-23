@@ -103,7 +103,7 @@ function SignUpModal({ isOpen, onClose }) {
             required
           />
           <button type="submit" className="submit">
-            Register
+            Rekisteröidy
           </button>
         </form>
       </section>
