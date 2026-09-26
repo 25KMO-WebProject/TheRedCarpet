@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Link } from 'react-router-dom'
 
 
+
 export default function Navbar({
   onSignUpClick,
   onSignInClick,
@@ -34,7 +35,17 @@ export default function Navbar({
 
       <ul>
         <Link to="/">Etusivu</Link>
-        <Link to="/groups">Ryhmäsivu</Link>
+        <Link 
+            to={account ? "/groups" : "#"}
+            onClick={ (event) => {
+              if (!account) {
+                event.preventDefault()
+                onSignInClick()
+                }
+              }}
+            >
+        
+        Ryhmäsivu</Link>
         <li>
           <a
             href="#"
