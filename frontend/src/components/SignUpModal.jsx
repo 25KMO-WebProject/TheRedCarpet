@@ -50,15 +50,9 @@ function SignUpModal({ isOpen, onClose }) {
     return null;
   }
   
-
-  function handleOverlayClick(event) {
-    if (event.target == event.currentTarget) {
-      onClose();
-    }
-  }
   //Itse etusivu näkymä
   return (
-    <div className="overlay-modal" onClick={handleOverlayClick}>
+    <div className="overlay-modal">
       <section className="SignUp-modal" role="dialog">
         {/* Sulkemis näppäin */}
         <button
