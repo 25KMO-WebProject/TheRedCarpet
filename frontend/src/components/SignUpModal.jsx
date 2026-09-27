@@ -60,7 +60,7 @@ function SignUpModal({ isOpen, onClose }) {
   return (
     <div className="overlay-modal" onClick={handleOverlayClick}>
       <section className="SignUp-modal" role="dialog">
-        /*Sulkemis näppäin*/
+        {/* Sulkemis näppäin */}
         <button
           type="button"
           className="close-button"
@@ -69,9 +69,9 @@ function SignUpModal({ isOpen, onClose }) {
         >
           &times;
         </button>
-        <h2>Title</h2>
+        <h2>Rekistöröityminen</h2>
         <form onSubmit={handleSignUp}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Käyttäjänimi</label>
           <input
             id="username"
             name="username"
@@ -80,8 +80,8 @@ function SignUpModal({ isOpen, onClose }) {
             maxLength={64}
             required
           />
-          /*Kohdat mihin kirjoitetaan email ja salasana rajoituksineen*/
-          <label htmlFor="email">email</label>
+          {/* Kohdat mihin kirjoitetaan email ja salasana rajoituksineen */}
+          <label htmlFor="email">Sähköposti</label>
           <input
             id="email"
             name="email"
@@ -90,10 +90,10 @@ function SignUpModal({ isOpen, onClose }) {
             maxLength={64}
             required
           />
-          <label htmlFor="password">password</label>
+          <label htmlFor="password">Salasana</label>
           <input
             id="password"
-            name="password"
+            name="********"
             type="password"
             placeholder="password"
             minLength={8}
