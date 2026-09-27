@@ -8,6 +8,8 @@ import MediaDetailsModal from './components/search/MediaDetailsModal'
 import FavoritesPage from './components/favorites/FavoritesPage.jsx'
 import SignUpModal from "./components/SignUpModal.jsx"
 import SignInModal from "./components/SignInModal.jsx"
+import {BrowserRouter, Routes, Route } from "react-router-dom"
+import Groups from "./components/Groups.jsx"
 
 function App() {
   const [query, setQuery] = useState('')
@@ -217,6 +219,7 @@ function App() {
 
   return (
     <>
+      <BrowserRouter>
       <Navbar
         query={query}
         setQuery={setQuery}
@@ -240,6 +243,11 @@ function App() {
         onSignInClick={() => setSignInOpen(true)}
         onLogout={handleLogout}
       />
+      <Routes>
+        <Route path="/" element={<NowPlaying />} />
+        <Route path="/groups" element={<Groups/>}/>
+      </Routes>
+      </BrowserRouter>
 
       {currentView === 'favorites' ? (
         <FavoritesPage
@@ -273,8 +281,6 @@ function App() {
                 <p>Hakutuloksia ei löytynyt.</p>
               )}
           </section>
-
-          <NowPlaying />
         </main>
       )}
 
