@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS public.account
     username character varying(16) NOT NULL,
     email character varying(64) NOT NULL,
     password character varying(64) NOT NULL,
+    favorites_share_token character varying(36) UNIQUE,
     PRIMARY KEY (id),
     UNIQUE (id),
 	UNIQUE (username)

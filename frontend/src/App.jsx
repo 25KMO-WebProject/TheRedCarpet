@@ -8,6 +8,14 @@ import MediaDetailsModal from './components/search/MediaDetailsModal'
 import FavoritesPage from './components/favorites/FavoritesPage.jsx'
 import SignUpModal from "./components/SignUpModal.jsx"
 import SignInModal from "./components/SignInModal.jsx"
+import SharedFavoritesPage from './components/favorites/SharedFavoritesPage.jsx'
+import {
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+  createFavoritesShare,
+  getSharedFavorites
+} from './services/favoritesApi.js'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -28,6 +36,8 @@ function App() {
   const [token, setToken] = useState(
     () => localStorage.getItem('token')
   )
+
+  const [sharedFavorites, setSharedFavorites] = useState([])
 
   const [favorites, setFavorites] = useState([])
 
@@ -77,8 +87,30 @@ function App() {
     }
   }
 
+  // Favorites API stores only TMDB ids and media types.
+  // This function loads the full movie/TV details from TMDB.
+  const loadFavoriteDetails = async (favoriteRows) => {
+    const details = await Promise.all(
+      favoriteRows.map(async (favorite) => {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/tmdb/details/${favorite.media_type}/${favorite.tmdb_id}`
+        )
+
+        if (!response.ok) {
+          return null
+        }
+
+        return response.json()
+      })
+    )
+    return details.filter(Boolean)
+  }
+
   // Load the user's favorite IDs from our API and fetch
   // the corresponding movie/TV details
+  // Load the authenticated user's favorites.
+  // First get the saved TMDB ids from our backend,
+  // then load the full movie/TV details.
   const loadFavorites = async () => {
     if (!token) {
       setFavorites([])
@@ -86,38 +118,12 @@ function App() {
     }
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/favorites`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      )
+      const favoriteRows = await getFavorites(token)
 
-      if (!response.ok) {
-        throw new Error('Suosikkien hakeminen epäonnistui')
-      }
+      const favoriteDetails =
+        await loadFavoriteDetails(favoriteRows)
 
-      const favoriteRows = await response.json()
-
-      const favoriteDetails = await Promise.all(
-        favoriteRows.map(async (favorite) => {
-          const detailsResponse = await fetch(
-            `${import.meta.env.VITE_API_URL}/tmdb/details/${favorite.media_type}/${favorite.tmdb_id}`
-          )
-
-          if (!detailsResponse.ok) {
-            return null
-          }
-
-          return detailsResponse.json()
-        })
-      )
-
-      setFavorites(
-        favoriteDetails.filter(Boolean)
-      )
+      setFavorites(favoriteDetails)
     } catch (error) {
       console.error(error)
       setFavorites([])
@@ -143,7 +149,7 @@ function App() {
     )
   }
 
-  // Add or remove a favorite
+  // Add or remove the selected movie/TV show from favorites.
   const toggleFavorite = async (item) => {
     if (!token || !item) {
       return
@@ -153,19 +159,7 @@ function App() {
 
     try {
       if (alreadyFavorite) {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/favorites/${item.media_type}/${item.id}`,
-          {
-            method: 'DELETE',
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        )
-
-        if (!response.ok) {
-          throw new Error('Suosikin poistaminen epäonnistui')
-        }
+        await removeFavorite(token, item)
 
         setFavorites(current =>
           current.filter(
@@ -177,24 +171,7 @@ function App() {
           )
         )
       } else {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/favorites`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              tmdbId: item.id,
-              mediaType: item.media_type
-            })
-          }
-        )
-
-        if (!response.ok) {
-          throw new Error('Suosikin lisääminen epäonnistui')
-        }
+        await addFavorite(token, item)
 
         setFavorites(current => [
           ...current,
@@ -205,6 +182,65 @@ function App() {
       console.error(error)
     }
   }
+
+  // Create a public share link and copy it to the clipboard.
+  // Returns true when the link was copied, otherwise false,
+  // so the share button knows whether to show a success message.
+  const shareFavorites = async () => {
+    if (!token) {
+      return false
+    }
+
+    try {
+      const data =
+        await createFavoritesShare(token)
+
+      const shareUrl =
+        `${window.location.origin}/?sharedFavorites=${data.shareToken}`
+
+      await navigator.clipboard.writeText(
+        shareUrl
+      )
+
+      return true
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
+
+  const sharedFavoritesToken =
+    new URLSearchParams(
+      window.location.search
+    ).get('sharedFavorites')
+
+  // Load a public favorites list using its share token.
+  const loadSharedFavorites = async () => {
+    if (!sharedFavoritesToken) {
+      return
+    }
+
+    try {
+      const favoriteRows =
+        await getSharedFavorites(
+          sharedFavoritesToken
+        )
+
+      const favoriteDetails =
+        await loadFavoriteDetails(favoriteRows)
+
+      setSharedFavorites(favoriteDetails)
+    } catch (error) {
+      console.error(error)
+      setSharedFavorites([])
+    }
+  }
+
+  useEffect(() => {
+    if (sharedFavoritesToken) {
+      loadSharedFavorites()
+    }
+  }, [])
 
   return (
     <>
@@ -230,11 +266,17 @@ function App() {
         onSignInClick={() => setSignInOpen(true)}
       />
 
-      {currentView === 'favorites' ? (
+      {sharedFavoritesToken ? (
+        <SharedFavoritesPage
+          favorites={sharedFavorites}
+          onMediaSelect={setSelectedMedia}
+        />
+      ) : currentView === 'favorites' ? (
         <FavoritesPage
           isAuthenticated={isAuthenticated}
           favorites={favorites}
           onMediaSelect={setSelectedMedia}
+          onShare={shareFavorites}
         />
       ) : (
         <main className="main-content">

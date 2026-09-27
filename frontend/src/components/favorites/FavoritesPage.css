@@ -109,3 +109,34 @@
 .favorites-empty button:hover {
   background: #333;
 }
+
+/* Heading on the left, share button on the right. */
+.favorites-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  margin-bottom: 30px;
+}
+
+/*
+  A global h1 rule (NowPlaying.css) gives every h1 a bottom
+  margin, which would push the button out of line with the
+  heading. The header's own margin-bottom is used instead.
+*/
+.favorites-header h1 {
+  margin: 0;
+}
+
+.share-favorites-button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.share-favorites-button:disabled {
+  opacity: 0.7;
+  cursor: default;
+  border-color: transparent;
+}
