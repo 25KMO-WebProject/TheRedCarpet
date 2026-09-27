@@ -2,6 +2,8 @@ import DeleteAccountButton from "./DeleteAccount"
 import "./Navbar.css"
 import SearchBar from './search/SearchBar'
 import { useState } from "react"
+import { Link } from 'react-router-dom'
+
 
 
 export default function Navbar({
@@ -32,14 +34,18 @@ export default function Navbar({
       </div>
 
       <ul>
-        <li>
-          <a href="#">Ryhmäsivu</a>
-        </li>
-
-        <li>
-          <a href="#">Arvostelut</a>
-        </li>
-
+        <Link to="/">Etusivu</Link>
+        <Link 
+            to={account ? "/groups" : "#"}
+            onClick={ (event) => {
+              if (!account) {
+                event.preventDefault()
+                onSignInClick()
+                }
+              }}
+            >
+        
+        Ryhmäsivu</Link>
         <li>
           <a
             href="#"
