@@ -28,9 +28,9 @@ const getAccountFromIdController = async (req, res, next) => {
 
 const deleteAccountController = async (req, res, next) => {
   try {
-    const { id } = req.user; //Pittää muuttaa aukentoinin tullessa
-    const result = await deleteAccountModel(id);
-    console.log(`Delete account with id: ${id}`);
+    const  id  = req.params.id
+    const result = await deleteAccountModel(id)
+    console.log(`Delete account with id: ${id}`)
 
     if (result.rowCount === 0) {
       const error = new Error("No account found");
