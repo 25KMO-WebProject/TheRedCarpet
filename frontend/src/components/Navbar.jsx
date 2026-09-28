@@ -34,7 +34,12 @@ export default function Navbar({
       </div>
 
       <ul>
-        <Link to="/">Etusivu</Link>
+        <Link
+          to="/"
+          onClick={onHomeClick}
+        >
+          Etusivu
+        </Link>
         <Link 
             to={account ? "/groups" : "#"}
             onClick={ (event) => {
@@ -47,15 +52,12 @@ export default function Navbar({
         
         Ryhmäsivu</Link>
         <li>
-          <a
-            href="#"
-            onClick={(event) => {
-              event.preventDefault()
-              onFavoritesClick()
-            }}
+          <Link
+            to="/"
+            onClick={onFavoritesClick}
           >
             Suosikit
-          </a>
+          </Link>
         </li>
         {!account && ( 
         <>

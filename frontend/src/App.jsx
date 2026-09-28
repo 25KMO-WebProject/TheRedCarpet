@@ -255,75 +255,85 @@ function App() {
   return (
     <>
       <BrowserRouter>
-      <Navbar
-        query={query}
-        setQuery={setQuery}
-        type={type}
-        setType={setType}
-        year={year}
-        setYear={setYear}
-        onSearch={searchMovies}
-        clearResults={clearSearchResults}
+        <Navbar
+          query={query}
+          setQuery={setQuery}
+          type={type}
+          setType={setType}
+          year={year}
+          setYear={setYear}
+          onSearch={searchMovies}
+          clearResults={clearSearchResults}
 
-        onFavoritesClick={() => {
-          setCurrentView('favorites')
-        }}
+          onFavoritesClick={() => {
+            setCurrentView('favorites')
+          }}
 
-        onHomeClick={() => {
-          setCurrentView('home')
-        }}
+          onHomeClick={() => {
+            setCurrentView('home')
+          }}
 
-        account={account}
-        onSignUpClick={() => setSignUpOpen(true)}
-        onSignInClick={() => setSignInOpen(true)}
-        onLogout={handleLogout}
-      />
-      <Routes>
-        <Route path="/" element={<NowPlaying />} />
-        <Route path="/groups" element={<Groups/>}/>
-      </Routes>
-      </BrowserRouter>
-
-      {sharedFavoritesToken ? (
-        <SharedFavoritesPage
-          favorites={sharedFavorites}
-          onMediaSelect={setSelectedMedia}
+          account={account}
+          onSignUpClick={() => setSignUpOpen(true)}
+          onSignInClick={() => setSignInOpen(true)}
+          onLogout={handleLogout}
         />
-      ) : currentView === 'favorites' ? (
-        <FavoritesPage
-          isAuthenticated={isAuthenticated}
-          favorites={favorites}
-          onMediaSelect={setSelectedMedia}
-          onShare={shareFavorites}
-        />
-      ) : (
-        <main className="main-content">
-          <section className="search-results">
-            {searchLoading && (
-              <p>Haetaan...</p>
-            )}
 
-            {!searchLoading && movies.length > 0 && (
-              <>
-                <h2>
-                  Hakutulokset haulle "{query}" ({movies.length})
-                </h2>
-
-                <SearchResults
-                  results={movies}
-                  onSelect={setSelectedMedia}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              sharedFavoritesToken ? (
+                <SharedFavoritesPage
+                  favorites={sharedFavorites}
+                  onMediaSelect={setSelectedMedia}
                 />
-              </>
-            )}
+              ) : currentView === 'favorites' ? (
+                <FavoritesPage
+                  isAuthenticated={isAuthenticated}
+                  favorites={favorites}
+                  onMediaSelect={setSelectedMedia}
+                  onShare={shareFavorites}
+                />
+              ) : (
+                <main className="main-content">
+                  <section className="search-results">
+                    {searchLoading && (
+                      <p>Haetaan...</p>
+                    )}
 
-            {!searchLoading &&
-              hasSearched &&
-              movies.length === 0 && (
-                <p>Hakutuloksia ei löytynyt.</p>
-              )}
-          </section>
-        </main>
-      )}
+                    {!searchLoading && movies.length > 0 && (
+                      <>
+                        <h2>
+                          Hakutulokset haulle "{query}" ({movies.length})
+                        </h2>
+
+                        <SearchResults
+                          results={movies}
+                          onSelect={setSelectedMedia}
+                        />
+                      </>
+                    )}
+
+                    {!searchLoading &&
+                      hasSearched &&
+                      movies.length === 0 && (
+                        <p>Hakutuloksia ei löytynyt.</p>
+                      )}
+                  </section>
+
+                  <NowPlaying />
+                </main>
+              )
+            }
+          />
+
+          <Route
+            path="/groups"
+            element={<Groups />}
+          />
+        </Routes>
+      </BrowserRouter>
 
       <SignUpModal
         isOpen={SignUpOpen}
