@@ -10,6 +10,9 @@
   margin-bottom: 30px;
 }
 
+
+/* Empty favorites state */
+
 .favorites-empty {
   max-width: 520px;
 
@@ -39,17 +42,33 @@
   margin-bottom: 24px;
 
   line-height: 1.5;
-  color: #bbb;
+  color: #d0d0d0;
 }
 
 .favorites-empty button {
   padding: 10px 20px;
 
-  cursor: pointer;
+  color: #f2f2f2;
+  background: transparent;
 
-  border: 1px solid #666;
+  border: 1px solid #777;
   border-radius: 6px;
+
+  cursor: pointer;
 }
+
+.favorites-empty button:hover {
+  background: #333;
+}
+
+.favorites-empty,
+.favorites-empty h2,
+.favorites-empty .favorites-heart {
+  color: #f2f2f2;
+}
+
+
+/* Favorites grid */
 
 .favorites-grid {
   display: grid;
@@ -60,6 +79,9 @@
   gap: 24px;
 }
 
+
+/* One favorite movie / TV card */
+
 .favorite-card {
   padding: 0;
 
@@ -68,11 +90,21 @@
   text-align: left;
 
   background: #202020;
+  color: #f2f2f2;
 
   border: 1px solid #555;
   border-radius: 10px;
 
   cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.favorite-card:hover {
+  transform: translateY(-2px);
+  border-color: #777;
 }
 
 .favorite-card img {
@@ -88,24 +120,71 @@
   padding: 14px;
 }
 
-.favorites-empty,
-.favorites-empty h2,
-.favorites-empty p,
-.favorites-empty .favorites-heart {
+.favorite-card strong {
   color: #f2f2f2;
+
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.favorites-empty p {
-  color: #d0d0d0;
+
+/* Heading on the left, share button on the right */
+
+.favorites-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  margin-bottom: 30px;
 }
 
-.favorites-empty button {
-  color: #f2f2f2;
-  background: transparent;
-
-  border: 1px solid #777;
+/*
+  A global h1 rule gives headings a bottom margin.
+  The favorites header handles its own spacing instead.
+*/
+.favorites-header h1 {
+  margin: 0;
 }
 
-.favorites-empty button:hover {
-  background: #333;
+
+/* Share favorites button */
+
+.share-favorites-button {
+  flex-shrink: 0;
+
+  width: auto;
+  height: auto;
+
+  padding: 10px 16px;
+
+  background: #6f7478;
+  color: #ffffff;
+
+  border: 1px solid #6f7478;
+  border-radius: 6px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.share-favorites-button:hover:not(:disabled) {
+  background: #5f6468;
+  border-color: #5f6468;
+}
+
+.share-favorites-button:disabled {
+  opacity: 0.7;
+
+  cursor: default;
+
+  border-color: transparent;
 }

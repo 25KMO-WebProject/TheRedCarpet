@@ -70,8 +70,51 @@ const deleteFavoriteModel = async (
   return result.rows[0] || null;
 };
 
+// Save a share token for the account
+const saveShareTokenModel = async (
+  accountId,
+  shareToken,
+) => {
+  const result = await pool.query(
+    `
+      UPDATE account
+      SET favorites_share_token = $1
+      WHERE id = $2
+      RETURNING favorites_share_token
+    `,
+    [shareToken, accountId],
+  );
+
+  return result.rows[0];
+};
+
+// Fetch shared favorites using a share token
+const getSharedFavoritesModel = async (
+  shareToken,
+) => {
+  const result = await pool.query(
+    `
+      SELECT
+        fm.tmdb_id,
+        fm.media_type,
+        fm.created_at,
+        a.username
+      FROM favourite_movies fm
+      JOIN account a
+        ON a.id = fm.id_account
+      WHERE a.favorites_share_token = $1
+      ORDER BY fm.created_at DESC
+    `,
+    [shareToken],
+  );
+
+  return result.rows;
+};
+
 export {
   getFavoritesModel,
   addFavoriteModel,
   deleteFavoriteModel,
+  saveShareTokenModel,
+  getSharedFavoritesModel,
 };

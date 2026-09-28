@@ -2,7 +2,10 @@ import {
   getFavoritesModel,
   addFavoriteModel,
   deleteFavoriteModel,
+  saveShareTokenModel,
+  getSharedFavoritesModel,
 } from "../models/favoriteModel.js";
+import { randomUUID } from "crypto";
 
 // User id comes from the verified JWT token
 const getFavoritesController = async (
@@ -114,8 +117,62 @@ const deleteFavoriteController = async (
   }
 };
 
+// Create a share link for the authenticated user's favorites.
+const createFavoriteShareController = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const accountId = req.user.userId;
+
+    const shareToken = randomUUID();
+
+    await saveShareTokenModel(
+      accountId,
+      shareToken,
+    );
+
+    return res.status(200).json({
+      shareToken,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+
+// Public endpoint for viewing a shared favorites list.
+const getSharedFavoritesController = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const favorites =
+      await getSharedFavoritesModel(
+        req.params.shareToken,
+      );
+
+    if (favorites.length === 0) {
+      const error = new Error(
+        "Shared favorites not found",
+      );
+
+      error.status = 404;
+      return next(error);
+    }
+
+    return res.status(200).json(favorites);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export {
   getFavoritesController,
   addFavoriteController,
   deleteFavoriteController,
+  createFavoriteShareController,
+  getSharedFavoritesController,
 };
