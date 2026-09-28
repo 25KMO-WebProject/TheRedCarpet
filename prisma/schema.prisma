@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model account {
+  id               Int                @id @default(autoincrement())
+  username         String             @unique @db.VarChar(16)
+  email            String             @db.VarChar(64)
+  password         String             @db.VarChar(64)
+  favourite_movies favourite_movies[]
+  group            group[]
+  join_request     join_request[]
+  member_list      member_list[]
+  review           review[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model favourite_movies {
+  id_account Int
+  tmdb_id    Int
+  media_type String   @db.VarChar(5)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  account    account  @relation(fields: [id_account], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "favourite_movies_account_fk")
+
+  @@id([id_account, tmdb_id, media_type], map: "favourite_movies_pk")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model group {
+  id            Int            @id @default(autoincrement())
+  id_owner      Int
+  group_name    String         @db.VarChar(64)
+  group_descr   String?        @db.VarChar(255)
+  creation_date DateTime       @db.Timestamptz(6)
+  account       account        @relation(fields: [id_owner], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  join_request  join_request[]
+  member_list   member_list[]
+
+  @@unique([group_name, id_owner])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model join_request {
+  id_group   Int
+  id_account Int
+  status     String  @db.VarChar(8)
+  account    account @relation(fields: [id_account], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  group      group   @relation(fields: [id_group], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_group, id_account])
+}
+
+model member_list {
+  id_group   Int
+  id_account Int
+  join_date  DateTime? @db.Timestamptz(6)
+  account    account   @relation(fields: [id_account], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  group      group     @relation(fields: [id_group], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_account, id_group])
+}
+
+model movie {
+  id           Int                     @id @default(autoincrement())
+  title        String                  @db.VarChar(255)
+  description  String?
+  duration     Unsupported("interval")
+  genre        String[]                @db.VarChar(255)
+  release_date DateTime?               @db.Date
+  review       review[]
+}
+
+model review {
+  id_account  Int
+  id_movie    Int
+  rating      Int      @db.SmallInt
+  description String   @db.VarChar(512)
+  date        DateTime @db.Timestamptz(6)
+  account     account  @relation(fields: [id_account], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  movie       movie    @relation(fields: [id_movie], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_account, id_movie])
+}
