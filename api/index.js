@@ -8,6 +8,7 @@ import movieRouter from "./routes/movieRouter.js";
 import searchRouter from "./routes/searchRouter.js";
 import favoriteRouter from "./routes/favoriteRouter.js";
 import registerRouter from "./routes/registerRouter.js";
+import reviewRouter from "./routes/reviewRouter.js";
 import groupRouter from "./routes/groupRouter.js";
 
 
@@ -28,6 +29,7 @@ app.use("/", movieRouter);
 app.use("/", registerRouter);
 
 app.use("/", favoriteRouter);
+app.use("/", reviewRouter);
 
 app.use("/", groupRouter);
 
