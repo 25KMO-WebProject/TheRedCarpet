@@ -16,6 +16,8 @@ import {
   createFavoritesShare,
   getSharedFavorites
 } from './services/favoritesApi.js'
+import {BrowserRouter, Routes, Route } from "react-router-dom"
+import Groups from "./components/Groups.jsx"
 
 function App() {
   const [query, setQuery] = useState('')
@@ -252,6 +254,7 @@ function App() {
 
   return (
     <>
+      <BrowserRouter>
       <Navbar
         query={query}
         setQuery={setQuery}
@@ -275,6 +278,11 @@ function App() {
         onSignInClick={() => setSignInOpen(true)}
         onLogout={handleLogout}
       />
+      <Routes>
+        <Route path="/" element={<NowPlaying />} />
+        <Route path="/groups" element={<Groups/>}/>
+      </Routes>
+      </BrowserRouter>
 
       {sharedFavoritesToken ? (
         <SharedFavoritesPage
@@ -314,8 +322,6 @@ function App() {
                 <p>Hakutuloksia ei löytynyt.</p>
               )}
           </section>
-
-          <NowPlaying />
         </main>
       )}
 

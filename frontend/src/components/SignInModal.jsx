@@ -70,20 +70,13 @@ function SignInModal({ isOpen, onClose, onLogin }) {
       setLoading(false);
     }
   }
-  //Käsitelle mitä käyttäjä painaa
-  function handleOverlayClick(event) {
-    if (event.target == event.currentTarget) {
-      onClose();
-    }
-  }
-
   function clearError() {
     setError("");
   }
 
   //Itse etusivu näkymä
   return (
-    <div className="overlay-modal" onClick={handleOverlayClick}>
+    <div className="overlay-modal">
       <section className="SignUp-modal" role="dialog">
         {/*Sulkemis näppäin*/}
         <button
