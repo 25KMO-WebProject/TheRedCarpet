@@ -346,6 +346,10 @@ function App() {
       <SignUpModal
         isOpen={SignUpOpen}
         onClose={() => setSignUpOpen(false)}
+        onSuccess={() => {
+          setSignUpOpen(false)
+          setSignInOpen(true)
+        }}
       />
 
       <SignInModal
