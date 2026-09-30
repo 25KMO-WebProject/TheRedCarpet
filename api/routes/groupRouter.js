@@ -5,7 +5,10 @@ import {
     getGroupFromIdController,
     getMembersFromGroupIdController,
     getCountofmembersController,
-    createGroupController
+    getAllJoinRequestsController,
+    createGroupController,
+    deleteGroupController,
+    createJoinRequestController,
 } from "../controllers/groupController.js"
 
 const router = Router();
@@ -60,6 +63,9 @@ router.get("/groups", getAllGroupsController);
 router.get("/groups/id/:id", getGroupFromIdController);
 router.get("/groups/members/id/:id", getMembersFromGroupIdController)
 router.get("/groups/:id/member-count", getCountofmembersController)
+router.get("/join-requests", getAllJoinRequestsController)
 router.post("/groups", requireAuth, createGroupController);
+router.post("/groups/:id/join-requests", requireAuth, createJoinRequestController)
+router.delete("/groups/id/:id", requireAuth, deleteGroupController)
 
 export default router;

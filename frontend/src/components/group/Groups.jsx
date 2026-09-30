@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import axios from "axios";
 import "./Groups.css"
 import CreategroupModal from "./GroupCreate";
+import Join_Request from "./GroupJoin";
 
 export default function Groups() {
     
@@ -58,7 +59,7 @@ export default function Groups() {
                     <h2>{group.group_name}</h2>
                     <p>{group.group_descr}</p>
                     <span>Jäseniä: {group.member_count}</span>
-                    <button type="button" className="join_button">Liity</button>
+                    <Join_Request idgroup={group.id}/>
                 </div>
             </article>
             ))}
