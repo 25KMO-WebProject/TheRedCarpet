@@ -92,6 +92,7 @@ function ConfirmCredentialsModal({
             name="identifier"
             type="text"
             placeholder="Sähköposti / Käyttäjänimi"
+            autoFocus
             required
           />
 

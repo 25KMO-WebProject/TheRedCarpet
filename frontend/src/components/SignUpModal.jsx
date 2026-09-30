@@ -81,6 +81,7 @@ function SignUpModal({
             type="text"
             placeholder="test"
             maxLength={64}
+            autoFocus
             required
           />
           {/* Kohdat mihin kirjoitetaan email ja salasana rajoituksineen */}

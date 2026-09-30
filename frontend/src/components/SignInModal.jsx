@@ -97,6 +97,7 @@ function SignInModal({ isOpen, onClose, onLogin }) {
             type="text"
             placeholder="Sähköposti / Käyttäjänimi"
             onFocus={clearError}
+            autoFocus
             required
           />
           <label htmlFor="signin-password">Salasana</label>
