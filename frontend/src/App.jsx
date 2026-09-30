@@ -17,7 +17,7 @@ import {
   getSharedFavorites
 } from './services/favoritesApi.js'
 import {BrowserRouter, Routes, Route } from "react-router-dom"
-import Groups from "./components/Groups.jsx"
+import Groups from "./components/group/Groups.jsx"
 
 function App() {
   const [query, setQuery] = useState('')
