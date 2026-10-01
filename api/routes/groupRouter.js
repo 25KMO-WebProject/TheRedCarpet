@@ -15,7 +15,6 @@ const router = Router();
 
 const requireAuth = (req, res, next) => {
     const authorization = req.headers.authorization;
-
     if (
         !authorization ||
         !authorization.startsWith("Bearer ")
@@ -59,7 +58,7 @@ const requireAuth = (req, res, next) => {
 };
 
 
-router.get("/groups", getAllGroupsController);
+router.get("/groups", requireAuth, getAllGroupsController);
 router.get("/groups/id/:id", getGroupFromIdController);
 router.get("/groups/members/id/:id", getMembersFromGroupIdController)
 router.get("/groups/:id/member-count", getCountofmembersController)

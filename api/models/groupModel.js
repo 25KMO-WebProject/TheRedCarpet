@@ -1,18 +1,31 @@
 import { pool } from "./db.js";
 
-const getAllGroupsModel = async () => {
+const getAllGroupsModel = async (idaccount) => {
     const result = await pool.query(
-        `SELECT "group".*,
+        `SELECT 
+            "group".*,
         (
             SELECT COUNT(*) 
             FROM member_list
             WHERE member_list.id_group = "group".id
-            ) AS member_count
+            ) AS member_count,
+
+            member_list.id_account AS member_accountid,
+            join_request.status AS join_request_status
         FROM "group"
+
+        LEFT JOIN member_list
+            ON member_list.id_group = "group".id
+            AND member_list.id_account = $1
+
+        LEFT JOIN join_request
+            ON join_request.id_group = "group".id
+            AND join_request.id_account = $1
         `,
+        [idaccount]
     );
     return result.rows;
-};
+}
 
 const getGroupFromIdModel = async (id) => {
     const result = await pool.query('SELECT * FROM "group" WHERE id = $1', [id]);

@@ -13,7 +13,8 @@ import {
 const getAllGroupsController = async (req, res, next ) => {
     console.log("Searching all Groups..")
     try {
-        const result = await getAllGroupsModel();
+        const idaccount = req.user.userId
+        const result = await getAllGroupsModel(idaccount);
         res.status(200).json(result || []);
     } catch (err) {
         next(err);

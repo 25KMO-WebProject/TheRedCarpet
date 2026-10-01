@@ -47,6 +47,10 @@ color: white;
     margin-top: 20px;
 }
 
+.no-groups {
+  font-size: 30px;
+}
+
 
 .group img {
     width: 200px;
