@@ -1,9 +1,8 @@
-const now = new Date();
+const today = new Date();
+const current_date = today.toISOString().split("T")[0]; // Gets YYYY-MM-DD format
 
-var release_date_start = "1900-01-01";
-var release_date_end = "1974-09-30";
-
-release_date_end = now.toLocaleDateString();
+const release_date_start = "1800-01-01";
+const release_date_end = current_date;
 
 var custom_args = {
   include_adult: false,

@@ -1,32 +1,31 @@
 require("dotenv").config();
 
-const { PrismaClient } = require("../generated/prisma");
 const { endpoints } = require("./endpoints.js");
 
 const { api_request } = require("./request.js");
 const { custom_args } = require("./getTopRatedMovies.js");
 const { urlBuilder } = require("./urlBuilder.js");
+const { importMovies } = require("./poolBuilder.js");
 
-var genreMap = new Map();
-var movieMap = new Map();
-var detailsMap = new Map();
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const genreMap = new Map();
+const movieMap = new Map();
+const detailsMap = new Map();
 
 async function main() {
+  // Get available movie genres from API
   await getGenres();
 
-  // Depth = number of pages
-  // 5 pages = 60 movies.
-  // 50 pages = 960 movies.
-
-  await fetchMoviesFromApi(100);
-  console.log(movieMap);
+  await fetchMoviesFromApi(50);
+  await importMovies(movieMap);
 }
 
 async function fetchMoviesFromApi(depth) {
-  if (depth > 100) {
-    depth = 100;
-  }
-  for (let i = 2; i < depth; i++) {
+  for (let i = 1; i <= depth; i++) {
+    if (i % 5 == 0) {
+      await wait(2000);
+    }
     custom_args.page = i;
     await getMovies();
   }
@@ -73,7 +72,6 @@ async function manageDetails() {
       }),
     );
   });
-
   await Promise.all(promises);
   convertDuration();
 }
@@ -100,53 +98,46 @@ function genresToMap(data) {
 
 function convertDuration() {
   detailsMap.forEach((element, id) => {
-    let runtime = element.runtime;
-    let hours = Math.floor(runtime / 60);
-    let minutes = runtime % 60;
-    if (minutes < 10) {
-      minutes = `0${minutes}`;
+    if (typeof element.runtime !== "number") {
+      console.log("\n\nWarning! Element runtime NOT number format!\n\n");
+      console.log(element);
+    } else {
+      let runtime = element.runtime;
+      let hours = Math.floor(runtime / 60);
+      let minutes = runtime % 60;
+      if (minutes < 10) {
+        minutes = `0${minutes}`;
+      }
+
+      movieMap.get(id).duration = `${hours}:${minutes}:00`;
     }
-    movieMap.get(id).duration = `${hours}:${minutes}:00`;
   });
 }
 
 // Sets every necessary attribute from the API Stream to variables
 function manageMovies(data) {
-  // Saving id is needed to find movie details, needed for duration info
-
-  let title;
-  let id;
-  let duration;
-  let overview;
-  let genre;
-  let release_date;
-
-  // data variable where all the movie details will be stored
-  let detailData;
-
   // Go thru every entry of data
   for (let i = 0; i < data.length; i++) {
-    id = data[i].id;
-    title = data[i].title;
-    duration = "";
-    overview = data[i].overview;
-    genre = [];
+    const movie = data[i];
 
-    for (let j = 0; j < data[i].genre_ids.length; j++) {
-      genre.push(genreMap[data[i].genre_ids[j]]);
-    }
-    release_date = data[i].release_date;
+    // Get genres from the genreMap
+    const genres = movie.genre_ids
+      .map((genreId) => genreMap[genreId])
+      .filter(Boolean);
 
-    let movieObject = {
-      id: id,
-      title: title,
-      description: overview,
-      duration: duration,
-      genre: genre,
-      release_date: release_date,
+    const movieObject = {
+      id: movie.id,
+      title: movie.title,
+      description: movie.overview,
+      duration: "",
+      genre: genres,
+      release_date: movie.release_date,
     };
 
-    movieMap.set(id, movieObject);
+    //  Store in map
+    movieMap.set(movie.id, movieObject);
+
+    // Progress indicator
     process.stdout.write(`\rMovies loaded: ${movieMap.size}`);
   }
 }
