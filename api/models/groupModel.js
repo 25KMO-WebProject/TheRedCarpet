@@ -56,7 +56,16 @@ const createGroupModel = async(group_name, group_descr, id_owner, creation_date)
         `,
         [ group_name, group_descr, id_owner]
     );
-    return result.rows[0]
+    const groupResult = result.rows[0]
+
+    await pool.query(
+        `INSERT INTO member_list
+            (id_account, id_group, join_date)
+        VALUES ($1, $2, CURRENT_TIMESTAMP)
+        `,
+        [id_owner, result.id_group]
+    )
+    return groupResult
 }
 
 const deleteGroupModel = async (idgroup, idowner) => {
@@ -81,13 +90,100 @@ const getAllJoinRequestsModel = async (id) => {
     return result.rows
 }
 
+const getGroupJoinRequestsModel = async (idgroup) => {
+    const result = await pool.query(
+        `SELECT
+            join_request.id_group,
+            join_request.id_account,
+            join_request.status,
+            account.username
+        FROM join_request
+        JOIN account
+            ON account.id_account = join_request.id_account
+        WHERE join_request.id_group = $1
+            AND join_request.status = 'pending'
+        ORDER BY join_request.id_account
+        `,
+        [idgroup]
+    )
+
+    return result.rows
+}
+
+const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
+    const result = await pool.query(`
+        UPDATE join_request
+        SET status = 'approved'
+        FROM "group"
+        WHERE join_request.id_account = $1
+            AND join.request.id_group = $2
+            AND join_request.status = 'pending'
+            AND "group".id = join_request.id_group
+            AND "group".id_owner = $3
+        RETURNING join_request.*
+        `
+        [idaccount, idgroup, idowner]
+    )
+
+    if (result.rowCount === 0) {
+        throw new Error(
+            "Pyyntöä ei löytynt tai käyttäjä ei ole ryhmän omistaja"
+        )
+    }
+
+    await pool.query(`
+        INSERT INTO member_list
+            (id_account, id_group, join_date)
+        SELECT $1, $2, CURRENT_TIMESTAMP
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM member_list
+            WHERE member_list.id_account = $1
+                AND member_list.id_group = $2
+        )
+        `,
+        [idaccount, idgroup]
+    )
+    return result.rows;
+}
+
+const rejectJoinRequestModel = async (idaccount, idgroup, idowner) => {
+    const result = await pool.query(`
+        UPDATE join_request
+        SET status = 'rejected'
+        FROM "group"
+        WHERE join_request.id_account = $1
+            AND join.request.id_group = $2
+            AND join_request.status = 'pending'
+            AND "group".id = join_request.id_group
+            AND "group".id_owner = $3
+        RETURNING join_request.*
+        `
+        [idaccount, idgroup, idowner]
+    )
+
+    if (result.rowCount === 0) {
+        throw new Error(
+            "Pyyntöä ei löytynt tai käyttäjä ei ole ryhmän omistaja"
+        )
+    }
+
+    return result.rows;
+
+}
+
+
 export {
     getAllGroupsModel,
     getGroupFromIdModel,
     getMembersFromGroupIdModel,
     getCountofmembersModel,
     getAllJoinRequestsModel,
+    getGroupJoinRequestsModel,
     createGroupModel,
     createJoinRequestModel,
     deleteGroupModel,
+    approveJoinRequestModel,
+    rejectJoinRequestModel,
+
 };

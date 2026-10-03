@@ -9,7 +9,7 @@ const Join_Request = ({ idgroup }) => {
 
     const sendRequest = async () => {
         try { 
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/groups/${idgroup}/join-request`,
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/groups/${idgroup}/join-requests`,
                 {},
                 {
                   headers: { "Content-Type": "application/json", 
@@ -29,7 +29,7 @@ const Join_Request = ({ idgroup }) => {
     }
 
     return (
-        <div>
+        <div onClick={(event) => event.stopPropagation()}>
             <button type="button" className="join_button" onClick={sendRequest}>
                 Liity
             </button>

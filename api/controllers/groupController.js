@@ -4,9 +4,12 @@ import {
     getMembersFromGroupIdModel,
     getCountofmembersModel,
     getAllJoinRequestsModel,
+    getGroupJoinRequestsModel,
     createGroupModel,
     createJoinRequestModel,
     deleteGroupModel,
+    approveJoinRequestModel,
+    rejectJoinRequestModel,
 
 } from "../models/groupModel.js";
 
@@ -118,6 +121,43 @@ const getAllJoinRequestsController = async (req, res, next) => {
     }
 };
 
+const getGroupJoinRequestsController = async (req, res, next) => {
+    try {
+        const idgroup = req.params.id
+
+        const result = await getGroupJoinRequestsModel();
+        res.status(200).json(result || [])
+    } catch (err) {
+        next(err)
+    }
+
+}
+
+const approveJoinRequestController = async (req, res, next) => {
+    try {
+        const idaccount = req.params.idaccount
+        const idgroup = req.params.idgroup
+        const idowner = req.user.userId
+
+        const result = await approveJoinRequestModel(idaccount, idgroup, idowner);
+        res.status(200).json(result)
+    } catch (err) {
+        next(err)
+    }
+}
+
+const rejectJoinRequestController = async (req, res, next) => {
+    try {
+        const idaccount = req.params.idaccount
+        const idgroup = req.params.idgroup
+        const idowner = req.user.userId
+
+        const result = await rejectJoinRequestModel(idaccount, idgroup, idowner);
+        res.status(200).json(result)
+    } catch (err) {
+        next(err)
+    }
+}
 
 export {
     getAllGroupsController,
@@ -125,7 +165,10 @@ export {
     getMembersFromGroupIdController,
     getCountofmembersController,
     getAllJoinRequestsController,
+    getGroupJoinRequestsController,
     createGroupController,
     createJoinRequestController,
     deleteGroupController,
+    approveJoinRequestController,
+    rejectJoinRequestController,
 }

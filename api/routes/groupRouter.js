@@ -6,9 +6,12 @@ import {
     getMembersFromGroupIdController,
     getCountofmembersController,
     getAllJoinRequestsController,
+    getGroupJoinRequestsController,
     createGroupController,
     deleteGroupController,
     createJoinRequestController,
+    approveJoinRequestController,
+    rejectJoinRequestController,
 } from "../controllers/groupController.js"
 
 const router = Router();
@@ -63,8 +66,11 @@ router.get("/groups/id/:id", getGroupFromIdController);
 router.get("/groups/members/id/:id", getMembersFromGroupIdController)
 router.get("/groups/:id/member-count", getCountofmembersController)
 router.get("/join-requests", getAllJoinRequestsController)
+router.get("/groups/:id/join-requests", requireAuth, getGroupJoinRequestsController)
 router.post("/groups", requireAuth, createGroupController);
 router.post("/groups/:id/join-requests", requireAuth, createJoinRequestController)
 router.delete("/groups/id/:id", requireAuth, deleteGroupController)
+router.patch("/groups/:idgroup/join-requests/:idaccount/approve", requireAuth, approveJoinRequestController)
+router.patch("/groups/:idgroup/join-requests/:idaccount/reject", requireAuth, rejectJoinRequestController)
 
 export default router;

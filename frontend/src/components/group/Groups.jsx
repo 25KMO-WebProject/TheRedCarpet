@@ -3,6 +3,8 @@ import axios from "axios";
 import "./Groups.css"
 import CreategroupModal from "./GroupCreate";
 import Join_Request from "./GroupJoin";
+import GroupPageModal from "./GroupPage";
+
 
 export default function Groups() {
     
@@ -10,7 +12,10 @@ export default function Groups() {
     
     const [isCreateGroupOpen, setCreateGroup] = useState(false)
 
+    const [selectedGroup, setSelectedGroup] = useState(null)
+
     const token = localStorage.getItem("token")
+    console.log(token)
 
     async function getGroups() {
         try {
@@ -60,7 +65,7 @@ export default function Groups() {
                 <p className="no-groups">Et kuulu vielä yhteenkään ryhmään.</p>
             ) : (
             ownGroups.map((group) => (
-            <article key={group.id} className="group">
+            <article key={group.id} className="group" onClick={() => setSelectedGroup(group)}>
                 <img
                 alt={`Ryhmän ${group.group_name} kuva`}
                 />
@@ -75,7 +80,7 @@ export default function Groups() {
             
         <h1> Katso muita ryhmiä: </h1>
         {otherGroups.map((group) => (
-            <article key={group.id} className="group">
+            <article key={group.id} className="group" onClick={() => setSelectedGroup(group)}>
                 <img
                 alt={`Ryhmän ${group.group_name} kuva`}
                 />
@@ -87,6 +92,13 @@ export default function Groups() {
                 </div>
             </article>
             ))}
+
+        <GroupPageModal
+        isOpen={selectedGroup !== null}
+        onClose={() => setSelectedGroup(null)}
+        groupId={selectedGroup?.id}
+        groupName={selectedGroup?.group_name}
+        />
 
         </section>
     )

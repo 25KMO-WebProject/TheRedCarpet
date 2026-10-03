@@ -11,6 +11,15 @@
     border: 1px solid black;
     border-radius: 12px;
     overflow: hidden;
+
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+}
+
+.group:hover {
+  border: 2px solid black;
+  font-weight: bold;
 }
 
 .group-content {
@@ -60,7 +69,7 @@ color: white;
 /*MODAL*/ 
 
 .overlay-modal {
-     position: fixed;
+  position: fixed;
   inset: 0;
   z-index: 1000;
 
@@ -79,6 +88,80 @@ color: white;
   border-radius: 16px;
   background: white;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.groupPage-modal {
+  
+  position: relative;
+  width: 1050px;
+  height: 650px;
+  padding: 32px;
+  box-sizing: border-box;
+
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.groupPage-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.delete-group-button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #dc3545;
+  color: white;
+}
+
+.group-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  box-sizing: border-box;
+  width: 100%;
+
+  padding-bottom: 20px;
+  border-bottom:  1px solid black;
+}
+
+.group-members ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.group-members li {
+  margin-bottom: 8px;
+}
+
+.sections-groupPage {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  align-items: flex-start;
+  box-sizing: border-box;
+  width: min(200px, 100%);
+  border-right: 1px solid black;
+  padding-right: 25px;
+  padding-top: 25px;
+  flex: 1;
+}
+
+.group-members, .join-requests {
+  box-sizing: border-box;
+}
+
+.group-members h3,
+.join-requests h3 {
+  margin-top: 0;
 }
 
 
@@ -160,4 +243,27 @@ color: white;
         height: 100%;
     }
 
+}
+
+@media (max-width: 700px) {
+  .groupPage-modal {
+    width: 100%;
+    height: 90vh;
+    padding: 24px;
+  }
+
+  .groupPage-content {
+    width: 100%;
+  }
+
+  .group-info {
+    width: 100%;
+  }
+
+  .sections-groupPage {
+    width: 100%;
+    min-height: 400px;
+    box-sizing: border-box;
+    padding-right: 15px;
+  }
 }
