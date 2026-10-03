@@ -50,15 +50,9 @@ function SignUpModal({ isOpen, onClose }) {
     return null;
   }
   
-
-  function handleOverlayClick(event) {
-    if (event.target == event.currentTarget) {
-      onClose();
-    }
-  }
   //Itse etusivu näkymä
   return (
-    <div className="overlay-modal" onClick={handleOverlayClick}>
+    <div className="overlay-modal">
       <section className="SignUp-modal" role="dialog">
         {/* Sulkemis näppäin */}
         <button
@@ -93,9 +87,9 @@ function SignUpModal({ isOpen, onClose }) {
           <label htmlFor="password">Salasana</label>
           <input
             id="password"
-            name="********"
+            name="password"
             type="password"
-            placeholder="password"
+            placeholder="********"
             minLength={8}
             maxLength={64}
             pattern="(?=.*[A-Z])(?=.*[0-9]).{8,64}"
@@ -103,7 +97,7 @@ function SignUpModal({ isOpen, onClose }) {
             required
           />
           <button type="submit" className="submit">
-            Register
+            Rekisteröidy
           </button>
         </form>
       </section>
