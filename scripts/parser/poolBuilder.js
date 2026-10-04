@@ -31,61 +31,69 @@ async function importMovies(movieMap) {
 
   if (movies.length === 0) return 0;
 
-  // Number of movies processed per query.
   const batchSize = 500;
 
-  // Progress counters.
   let processed = 0;
   let inserted = 0;
 
-  const query = `
-        INSERT INTO public.movie
+  // Retrieve the property names from our movie objects.
+  // Exclude the database-generated primary key.
+  const columns = [
+    ...new Set(movies.flatMap((movie) => Object.keys(movie))),
+  ].filter((column) => column !== "id");
 
-        SELECT *
+  if (!columns.includes("tmdb_id")) {
+    throw new Error("Missing required tmdb_id property.");
+  }
+
+  // Safely quote PostgreSQL column identifiers.
+  const quoteIdentifier = (identifier) =>
+    `"${identifier.replaceAll('"', '""')}"`;
+
+  // Generate the INSERT and SELECT column lists.
+  const insertColumns = columns.map(quoteIdentifier).join(", ");
+
+  const selectColumns = columns
+    .map((column) => `m.${quoteIdentifier(column)}`)
+    .join(", ");
+
+  const query = `
+        INSERT INTO public.movie (
+            ${insertColumns}
+        )
+
+        SELECT
+            ${selectColumns}
+
         FROM jsonb_populate_recordset(
             NULL::public.movie,
             $1::jsonb
-        )
+        ) AS m
 
-        ON CONFLICT (id) DO NOTHING;
+        ON CONFLICT (tmdb_id) DO NOTHING;
     `;
 
-  try {
-    // Initial progress indicator.
-    process.stdout.write(`\rMovies processed: 0/${movies.length} (0%)`);
+  process.stdout.write(`Movies processed: 0/${movies.length} (0%)`);
 
-    // Iterate through the array in batches.
+  try {
     for (let i = 0; i < movies.length; i += batchSize) {
-      // Extract the next batch.
       const batch = movies.slice(i, i + batchSize);
 
-      // Execute the insertion.
       const result = await pool.query(query, [JSON.stringify(batch)]);
 
-      // Update counters.
       processed += batch.length;
       inserted += result.rowCount;
 
-      // Calculate progress percentage.
       const percentage = ((processed / movies.length) * 100).toFixed(1);
 
-      // Update the same terminal line.
       process.stdout.write(
         `\rMovies processed: ${processed}/${movies.length} (${percentage}%)`,
       );
     }
 
-    // Move to a new line after completing the import.
-    process.stdout.write("\n");
-
-    console.log(`New movies inserted: ${inserted}`);
-
     return inserted;
-  } catch (error) {
+  } finally {
     process.stdout.write("\n");
-    console.error("Movie import failed:", error);
-
-    throw error;
   }
 }
 

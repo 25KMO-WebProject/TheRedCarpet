@@ -13,6 +13,16 @@ const endpoints = {
     path: "https://api.themoviedb.org/3/movie",
     auth: true,
   },
+
+  poster: {
+    path: "https://image.tmdb.org/t/p/w600_and_h900_face",
+    auth: false,
+  },
+
+  thumbnail: {
+    path: "https://image.tmdb.org/t/p/w342/",
+    auth: false,
+  },
 };
 
 module.exports = { endpoints };

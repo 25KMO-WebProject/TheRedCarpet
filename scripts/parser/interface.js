@@ -17,7 +17,7 @@ async function main() {
   // Get available movie genres from API
   await getGenres();
 
-  await fetchMoviesFromApi(50);
+  await fetchMoviesFromApi(10);
   await importMovies(movieMap);
 }
 
@@ -73,7 +73,7 @@ async function manageDetails() {
     );
   });
   await Promise.all(promises);
-  convertDuration();
+  assignDetails();
 }
 
 // Get movie genres from the API stream and Map them
@@ -96,7 +96,8 @@ function genresToMap(data) {
   }
 }
 
-function convertDuration() {
+function assignDetails() {
+  // Duration
   detailsMap.forEach((element, id) => {
     if (typeof element.runtime !== "number") {
       console.log("\n\nWarning! Element runtime NOT number format!\n\n");
@@ -109,7 +110,19 @@ function convertDuration() {
         minutes = `0${minutes}`;
       }
 
-      movieMap.get(id).duration = `${hours}:${minutes}:00`;
+      const movie = movieMap.get(id);
+      const detail = detailsMap.get(id);
+
+      movie.duration = `${hours}:${minutes}:00`;
+
+      // Assign image URL paths
+      const poster_path = endpoints.poster.path;
+      const thumbnail_path = endpoints.thumbnail.path;
+
+      movie.poster_path = poster_path + detail.poster_path;
+      movie.backdrop_path = poster_path + detail.backdrop_path;
+      movie.small_poster_path = thumbnail_path + detail.poster_path;
+      movie.small_backdrop_path = thumbnail_path + detail.backdrop_path;
     }
   });
 }
@@ -126,12 +139,16 @@ function manageMovies(data) {
       .filter(Boolean);
 
     const movieObject = {
-      id: movie.id,
+      tmdb_id: movie.id,
       title: movie.title,
       description: movie.overview,
       duration: "",
       genre: genres,
       release_date: movie.release_date,
+      backdrop_path: "",
+      poster_path: "",
+      small_backdrop_path: "",
+      small_poster_path: "",
     };
 
     //  Store in map
