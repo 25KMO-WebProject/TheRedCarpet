@@ -75,24 +75,24 @@ const deleteGroupModel = async (idgroup, idowner) => {
     console.log("Model idowner:", idowner);
     const result = await pool.query('DELETE FROM "group" WHERE id = $1 AND id_owner = $2', [idgroup, idowner]);
     return result;
-}
+};
 
 const createJoinRequestModel = async (idgroup, idaccount) => {
     const result = await pool.query(`INSERT INTO join_request (id_account, id_group, status)
         VALUES ($1, $2, 'PENDING')
         RETURNING *
         `,
-        [idgroup, idaccount]
+        [idaccount, idgroup]
     
     );
 
     return result.rows[0]
-}
+};
 
 const getAllJoinRequestsModel = async (id) => {
     const result = await pool.query('SELECT * FROM join_request');
     return result.rows
-}
+};
 
 const getGroupJoinRequestsModel = async (idgroup) => {
     const result = await pool.query(
@@ -112,16 +112,16 @@ const getGroupJoinRequestsModel = async (idgroup) => {
     )
 
     return result.rows
-}
+};
 
 const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
     const result = await pool.query(`
         UPDATE join_request
-        SET status = 'approved'
+        SET status = 'APPROVED'
         FROM "group"
         WHERE join_request.id_account = $1
             AND join.request.id_group = $2
-            AND join_request.status = 'pending'
+            AND join_request.status = 'PENDING'
             AND "group".id = join_request.id_group
             AND "group".id_owner = $3
         RETURNING join_request.*
@@ -149,20 +149,20 @@ const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
         [idaccount, idgroup]
     )
     return result.rows;
-}
+};
 
 const rejectJoinRequestModel = async (idaccount, idgroup, idowner) => {
     const result = await pool.query(`
         UPDATE join_request
-        SET status = 'rejected'
+        SET status = 'REJECTED'
         FROM "group"
         WHERE join_request.id_account = $1
-            AND join.request.id_group = $2
-            AND join_request.status = 'pending'
+            AND join_request.id_group = $2
+            AND join_request.status = 'PENDING'
             AND "group".id = join_request.id_group
             AND "group".id_owner = $3
         RETURNING join_request.*
-        `
+        `,
         [idaccount, idgroup, idowner]
     )
 
@@ -174,7 +174,7 @@ const rejectJoinRequestModel = async (idaccount, idgroup, idowner) => {
 
     return result.rows;
 
-}
+};
 
 
 export {

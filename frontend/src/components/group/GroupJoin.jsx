@@ -15,7 +15,7 @@ const Join_Request = ({ idgroup }) => {
                 {},
                 {
                   headers: { "Content-Type": "application/json", 
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         },  
     );
@@ -24,7 +24,7 @@ const Join_Request = ({ idgroup }) => {
         console.log(response.data)
     } catch (err) {
         setMessage(
-         err.response?.data?.message ||
+         err.response?.data?.error?.message ||
          "Liittymispyyntö epäonnistui"
          )
         }

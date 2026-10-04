@@ -9,6 +9,12 @@ const JoinRequest = ({ idaccount, groupId, handleRequest}) => {
             setLoading(true);
             await axios.patch(
                 `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests/${idaccount}/approve`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
             )
 
             handleRequest(idaccount)
@@ -24,6 +30,12 @@ const JoinRequest = ({ idaccount, groupId, handleRequest}) => {
             setLoading(true)
                  await axios.patch(
                 `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests/${idaccount}/reject`,
+                {},
+                {
+                     headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
             )
 
             handleRequest(idaccount)

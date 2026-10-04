@@ -81,9 +81,9 @@ const deleteGroupController = async (req, res, next) => {
         const idgroup = req.params.idgroup
         const idowner = req.user.userId
 
-        const resultRows = await deleteGroupModel(idgroup, idowner)
+        const result = await deleteGroupModel(idgroup, idowner)
 
-        if (resultRows === 0) {
+        if (result.rowCount === 0) {
             const error = new Error("No group found or account is not the owner");
             error.status = 404;
             return next(error);

@@ -10,9 +10,6 @@ const DeleteGroupButton = ({ idgroup, idowner, token, onDeleted }) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          data: {
-            idowner,
-          },
         }
       );
 

@@ -41,7 +41,7 @@ export default function Groups() {
         setCreateGroup(false)
     }
 
-    const ownGroups = groups.filter(
+    const memberGroups = groups.filter(
          (group) => 
             group.member_accountid !== null
      )
@@ -64,10 +64,10 @@ export default function Groups() {
             onCreated={handleGroupCreated}
             />
             <h1>Omat ryhmät:</h1>
-            {ownGroups.length === 0 ? (
+            {memberGroups.length === 0 ? (
                 <p className="no-groups">Et kuulu vielä yhteenkään ryhmään.</p>
             ) : (
-            ownGroups.map((group) => (
+            memberGroups.map((group) => (
             <article key={group.id} className="group" onClick={() => setSelectedGroup(group)}>
                 <img
                 alt={`Ryhmän ${group.group_name} kuva`}
