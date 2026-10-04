@@ -2,8 +2,11 @@ import axios from "axios"
 import { useEffect, useState } from "react";
 import "./Groups.css"
 import JoinRequest from "./JoinRequests";
+import DeleteGroupButton from "./GroupDelete";
 
-function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest}) {
+function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted}) {
+
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [members, setMembers] = useState([])
@@ -81,6 +84,7 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest}) {
   if (!isOpen) {
     return null;
   }
+
    return (
   <div className="overlay-modal" onClick={onClose}>
     <div
@@ -100,12 +104,15 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest}) {
         <div className="group-info">
           <h2>{groupName}</h2>
           
-          <button
-          type="button"
-          className="delete-group-button"
-          >
-            Poista ryhmä
-          </button>
+          
+          {ownerId === ownerId && (
+            <DeleteGroupButton
+              idgroup={groupId}
+              idowner={ownerId}
+              token={localStorage.getItem("token")}
+              onDeleted={onDeleted}
+              />
+          )}
         </div>
 
                 <div className="sections-groupPage">

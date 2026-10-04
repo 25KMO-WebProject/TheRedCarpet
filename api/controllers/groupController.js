@@ -76,8 +76,9 @@ const createGroupController = async (req, res, next) => {
 }
 
 const deleteGroupController = async (req, res, next) => {
+    console.log("Req params:", req.params);
     try {
-        const idgroup = req.params.id
+        const idgroup = req.params.idgroup
         const idowner = req.user.userId
 
         const resultRows = await deleteGroupModel(idgroup, idowner)
@@ -90,7 +91,7 @@ const deleteGroupController = async (req, res, next) => {
 
         console.log(`Deleting group with id: ${idgroup}`)
 
-        return res.status(200).json({ id: Number(id) });
+        return res.status(200).json({ id: Number(idgroup) });
     } catch (err) {
         next(err)
     }

@@ -15,7 +15,6 @@ export default function Groups() {
     const [selectedGroup, setSelectedGroup] = useState(null)
 
     const token = localStorage.getItem("token")
-    console.log(token)
 
     async function getGroups() {
         try {
@@ -51,6 +50,10 @@ export default function Groups() {
          (group) => group.member_accountid === null
      )
 
+      const handleDeleted = () => {
+        setSelectedGroup(null)
+        window.location.reload()
+  }
 
     return (
         <section>
@@ -98,6 +101,9 @@ export default function Groups() {
         onClose={() => setSelectedGroup(null)}
         groupId={selectedGroup?.id}
         groupName={selectedGroup?.group_name}
+        ownerId={selectedGroup?.id_owner}
+        accountId={null}
+        onDeleted={handleDeleted}
         />
 
         </section>

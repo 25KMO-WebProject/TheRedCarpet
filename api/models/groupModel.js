@@ -57,25 +57,29 @@ const createGroupModel = async(group_name, group_descr, id_owner, creation_date)
         [ group_name, group_descr, id_owner]
     );
     const groupResult = result.rows[0]
+    console.log(groupResult),
+    console.log(groupResult.id)
 
     await pool.query(
         `INSERT INTO member_list
             (id_account, id_group, join_date)
         VALUES ($1, $2, CURRENT_TIMESTAMP)
         `,
-        [id_owner, result.id_group]
+        [id_owner, groupResult.id]
     )
     return groupResult
 }
 
 const deleteGroupModel = async (idgroup, idowner) => {
-    const result = await pool.query('DELETE FROM "group" WHERE id = $1 AND id_owner $2', [idgroup, idowner]);
+    console.log("Model idgroup:", idgroup);
+    console.log("Model idowner:", idowner);
+    const result = await pool.query('DELETE FROM "group" WHERE id = $1 AND id_owner = $2', [idgroup, idowner]);
     return result;
 }
 
 const createJoinRequestModel = async (idgroup, idaccount) => {
-    const result = await pool.query(`INSERT INTO join_request (id_group, id_account, status)
-        VALUES ($1, $2, 'pending')
+    const result = await pool.query(`INSERT INTO join_request (id_account, id_group, status)
+        VALUES ($1, $2, 'PENDING')
         RETURNING *
         `,
         [idgroup, idaccount]

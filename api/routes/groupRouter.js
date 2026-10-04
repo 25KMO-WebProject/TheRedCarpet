@@ -69,7 +69,7 @@ router.get("/join-requests", getAllJoinRequestsController)
 router.get("/groups/:id/join-requests", requireAuth, getGroupJoinRequestsController)
 router.post("/groups", requireAuth, createGroupController);
 router.post("/groups/:id/join-requests", requireAuth, createJoinRequestController)
-router.delete("/groups/id/:id", requireAuth, deleteGroupController)
+router.delete("/groups/id/:idgroup", requireAuth, deleteGroupController)
 router.patch("/groups/:idgroup/join-requests/:idaccount/approve", requireAuth, approveJoinRequestController)
 router.patch("/groups/:idgroup/join-requests/:idaccount/reject", requireAuth, rejectJoinRequestController)
 
