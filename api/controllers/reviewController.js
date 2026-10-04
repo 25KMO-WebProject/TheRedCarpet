@@ -1,18 +1,30 @@
-import { getAllReviewsModel, createReviewModel } from "../models/reviewModel.js";
+import {
+    getMovieIdByTmdbIdModel,
+    getAllReviewsModel,
+    createReviewModel,
+} from "../models/reviewModel.js";
 
 const getAllReviewsController = async (req, res, next) => {
     try {
-        const movieId = Number(req.params.movieId);
+        const tmdbId = Number(req.params.movieId);
 
-        if (!Number.isInteger(movieId) || movieId <= 0) {
+        if (!Number.isInteger(tmdbId) || tmdbId <= 0) {
             const error = new Error("Invalid movie ID");
             error.status = 400;
             return next(error);
         }
 
 
+       // Tarkistetaan että elokuva on olemassa tietokannassa
+        const movie = await getMovieIdByTmdbIdModel(tmdbId);
 
-        const reviews = await getAllReviewsModel(movieId);
+        if (!movie) {
+            const error = new Error("Movie not found");
+            error.status = 404;
+            return next(error);
+        }
+
+        const reviews = await getAllReviewsModel(tmdbId);
         res.status(200).json(reviews);
     } catch (error) {
        return next(error);
@@ -21,12 +33,12 @@ const getAllReviewsController = async (req, res, next) => {
 
 const createReviewController = async (req, res, next) => {
     try {
-        const movieId = Number(req.body.movieId);
+        const tmdbId = String(req.body.movieId);
         const rating = Number(req.body.rating);
         const description = req.body.description;
         const accountId = req.user.userId;
 
-        if (!Number.isInteger(movieId) || movieId <= 0) {
+        if (!/^\d+$/.test(tmdbId)) {
             const error = new Error("Invalid movie id");
             error.status = 400;
             return next(error);
@@ -52,9 +64,17 @@ const createReviewController = async (req, res, next) => {
             error.status = 400;
             return next(error);
         }
+        // Tarkistetaan että elokuva on olemassa tietokannassa
+        const movie = await getMovieIdByTmdbIdModel(tmdbId);
+
+        if (!movie) {
+            const error = new Error("Media not found");
+            error.status = 404;
+            return next(error);
+        }
 
         const review = await createReviewModel(
-            movieId,
+            movie.id,
             accountId,
             rating,
             description.trim(),
@@ -62,6 +82,14 @@ const createReviewController = async (req, res, next) => {
 
         return res.status(201).json(review);
     } catch (error) {
+        if (error.code === "23505") {
+            const duplicateError = new Error(
+                "Arvostelun voi jättää vain kerran.",
+            );
+            duplicateError.status = 409;
+            return next(duplicateError);
+        }
+
         return next(error);
     }
     

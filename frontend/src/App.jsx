@@ -330,7 +330,7 @@ function App() {
                       )}
                   </section>
 
-                  <NowPlaying />
+                  <NowPlaying onMediaSelect={setSelectedMedia}/>
                 </main>
               )
             }
@@ -373,6 +373,7 @@ function App() {
         item={selectedMedia}
         onClose={() => setSelectedMedia(null)}
         isAuthenticated={isAuthenticated}
+        token={token}
         isFavorite={
           selectedMedia
             ? isFavorite(selectedMedia)

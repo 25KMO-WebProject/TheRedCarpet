@@ -1,6 +1,21 @@
 import { pool } from "./db.js";
 
-const getAllReviewsModel = async (movieId) => {
+// Hakee movies taulusta id:n TMDB id:n perusteella.
+// review taulussa oma tietokannan id ja frontend TMDB id.
+const getMovieIdByTmdbIdModel = async (tmdbId) => {
+    const result = await pool.query(
+        `
+        SELECT id
+        FROM movie
+        WHERE tmdb_id = $1
+        `,
+        [tmdbId],
+    );
+
+    return result.rows[0];
+};
+
+const getAllReviewsModel = async (tmdbId) => {
     const result = await pool.query(
         `
 
@@ -12,10 +27,12 @@ const getAllReviewsModel = async (movieId) => {
         FROM review
         JOIN account
         ON review.id_account = account.id
-        WHERE review.id_movie = $1
+        JOIN movie
+        ON review.id_movie = movie.id
+        WHERE movie.tmdb_id = $1
         ORDER BY review.date DESC
         `,
-        [movieId],
+        [tmdbId],
     );
     return result.rows;
 }
@@ -32,4 +49,8 @@ const createReviewModel = async (movieId, accountId, rating, description) => {
     return result.rows[0];
 };
 
-export { getAllReviewsModel, createReviewModel }; 
+export {
+    getMovieIdByTmdbIdModel,
+    getAllReviewsModel,
+    createReviewModel,
+};
