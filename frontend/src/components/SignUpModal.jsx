@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import "./SignUpModal.css";
 
-function SignUpModal({ isOpen, onClose }) {
+function SignUpModal({
+  isOpen,
+  onClose,
+  onSuccess
+}) {
   useEffect(() => {
     function handleEsc(event) {
       if (event.key === "Escape") {
@@ -40,9 +44,14 @@ function SignUpModal({ isOpen, onClose }) {
             });
             const data = await reponse.json();
             if (!reponse.ok) { throw new Error(data.message || 'Rekisteröinti ei onnisunut'); }
-            console.log('Rekisteröinti onnistui:', data);
-            event.target.reset();
+          console.log('Rekisteröinti onnistui:', data);
+          event.target.reset();
+
+          if (onSuccess) {
+            onSuccess();
+          } else {
             onClose();
+          }
         }
         catch (error) {console.error('Rekisteröinti epäonnistui:', error); alert(error.message);}}
 
@@ -72,6 +81,7 @@ function SignUpModal({ isOpen, onClose }) {
             type="text"
             placeholder="test"
             maxLength={64}
+            autoFocus
             required
           />
           {/* Kohdat mihin kirjoitetaan email ja salasana rajoituksineen */}
