@@ -1,11 +1,11 @@
+import axios from "axios"
 import { useEffect, useState } from "react";
-import "./SignInModal.css";
-import axios from "axios";
+import "./Groups.css"
 
-function SignInModal({ isOpen, onClose, onLogin }) {
-  const [user, setUser] = useState(null);
+function CreategroupModal({ isOpen, onClose, onCreated }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
     function handleEsc(event) {
@@ -29,42 +29,34 @@ function SignInModal({ isOpen, onClose, onLogin }) {
   if (!isOpen) {
     return null;
   }
-  async function handleSignIn(event) {
+  async function handleCreategroup(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
 
-    const account = formData.get("identifier");
-    const password = formData.get("password");
+    const groupName = formData.get("group_name");
+    const groupDesc = formData.get("group_descr");
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/login`,
+        `${import.meta.env.VITE_API_URL}/groups`,
         {
-          account,
-          password,
+          group_name: groupName,
+          group_descr: groupDesc
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", 
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
-
-      // Authentication is handled with the JWT in App.jsx
-      // Storing the full user object in sessionStorage is not currently needed.
-      /* const userData = response.data;
-      setUser(userData);
-      sessionStorage.setItem("user", JSON.stringify(userData)); */
-
-      onLogin(response.data)
+      onCreated(response.data)
 
       onClose();
     } catch (err) {
-      if (err.response?.status === 401) {
-        setError("Virheellinen käyttäjänimi tai salasana.");
-      } else {
-        setError("Virhe kirjautumisessa. Tarkista tiedot.");
-        console.error(err);
-      }
+        setError("Ryhmän luominen epäonnistui");
+      console.log(err.response?.data)
+      console.log(err.message)
       console.log(err);
     } finally {
       setLoading(false);
@@ -74,10 +66,9 @@ function SignInModal({ isOpen, onClose, onLogin }) {
     setError("");
   }
 
-  //Itse etusivu näkymä
   return (
     <div className="overlay-modal">
-      <section className="SignUp-modal" role="dialog">
+      <section className="creategroup-modal" role="dialog">
         {/*Sulkemis näppäin*/}
         <button
           type="button"
@@ -87,29 +78,30 @@ function SignInModal({ isOpen, onClose, onLogin }) {
         >
           &times;
         </button>
-        <h2>Sisäänkirjautuminen</h2>
-        <form onSubmit={handleSignIn}>
+        <h2>Luo ryhmä</h2>
+        <form onSubmit={handleCreategroup}>
           {/*Kohdat mihin kirjoitetaan email ja salasana rajoituksineen*/}
-          <label htmlFor="signin-identifier">Sähköposti / Käyttäjänimi</label>
+          <label htmlFor="group-name">Ryhmän nimi</label>
           <input
-            id="signin-identifier"
-            name="identifier"
+            id="group-name"
+            name="group_name"
             type="text"
-            placeholder="Sähköposti / Käyttäjänimi"
+            placeholder="Ryhmän nimi"
             onFocus={clearError}
-            autoFocus
             required
           />
-          <label htmlFor="signin-password">Salasana</label>
-          <input
-            id="signin-password"
-            name="password"
-            type="password"
-            placeholder="********"
+          <label htmlFor="group_desc">Ryhmän kuvaus</label>
+          <textarea
+            id="group_desc"
+            name="group_descr"
+            type="text"
+            placeholder="Ryhmän kuvaus"
+            onFocus={clearError}
+            rows="4"
             required
           />
           <button type="submit" className="submit">
-            Kirjaudu sisään
+            Luo ryhmä
           </button>
           {error && <p className="error">{error}</p>}
         </form>
@@ -117,5 +109,5 @@ function SignInModal({ isOpen, onClose, onLogin }) {
     </div>
   );
 }
-export default SignInModal;
 
+export default CreategroupModal
