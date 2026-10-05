@@ -35,6 +35,7 @@ router.get("/nowplaying", async (req, res) => {
 
   const movies = data.results.slice(0, 5).map((movie) => ({
     ...movie,
+    media_type: "movie",
     genres: movie.genre_ids.map((id) => {
       const genre = genresData.genres.find((genre) => genre.id === id);
       return genre ? genre.name : "";

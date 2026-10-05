@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import './MediaDetailsModal.css'
 import FavoriteButton from '../favorites/FavoriteButton.jsx'
+import Reviews from '../Review.jsx'
 
 export default function MediaDetailsModal({
   item,
   onClose,
   isAuthenticated,
+  token,
   isFavorite,
   onToggleFavorite
 }) {
@@ -229,6 +231,11 @@ export default function MediaDetailsModal({
                   Katselupalvelutiedot: JustWatch
                 </small>
               </div>
+              <Reviews
+                item={item}
+                isAuthenticated={isAuthenticated}
+                token={token}
+              />
             </div>
           </div>
         )}
