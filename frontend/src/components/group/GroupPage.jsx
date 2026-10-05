@@ -144,9 +144,9 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                                 groupId={groupId}
                                 username={request.username}
                                 handleRequest={handleRequests}
-                                />
-                              )
-                            )}
+                                  />
+                                )
+                              )}
                           </ul>
                         )}
                     </section>

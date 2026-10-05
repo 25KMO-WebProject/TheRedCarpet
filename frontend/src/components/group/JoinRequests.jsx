@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const JoinRequest = ({ idaccount, groupId, handleRequest}) => {
+const JoinRequest = ({ idaccount, groupId, username, handleRequest}) => {
     const [loading, setLoading] = useState(false);
 
     const approveRequest = async () => {
@@ -47,7 +47,9 @@ const JoinRequest = ({ idaccount, groupId, handleRequest}) => {
     }
 
     return (
-        <div>
+        <li className="join-request-content">
+            <span>{username}</span>
+        <div className="join-request-buttons">
             <button
                 type="button"
                 onClick={approveRequest}
@@ -64,7 +66,8 @@ const JoinRequest = ({ idaccount, groupId, handleRequest}) => {
                     Hylkää
                 </button>
 
-        </div>
+            </div>
+        </li>
     )
 }
 

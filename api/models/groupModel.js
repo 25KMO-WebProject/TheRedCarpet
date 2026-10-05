@@ -103,9 +103,9 @@ const getGroupJoinRequestsModel = async (idgroup) => {
             account.username
         FROM join_request
         JOIN account
-            ON account.id_account = join_request.id_account
+            ON account.id = join_request.id_account
         WHERE join_request.id_group = $1
-            AND join_request.status = 'pending'
+            AND join_request.status = 'PENDING'
         ORDER BY join_request.id_account
         `,
         [idgroup]
@@ -120,12 +120,12 @@ const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
         SET status = 'APPROVED'
         FROM "group"
         WHERE join_request.id_account = $1
-            AND join.request.id_group = $2
+            AND join_request.id_group = $2
             AND join_request.status = 'PENDING'
             AND "group".id = join_request.id_group
             AND "group".id_owner = $3
         RETURNING join_request.*
-        `
+        `,
         [idaccount, idgroup, idowner]
     )
 
@@ -152,6 +152,11 @@ const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
 };
 
 const rejectJoinRequestModel = async (idaccount, idgroup, idowner) => {
+    console.log({
+    idaccount,
+    idgroup,
+    idowner
+    })
     const result = await pool.query(`
         UPDATE join_request
         SET status = 'REJECTED'
@@ -168,7 +173,7 @@ const rejectJoinRequestModel = async (idaccount, idgroup, idowner) => {
 
     if (result.rowCount === 0) {
         throw new Error(
-            "Pyyntöä ei löytynt tai käyttäjä ei ole ryhmän omistaja"
+            "Pyyntöä ei löytynyt tai käyttäjä ei ole ryhmän omistaja"
         )
     }
 

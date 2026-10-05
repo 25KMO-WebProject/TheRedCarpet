@@ -148,7 +148,7 @@ color: white;
 
   align-items: flex-start;
   box-sizing: border-box;
-  width: min(200px, 100%);
+  width: min(250px, 100%);
   border-right: 1px solid black;
   padding-right: 25px;
   padding-top: 25px;
@@ -192,6 +192,37 @@ color: white;
     width: 100%;
     box-sizing: border-box;
     font-size: 28px;
+}
+
+/*JOIN-BUTTON*/
+
+.join-request-content {
+    margin-bottom: 12px;
+    position: relative;
+    padding-right: 175px;
+    min-height: 30px;
+}
+
+.join-request-buttons {
+  gap: 6px;
+  position: absolute;
+  display: flex;
+  top: 0;
+  right: 0;
+  color: #f2f2f2;
+}
+
+.join-request-buttons button {
+  padding: 4px 8px;
+}
+
+.join-requests ul {
+    padding-left: 18px;
+    margin: 0;
+}
+
+.join-requests li {
+  display: list-item;
 }
 
 .close-button {

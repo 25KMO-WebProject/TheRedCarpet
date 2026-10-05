@@ -126,7 +126,7 @@ const getGroupJoinRequestsController = async (req, res, next) => {
     try {
         const idgroup = req.params.id
 
-        const result = await getGroupJoinRequestsModel();
+        const result = await getGroupJoinRequestsModel(idgroup);
         res.status(200).json(result || [])
     } catch (err) {
         next(err)
@@ -149,6 +149,12 @@ const approveJoinRequestController = async (req, res, next) => {
 
 const rejectJoinRequestController = async (req, res, next) => {
     try {
+        console.log("PARAMS:", req.params)
+        console.log("USER:", req.user)
+        console.log("idaccount:", req.params.idaccount)
+        console.log("idgroup:", req.params.idgroup)
+        console.log("idowner:", req.user.userId)
+
         const idaccount = req.params.idaccount
         const idgroup = req.params.idgroup
         const idowner = req.user.userId
