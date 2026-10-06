@@ -20,37 +20,34 @@ export default function Navbar({
   return (
     <nav>
       <div className="nav-left">
-        <button
-          type="button"
+        <Link
+          to="/"
           className="brand-button"
           onClick={onHomeClick}
         >
           <h1>
             The<br />RedCarpet
           </h1>
-        </button>
+        </Link>
 
         <SearchBar {...searchProps} />
       </div>
 
       <ul>
-        <Link
-          to="/"
-          onClick={onHomeClick}
-        >
-          Etusivu
-        </Link>
-        <Link 
+        <li>
+          <Link 
             to={account ? "/groups" : "#"}
             onClick={ (event) => {
               if (!account) {
                 event.preventDefault()
                 onSignInClick()
-                }
-              }}
-            >
+              }
+            }}
+          >
+            Ryhmäsivu
+          </Link>
+        </li>
         
-        Ryhmäsivu</Link>
         <li>
           <Link
             to="/"

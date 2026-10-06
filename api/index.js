@@ -2,14 +2,15 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import errorHandler from "./middleware/errorHandler.js";
+import healthCheck from "./middleware/healthCheck.js";
 
 import accountRouter from "./routes/accountRouter.js";
 import movieRouter from "./routes/movieRouter.js";
 import searchRouter from "./routes/searchRouter.js";
 import favoriteRouter from "./routes/favoriteRouter.js";
 import registerRouter from "./routes/registerRouter.js";
+import reviewRouter from "./routes/reviewRouter.js";
 import groupRouter from "./routes/groupRouter.js";
-
 
 const port = process.env.PORT || 3000;
 
@@ -19,39 +20,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Check health before routes
+app.get("/api/health", healthCheck);
+
 // Routes
 app.use("/", movieRouter);
-app.use("/", accountRouter);
-
-app.use("/tmdb", searchRouter);
-app.use("/", movieRouter);
 app.use("/", registerRouter);
+app.use("/tmdb", searchRouter);
+app.use("/", reviewRouter);
 
+app.use("/", accountRouter);
 app.use("/", favoriteRouter);
-
 app.use("/", groupRouter);
-
-// Health check
-app.get("/api/health", async (req, res) => {
-  try {
-    const { pool } = await import("./models/db.js");
-
-    await pool.query("SELECT 1");
-
-    res.status(200).json({
-      status: "healthy",
-      database: "connected",
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "unhealthy",
-      database: "disconnected",
-      error: error.message,
-      timestamp: new Date().toISOString(),
-    });
-  }
-});
 
 app.use((req, res, next) => {
   const error = new Error("Not found");

@@ -330,7 +330,7 @@ function App() {
                       )}
                   </section>
 
-                  <NowPlaying />
+                  <NowPlaying onMediaSelect={setSelectedMedia}/>
                 </main>
               )
             }
@@ -346,6 +346,10 @@ function App() {
       <SignUpModal
         isOpen={SignUpOpen}
         onClose={() => setSignUpOpen(false)}
+        onSuccess={() => {
+          setSignUpOpen(false)
+          setSignInOpen(true)
+        }}
       />
 
       <SignInModal
@@ -373,6 +377,7 @@ function App() {
         item={selectedMedia}
         onClose={() => setSelectedMedia(null)}
         isAuthenticated={isAuthenticated}
+        token={token}
         isFavorite={
           selectedMedia
             ? isFavorite(selectedMedia)

@@ -123,6 +123,26 @@ graph TD
 
 ```
 
+## Parser
+
+To scrape some data from the API you need the necessary API key and access key.
+The default code will scrape 200 top rated movies from January 1st 1800 to current day.
+
+To catch more you need to replace ``fetchMoviesFromApi({value})``.
+The value represents pages, my testing resulted that around 100 pages API stream starts putting the break.
+
+```javascript
+  await fetchMoviesFromApi(10);
+
+```
+
+
+```javascript
+node scripts/parser/interface.js
+
+```
+
+
 
 ## Login requirements
 - User email works as an username

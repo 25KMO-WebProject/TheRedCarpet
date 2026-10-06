@@ -131,12 +131,19 @@ DROP TABLE IF EXISTS public.movie;
 CREATE TABLE IF NOT EXISTS public.movie
 (
     id serial NOT NULL,
+    tmdb_id character varying (16) NOT NULL,
     title character varying(255) NOT NULL,
     description text,
     duration interval NOT NULL,
     genre character varying(255)[] NOT NULL,
     release_date date,
-    PRIMARY KEY (id)
+    backdrop_path character varying(255) NOT NULL,
+    poster_path character varying(255) NOT NULL,
+    small_backdrop_path character varying(255) NOT NULL,
+    small_poster_path character varying(255) NOT NULL,
+
+    PRIMARY KEY (id),
+    CONSTRAINT uk_tmdb_id UNIQUE (tmdb_id)
 );
 
 DROP TABLE IF EXISTS public.review;

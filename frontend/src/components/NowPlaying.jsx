@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./NowPlaying.css";
 
-function NowPlaying() {
+function NowPlaying({ onMediaSelect }) {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function NowPlaying() {
 
       <div className="movie-grid">
         {movies.map((movie) => (
-          <div className="movie-card" key={movie.id}>
+          <div className="movie-card" key={movie.id} onClick={() => onMediaSelect(movie)}>
             {movie.poster_path ? (
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
