@@ -53,6 +53,11 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     try {
         const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
+        {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
         
       );
       setMembers(response.data)
