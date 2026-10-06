@@ -76,7 +76,7 @@ const createGroupController = async (req, res, next) => {
 }
 
 const deleteGroupController = async (req, res, next) => {
-    console.log("Req params:", req.params);
+    
     try {
         const idgroup = req.params.idgroup
         const idowner = req.user.userId
@@ -149,12 +149,6 @@ const approveJoinRequestController = async (req, res, next) => {
 
 const rejectJoinRequestController = async (req, res, next) => {
     try {
-        console.log("PARAMS:", req.params)
-        console.log("USER:", req.user)
-        console.log("idaccount:", req.params.idaccount)
-        console.log("idgroup:", req.params.idgroup)
-        console.log("idowner:", req.user.userId)
-
         const idaccount = req.params.idaccount
         const idgroup = req.params.idgroup
         const idowner = req.user.userId

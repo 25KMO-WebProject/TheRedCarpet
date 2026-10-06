@@ -1,3 +1,4 @@
+/* Group.jsx*/
 .section {
     display: flex;
     flex-direction: column;
@@ -42,16 +43,6 @@
     font-size: 20px;
 }
 
-.join_button {
-color: white;
-}
-
-.Create_Group {
-      margin-top: 20px;
-      color: white;
-      font-size: 18px;
-}
-
 .section h1 {
     margin-top: 20px;
 }
@@ -66,7 +57,59 @@ color: white;
     height: 160px;
 }
 
-/*MODAL*/ 
+/*Liittymis nappi*/
+.join_button {
+color: white;
+}
+
+/*Ryhmän luomis nappi ja Ryhmän luomis modal*/
+
+.Create_Group {
+      margin-top: 20px;
+      color: white;
+      font-size: 18px;
+}
+
+.creategroup-modal {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 32px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.creategroup-modal h2 {
+  margin: 0 0 24px;
+  color: #172033;
+  text-align: center;
+}
+
+
+.creategroup-modal label {
+  display: block;
+  margin: 16px 0 7px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.creategroup-modal input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 28px;
+}
+
+.creategroup-modal textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 28px;
+}
+
+
+/*MODAL eli GroupPage.jsx*/ 
 
 .overlay-modal {
   position: fixed;
@@ -79,15 +122,6 @@ color: white;
 
   padding: 20px;
   background: rgba(0, 0, 0, 0.65);
-}
-
-.creategroup-modal {
-  position: relative;
-  width: min(420px, 100%);
-  padding: 32px;
-  border-radius: 16px;
-  background: white;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .groupPage-modal {
@@ -164,37 +198,7 @@ color: white;
   margin-top: 0;
 }
 
-
-.creategroup-modal h2 {
-  margin: 0 0 24px;
-  color: #172033;
-  text-align: center;
-}
-
-
-.creategroup-modal label {
-  display: block;
-  margin: 16px 0 7px;
-  color: #374151;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.creategroup-modal input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 28px;
-}
-
-.creategroup-modal textarea {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 28px;
-}
-
-/*JOIN-BUTTON*/
+/*JOIN-Request*/
 
 .join-request-content {
     margin-bottom: 12px;

@@ -57,9 +57,7 @@ const createGroupModel = async(group_name, group_descr, id_owner, creation_date)
         [ group_name, group_descr, id_owner]
     );
     const groupResult = result.rows[0]
-    console.log(groupResult),
-    console.log(groupResult.id)
-
+    
     await pool.query(
         `INSERT INTO member_list
             (id_account, id_group, join_date)
@@ -71,8 +69,6 @@ const createGroupModel = async(group_name, group_descr, id_owner, creation_date)
 }
 
 const deleteGroupModel = async (idgroup, idowner) => {
-    console.log("Model idgroup:", idgroup);
-    console.log("Model idowner:", idowner);
     const result = await pool.query('DELETE FROM "group" WHERE id = $1 AND id_owner = $2', [idgroup, idowner]);
     return result;
 };
@@ -152,11 +148,7 @@ const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
 };
 
 const rejectJoinRequestModel = async (idaccount, idgroup, idowner) => {
-    console.log({
-    idaccount,
-    idgroup,
-    idowner
-    })
+   
     const result = await pool.query(`
         UPDATE join_request
         SET status = 'REJECTED'

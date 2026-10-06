@@ -2,15 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import "./Groups.css"
 
-const token = localStorage.getItem("token")
+//const token = localStorage.getItem("token")
 
 const Join_Request = ({ idgroup }) => {
     const [message, setMessage] = useState("");
 
     const sendRequest = async () => {
         try { 
-            console.log("Token:", token)
-            console.log("GroupID: ", idgroup)
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/groups/${idgroup}/join-requests`,
                 {},
                 {

@@ -12,13 +12,15 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     const [members, setMembers] = useState([])
     const [currentJoinRequests, setJoinrequests] = useState(joinRequest || [])
 
+    //Suodatetaan vanhat ja uudet liittymispyynnöt
     const handleRequests = (idaccount) => {
       setJoinrequests((oldRequests) =>
       oldRequests.filter(
         (request) => request.id_account !== idaccount
       ))
     }
-    
+  
+  // Modal sulketuuu esc-näppäimestä tai X:sttä
   useEffect(() => {
     function handleEsc(event) {
       if (event.key === "Escape") {
@@ -47,7 +49,7 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     setLoading(true)
     setError("")
 
-
+    //Jäsen lista
     try {
         const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
@@ -59,6 +61,7 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
         setError("Jäsenten hakeminen epäonnistui")
     }
 
+    //Liittymispyynnöt
     try {
       const joinRequestsResponse = await axios.get(
       `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
@@ -85,6 +88,8 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     return null;
   }
 
+  //stop.Propagation estää muitten modaaliesn aukeamisen
+  //ownerid === piilotetaan ryhmänjäseniltä ryhmän omistajalle kuuluvat napit
    return (
   <div className="overlay-modal" onClick={onClose}>
     <div
@@ -103,7 +108,6 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
       <div className="groupPage-content">
         <div className="group-info">
           <h2>{groupName}</h2>
-          
           
           {ownerId === ownerId && (
             <DeleteGroupButton

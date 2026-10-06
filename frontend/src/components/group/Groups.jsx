@@ -50,6 +50,7 @@ export default function Groups() {
          (group) => group.member_accountid === null
      )
 
+     //Kun ryhmä poistetaan ladataan sivu uudelleen
       const handleDeleted = () => {
         setSelectedGroup(null)
         window.location.reload()
