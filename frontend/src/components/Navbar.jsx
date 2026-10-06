@@ -5,7 +5,6 @@ import { useState } from "react"
 import { Link } from 'react-router-dom'
 
 
-
 export default function Navbar({
   onSignUpClick,
   onSignInClick,
@@ -16,7 +15,9 @@ export default function Navbar({
   ...searchProps
 }) {
   const [menuOpen, setMenu] = useState(false)
+
   console.log("Navbar ac: ", account)
+
   return (
     <nav>
       <div className="nav-left">
@@ -35,9 +36,9 @@ export default function Navbar({
 
       <ul>
         <li>
-          <Link 
+          <Link
             to={account ? "/groups" : "#"}
-            onClick={ (event) => {
+            onClick={(event) => {
               if (!account) {
                 event.preventDefault()
                 onSignInClick()
@@ -47,7 +48,7 @@ export default function Navbar({
             Ryhmäsivu
           </Link>
         </li>
-        
+
         <li>
           <Link
             to="/"
@@ -56,40 +57,56 @@ export default function Navbar({
             Suosikit
           </Link>
         </li>
-        {!account && ( 
-        <>
-        <li>
-          <button
-            type="button"
-            className="signup"
-            onClick={onSignUpClick}
-          >
-            Rekisteröidy
-          </button>
-        </li>
 
-        <li>
-          <button
-            type="button"
-            className="signin"
-            onClick={onSignInClick}
-          >
-            Kirjaudu
-          </button>
-        </li>
-        </>
+        {!account && (
+          <>
+            <li>
+              <button
+                type="button"
+                className="signup"
+                onClick={onSignUpClick}
+              >
+                Rekisteröidy
+              </button>
+            </li>
+
+            <li>
+              <button
+                type="button"
+                className="signin"
+                onClick={onSignInClick}
+              >
+                Kirjaudu
+              </button>
+            </li>
+          </>
         )}
+
         {account && (
-          <li>
-            <button type="button" className="profile" onClick={() => setMenu(!menuOpen)}>
+          <li className="profile-menu">
+            <button
+              type="button"
+              className="profile"
+              onClick={() => setMenu((open) => !open)}
+              aria-expanded={menuOpen}
+            >
               Profiili
             </button>
+
             {menuOpen && (
               <div className="dropdown">
-                <button type="button" onClick={onLogout}>
+                {/* Profile actions are shown vertically below the button. */}
+                <button
+                  type="button"
+                  onClick={onLogout}
+                >
                   Kirjaudu ulos
                 </button>
-                <DeleteAccountButton account={account} onLogout={onLogout} />
+
+                <DeleteAccountButton
+                  account={account}
+                  onLogout={onLogout}
+                />
               </div>
             )}
           </li>
