@@ -11,7 +11,6 @@ import registerRouter from "./routes/registerRouter.js";
 import reviewRouter from "./routes/reviewRouter.js";
 import groupRouter from "./routes/groupRouter.js";
 
-
 const port = process.env.PORT || 3000;
 
 const app = express();
@@ -19,19 +18,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// Routes
-app.use("/", movieRouter);
-app.use("/", accountRouter);
-
-app.use("/tmdb", searchRouter);
-app.use("/", movieRouter);
-app.use("/", registerRouter);
-
-app.use("/", favoriteRouter);
-app.use("/", reviewRouter);
-
-app.use("/", groupRouter);
 
 // Health check
 app.get("/api/health", async (req, res) => {
@@ -54,6 +40,19 @@ app.get("/api/health", async (req, res) => {
     });
   }
 });
+
+// Routes
+app.use("/", movieRouter);
+app.use("/", accountRouter);
+
+app.use("/tmdb", searchRouter);
+app.use("/", movieRouter);
+app.use("/", registerRouter);
+
+app.use("/", favoriteRouter);
+app.use("/", reviewRouter);
+
+app.use("/", groupRouter);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
