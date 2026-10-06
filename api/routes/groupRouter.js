@@ -8,6 +8,7 @@ import {
   getGroupJoinRequestsController,
   createGroupController,
   deleteGroupController,
+  leaveGroupController,
   createJoinRequestController,
   approveJoinRequestController,
   rejectJoinRequestController,
@@ -29,6 +30,7 @@ router.get("/groups/:id/join-requests", getGroupJoinRequestsController)
 router.post("/groups", createGroupController);
 router.post("/groups/:id/join-requests", createJoinRequestController);
 router.delete("/groups/id/:idgroup", deleteGroupController);
+router.delete("/groups/:id/leave", leaveGroupController)
 router.patch("/groups/:idgroup/join-requests/:idaccount/approve", approveJoinRequestController);
 router.patch("/groups/:idgroup/join-requests/:idaccount/reject", rejectJoinRequestController);
 

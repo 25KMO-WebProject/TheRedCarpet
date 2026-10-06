@@ -8,6 +8,7 @@ import {
     createGroupModel,
     createJoinRequestModel,
     deleteGroupModel,
+    leaveGroupModel,
     approveJoinRequestModel,
     rejectJoinRequestModel,
 
@@ -97,6 +98,27 @@ const deleteGroupController = async (req, res, next) => {
     }
 }
 
+const leaveGroupController = async (req, res, next) => {
+    console.log("Leaving group...")
+    try {
+        const idgroup = req.params.id
+        const idaccount = req.user.userId;
+
+        const result = await leaveGroupModel(idgroup, idaccount)
+
+        if (result.rowCount === 0) {
+            const error = new Error("Ryhmän omistaja ei poistua ryhmästä")
+            error.status = 400
+            return next(error)
+        }
+        return res.status(200).json({
+            message: "Poistuit ryhmästä onnistuneesti"
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 const createJoinRequestController = async (req, res, next) => {
      console.log("Sending a request...")
     try {
@@ -170,6 +192,7 @@ export {
     createGroupController,
     createJoinRequestController,
     deleteGroupController,
+    leaveGroupController,
     approveJoinRequestController,
     rejectJoinRequestController,
 }

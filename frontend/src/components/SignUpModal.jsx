@@ -84,6 +84,7 @@ function SignUpModal({
             autoFocus
             required
           />
+          <small>Enintään 64 merkkiä.</small>
           {/* Kohdat mihin kirjoitetaan email ja salasana rajoituksineen */}
           <label htmlFor="email">Sähköposti</label>
           <input
@@ -94,6 +95,7 @@ function SignUpModal({
             maxLength={64}
             required
           />
+          <small>Anna voimassa oleva sähköpostiosoite.</small>
           <label htmlFor="password">Salasana</label>
           <input
             id="password"
@@ -106,6 +108,7 @@ function SignUpModal({
             /*Tähän voisi lisätä titlen niin käyttäjä huomaa vaatimukset*/
             required
           />
+          <small>Vähintään 8 merkkiä, yksi iso kirjain, yksi numero ja yksi erikoismerkki.</small>
           <button type="submit" className="submit">
             Rekisteröidy
           </button>

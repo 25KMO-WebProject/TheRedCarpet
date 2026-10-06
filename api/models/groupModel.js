@@ -73,6 +73,25 @@ const deleteGroupModel = async (idgroup, idowner) => {
     return result;
 };
 
+const leaveGroupModel = async (idgroup, idaccount) => {
+    const result = await pool.query(
+        `
+        DELETE FROM member_list
+        WHERE id_group = $1
+            AND id_account = $2 
+            AND id_account NOT IN (
+                SELECT id_owner
+                FROM "group"
+                WHERE id = $1
+            )
+        RETURNING *;
+        `,
+        [idgroup, idaccount]
+    )
+
+    return result
+}
+
 const createJoinRequestModel = async (idgroup, idaccount) => {
     const result = await pool.query(`INSERT INTO join_request (id_account, id_group, status)
         VALUES ($1, $2, 'PENDING')
@@ -184,6 +203,7 @@ export {
     createGroupModel,
     createJoinRequestModel,
     deleteGroupModel,
+    leaveGroupModel,
     approveJoinRequestModel,
     rejectJoinRequestModel,
 
