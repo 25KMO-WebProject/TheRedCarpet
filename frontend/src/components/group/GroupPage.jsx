@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import "./Groups.css"
 import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
+import LeaveGroupButton from "./GroupLeave";
 
 function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted}) {
 
@@ -114,7 +115,7 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
         <div className="group-info">
           <h2>{groupName}</h2>
           
-          {ownerId === ownerId && (
+          {String(ownerId) === String(accountId) && (
             <DeleteGroupButton
               idgroup={groupId}
               idowner={ownerId}
@@ -122,6 +123,12 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
               onDeleted={onDeleted}
               />
           )}
+
+            <LeaveGroupButton
+            groupId={groupId}
+
+            />
+
         </div>
 
                 <div className="sections-groupPage">
@@ -133,7 +140,9 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                         ) : (
                         <ul>
                             {members.map((member) => (
-                                <li key={member.id_account}>{member.username}</li>
+                                <li key={member.id_account}>{member.username}
+                                {String(member.id_account) === String(ownerId) && " (omistaja)"}
+                                </li>
                          ))}
                         </ul>
                      )}

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import "./Groups.css"
 
-const LeaveGroupButton = ({ idgroup }) => {
+const LeaveGroupButton = ({ groupId }) => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
 
@@ -11,7 +12,7 @@ const LeaveGroupButton = ({ idgroup }) => {
             setMessage("")
 
             await axios.delete(
-                `${import.meta.env.VITE_API_URL}/groups/${idgroup}/leave`,
+                `${import.meta.env.VITE_API_URL}/groups/${groupId}/leave`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -19,7 +20,8 @@ const LeaveGroupButton = ({ idgroup }) => {
         }
       );
 
-      setMessage("Poistuit ryhmästä")
+      setMessage("Poistuit ryhmästä onnistuneesti")
+      window.location.reload()
     } catch (err) {
         setMessage(err.response?.data?.error?.message ||
             "Ryhmästä poistuminen epäonnistui"
@@ -37,7 +39,7 @@ const LeaveGroupButton = ({ idgroup }) => {
             disabled={loading}
             className="Leave-group"
             >
-
+                Poistu ryhmästä
             </button>
         </div>
     )

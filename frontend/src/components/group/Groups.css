@@ -146,7 +146,7 @@ color: white;
   height: 100%;
 }
 
-.delete-group-button {
+.delete-group-button, .Leave-group {
   padding: 6px 10px;
   border: none;
   border-radius: 5px;

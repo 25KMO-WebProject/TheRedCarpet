@@ -32,13 +32,15 @@ const getGroupFromIdModel = async (id) => {
     return result.rows;
 }
 
-const getMembersFromGroupIdModel = async(id) => {
+const getMembersFromGroupIdModel = async(idgroup) => {
     const result = await pool.query(
-        `SELECT "account".*
+        `SELECT 
+            "account".*,
+            member_list.id_account AS id_account
         FROM member_list
         JOIN "account"
             ON member_list.id_account = "account".id
-        WHERE member_list.id_group = $1`, [id]
+        WHERE member_list.id_group = $1`, [idgroup]
     );
     return result.rows;
 }
@@ -77,12 +79,13 @@ const leaveGroupModel = async (idgroup, idaccount) => {
     const result = await pool.query(
         `
         DELETE FROM member_list
-        WHERE id_group = $1
-            AND id_account = $2 
-            AND id_account NOT IN (
-                SELECT id_owner
+        WHERE member_list.id_group = $1
+            AND member_list.id_account = $2 
+            AND NOT EXISTS (
+                SELECT 1
                 FROM "group"
-                WHERE id = $1
+                WHERE "group".id = member_list.id_group
+                    AND "group".id_owner = member_list.id_account
             )
         RETURNING *;
         `,
