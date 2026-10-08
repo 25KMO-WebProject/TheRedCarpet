@@ -4,16 +4,22 @@ import {
     getMembersFromGroupIdModel,
     getCountofmembersModel,
     getAllJoinRequestsModel,
+    getGroupJoinRequestsModel,
     createGroupModel,
     createJoinRequestModel,
     deleteGroupModel,
+    leaveGroupModel,
+    removeMemberFromGroupModel,
+    approveJoinRequestModel,
+    rejectJoinRequestModel,
 
 } from "../models/groupModel.js";
 
 const getAllGroupsController = async (req, res, next ) => {
     console.log("Searching all Groups..")
     try {
-        const result = await getAllGroupsModel();
+        const idaccount = req.user.userId
+        const result = await getAllGroupsModel(idaccount);
         res.status(200).json(result || []);
     } catch (err) {
         next(err);
@@ -72,13 +78,14 @@ const createGroupController = async (req, res, next) => {
 }
 
 const deleteGroupController = async (req, res, next) => {
+    
     try {
-        const idgroup = req.params.id
+        const idgroup = req.params.idgroup
         const idowner = req.user.userId
 
-        const resultRows = await deleteGroupModel(idgroup, idowner)
+        const result = await deleteGroupModel(idgroup, idowner)
 
-        if (resultRows === 0) {
+        if (result.rowCount === 0) {
             const error = new Error("No group found or account is not the owner");
             error.status = 404;
             return next(error);
@@ -86,7 +93,53 @@ const deleteGroupController = async (req, res, next) => {
 
         console.log(`Deleting group with id: ${idgroup}`)
 
-        return res.status(200).json({ id: Number(id) });
+        return res.status(200).json({ id: Number(idgroup) });
+    } catch (err) {
+        next(err)
+    }
+}
+
+const leaveGroupController = async (req, res, next) => {
+    console.log("Leaving group...")
+    try {
+        const idgroup = req.params.idgroup;
+        const idaccount = req.user.userId;
+        
+        const result = await leaveGroupModel(idgroup, idaccount)
+
+        if (result.rowCount === 0) {
+            const error = new Error("Et voi poistua ryhmästä tai olet sen ryhmän omistaja")
+            error.status = 400
+            return next(error)
+        }
+        return res.status(200).json({
+            message: "Poistuit ryhmästä onnistuneesti"
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+const removeMemberFromGroupController = async (req, res, next) => {
+    try {
+        const idgroup = req.params.idgroup
+        const idaccount = req.params.idaccount
+        const idowner = req.user.userId
+
+        const result = await removeMemberFromGroupModel(
+           idgroup,
+           idaccount,
+           idowner 
+        )
+
+        if (result.rowCount === 0) {
+            const error = new Error("Tarkista käyttöoikeudet")
+            error.status = 403
+            return next(error)
+        }
+        return res.status(200).json({
+            message: "Jäsen poistettu onnistuneesti"
+        })
     } catch (err) {
         next(err)
     }
@@ -117,6 +170,43 @@ const getAllJoinRequestsController = async (req, res, next) => {
     }
 };
 
+const getGroupJoinRequestsController = async (req, res, next) => {
+    try {
+        const idgroup = req.params.id
+
+        const result = await getGroupJoinRequestsModel(idgroup);
+        res.status(200).json(result || [])
+    } catch (err) {
+        next(err)
+    }
+
+}
+
+const approveJoinRequestController = async (req, res, next) => {
+    try {
+        const idaccount = req.params.idaccount
+        const idgroup = req.params.idgroup
+        const idowner = req.user.userId
+
+        const result = await approveJoinRequestModel(idaccount, idgroup, idowner);
+        res.status(200).json(result)
+    } catch (err) {
+        next(err)
+    }
+}
+
+const rejectJoinRequestController = async (req, res, next) => {
+    try {
+        const idaccount = req.params.idaccount
+        const idgroup = req.params.idgroup
+        const idowner = req.user.userId
+
+        const result = await rejectJoinRequestModel(idaccount, idgroup, idowner);
+        res.status(200).json(result)
+    } catch (err) {
+        next(err)
+    }
+}
 
 export {
     getAllGroupsController,
@@ -124,7 +214,12 @@ export {
     getMembersFromGroupIdController,
     getCountofmembersController,
     getAllJoinRequestsController,
+    getGroupJoinRequestsController,
     createGroupController,
     createJoinRequestController,
     deleteGroupController,
+    leaveGroupController,
+    removeMemberFromGroupController,
+    approveJoinRequestController,
+    rejectJoinRequestController,
 }

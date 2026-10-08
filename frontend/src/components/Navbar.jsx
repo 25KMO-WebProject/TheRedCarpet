@@ -16,7 +16,6 @@ export default function Navbar({
   ...searchProps
 }) {
   const [menuOpen, setMenu] = useState(false)
-  console.log("Navbar ac: ", account)
   return (
     <nav>
       <div className="nav-left">
