@@ -198,6 +198,18 @@ color: white;
   margin-top: 0;
 }
 
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Remove-member-button {
+  position: static;
+  padding: 3px 7px;
+  color: #f2f2f2;
+}
+
 /*JOIN-Request*/
 
 .join-request-content {

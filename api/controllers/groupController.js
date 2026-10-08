@@ -9,6 +9,7 @@ import {
     createJoinRequestModel,
     deleteGroupModel,
     leaveGroupModel,
+    removeMemberFromGroupModel,
     approveJoinRequestModel,
     rejectJoinRequestModel,
 
@@ -119,6 +120,31 @@ const leaveGroupController = async (req, res, next) => {
     }
 }
 
+const removeMemberFromGroupController = async (req, res, next) => {
+    try {
+        const idgroup = req.params.idgroup
+        const idaccount = req.params.idaccount
+        const idowner = req.user.userId
+
+        const result = await removeMemberFromGroupModel(
+           idgroup,
+           idaccount,
+           idowner 
+        )
+
+        if (result.rowCount === 0) {
+            const error = new Error("Tarkista käyttöoikeudet")
+            error.status = 403
+            return next(error)
+        }
+        return res.status(200).json({
+            message: "Jäsen poistettu onnistuneesti"
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 const createJoinRequestController = async (req, res, next) => {
      console.log("Sending a request...")
     try {
@@ -193,6 +219,7 @@ export {
     createJoinRequestController,
     deleteGroupController,
     leaveGroupController,
+    removeMemberFromGroupController,
     approveJoinRequestController,
     rejectJoinRequestController,
 }

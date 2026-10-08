@@ -16,6 +16,10 @@ export default function Groups() {
 
     const token = localStorage.getItem("token")
 
+    const account = JSON.parse(localStorage.getItem("account") || "null")
+    const accountId = account?.id
+    
+
     async function getGroups() {
         try {
             const response = await axios.get(
@@ -103,7 +107,7 @@ export default function Groups() {
         groupId={selectedGroup?.id}
         groupName={selectedGroup?.group_name}
         ownerId={selectedGroup?.id_owner}
-        accountId={null}
+        accountId={accountId}
         onDeleted={handleDeleted}
         />
 

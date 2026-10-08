@@ -4,14 +4,16 @@ import "./Groups.css"
 import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
+import RemoveMemberButton from "./MemberRemove";
 
-function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted}) {
+function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted, accountId}) {
 
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [members, setMembers] = useState([])
     const [currentJoinRequests, setJoinrequests] = useState(joinRequest || [])
+    const OwnerActions = String(ownerId) === String(accountId);
 
     //Suodatetaan vanhat ja uudet liittymispyynnöt
     const handleRequests = (idaccount) => {
@@ -114,8 +116,7 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
       <div className="groupPage-content">
         <div className="group-info">
           <h2>{groupName}</h2>
-          
-          {String(ownerId) === String(accountId) && (
+          {OwnerActions && (
             <DeleteGroupButton
               idgroup={groupId}
               idowner={ownerId}
@@ -124,10 +125,11 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
               />
           )}
 
+          {!OwnerActions && (
             <LeaveGroupButton
             groupId={groupId}
-
-            />
+           />
+          )}
 
         </div>
 
@@ -140,14 +142,28 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                         ) : (
                         <ul>
                             {members.map((member) => (
-                                <li key={member.id_account}>{member.username}
+                                <li key={member.id_account}>
+                                  <div className="member-row">
+                                    <span>{member.username}</span>
+
                                 {String(member.id_account) === String(ownerId) && " (omistaja)"}
+                                
+                                {OwnerActions && String(member.id_account) !== String(ownerId)
+                                && (
+                                    <RemoveMemberButton
+                                    idgroup={groupId}
+                                    idaccount={member.id_account}
+                                    setMembers={setMembers}
+                                  />
+                                )}
+                                </div>
                                 </li>
                          ))}
                         </ul>
                      )}
                     </section>
 
+                  {OwnerActions && (
                     <section className="join-requests">
                         <h3>Liittymispyynnöt:</h3>
                         {currentJoinRequests.length === 0 ? (
@@ -168,6 +184,7 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                           </ul>
                         )}
                     </section>
+                  )}
                 </div>
             </div>
         </div>
