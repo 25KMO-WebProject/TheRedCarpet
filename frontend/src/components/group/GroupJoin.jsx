@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "../api/tokenHandler.js";
+import axios from "../api/authAxios.js";
 import "./Groups.css";
 
 //const token = localStorage.getItem("token")

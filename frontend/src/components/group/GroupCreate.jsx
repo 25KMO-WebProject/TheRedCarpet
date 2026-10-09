@@ -1,4 +1,4 @@
-import axios from "../api/tokenHandler.js";
+import axios from "../api/authAxios.js";
 import { useEffect, useState } from "react";
 import "./Groups.css";
 

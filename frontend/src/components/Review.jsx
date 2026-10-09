@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "./api/tokenHandler.js";
+import axios from "./api/authAxios.js";
 import "./Review.css";
 
 export default function Reviews({ item, isAuthenticated, token }) {
@@ -67,7 +67,7 @@ export default function Reviews({ item, isAuthenticated, token }) {
     setError(null);
 
     try {
-      // Protected POST request using tokenHandler.js
+      // Protected POST request using authAxios.js
       await axios.post("/reviews", {
         movieId,
         rating,

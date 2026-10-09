@@ -28,10 +28,19 @@ const requireAuth = (req, res, next) => {
     req.user = payload;
 
     next();
-  } catch {
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        error: {
+          message: "Token expired",
+          status: 401,
+        },
+      });
+    }
+
     return res.status(401).json({
       error: {
-        message: "Invalid or expired token",
+        message: "Invalid token",
         status: 401,
       },
     });

@@ -20,10 +20,12 @@ api.interceptors.response.use(
   (response) => response,
 
   (error) => {
+    // If token expired, respond with rejected Promise containing an error object
     if (
       error.response?.status === 401 &&
       error.response?.data?.error?.message === "Token expired"
     ) {
+      // If token expired, create event 'sessionExpired' that App.jsx listens to with every request made
       const event = new CustomEvent("sessionExpired");
       window.dispatchEvent(event);
     }
@@ -32,4 +34,4 @@ api.interceptors.response.use(
   },
 );
 
-export default axios;
+export default api;

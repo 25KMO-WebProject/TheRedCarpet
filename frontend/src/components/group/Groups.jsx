@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../api/tokenHandler.js";
+import axios from "../api/authAxios.js";
 import "./Groups.css";
 import CreategroupModal from "./GroupCreate";
 import Join_Request from "./GroupJoin";

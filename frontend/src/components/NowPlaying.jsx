@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "./api/tokenHandler.js";
+import axios from "./api/authAxios.js";
 import "./NowPlaying.css";
 
 function NowPlaying({ onMediaSelect }) {

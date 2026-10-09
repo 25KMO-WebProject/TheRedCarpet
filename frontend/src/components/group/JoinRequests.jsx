@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "../api/tokenHandler.js";
+import axios from "../api/authAxios.js";
 
 const JoinRequest = ({ idaccount, groupId, username, handleRequest }) => {
   const [loading, setLoading] = useState(false);

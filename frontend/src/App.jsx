@@ -53,6 +53,7 @@ function App() {
   const [sharedFavorites, setSharedFavorites] = useState([]);
 
   const [favorites, setFavorites] = useState([]);
+  const [favoritesRefresh, setFavoritesRefresh] = useState(0);
 
   useEffect(() => {
     function handleSessionExpired() {
@@ -159,7 +160,7 @@ function App() {
     if (currentView === "favorites") {
       loadFavorites();
     }
-  }, [currentView, token]);
+  }, [currentView, token, favoritesRefresh]);
 
   // Check whether the selected TMDB item already exists in favorites.
   const isFavorite = (item) => {
@@ -270,6 +271,7 @@ function App() {
 
           onFavoritesClick={() => {
             setCurrentView("favorites");
+            setFavoritesRefresh((prev) => prev + 1);
           }}
 
           onHomeClick={() => {

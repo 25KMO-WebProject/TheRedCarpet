@@ -1,4 +1,4 @@
-import axios from "../components/api/tokenHandler.js";
+import axios from "../components/api/authAxios.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
