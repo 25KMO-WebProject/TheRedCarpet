@@ -1,143 +1,120 @@
-import { useEffect, useState } from 'react'
-import './Review.css'
+import { useEffect, useState } from "react";
+import axios from "./api/tokenHandler.js";
+import "./Review.css";
 
-export default function Reviews({
-  item,
-  isAuthenticated,
-  token
-}) {
-  const [reviews, setReviews] = useState([])
-  const [error, setError] = useState(null)
+export default function Reviews({ item, isAuthenticated, token }) {
+  const [reviews, setReviews] = useState([]);
+  const [error, setError] = useState(null);
 
-  const [rating, setRating] = useState(0)
-  const [description, setDescription] = useState('')
-  const [showForm, setShowForm] = useState(false)
-  const [sending, setSending] = useState(false)
+  const [rating, setRating] = useState(0);
+  const [description, setDescription] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const movieId = item?.id
+  const movieId = item?.id;
 
   // Haetaan elokuvan arvostelut backendistä
   useEffect(() => {
     if (!movieId) {
-      return
+      return;
     }
 
     const fetchReviews = async () => {
-      setError(null)
+      setError(null);
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/reviews/${movieId}`
-        )
+          `${import.meta.env.VITE_API_URL}/reviews/${movieId}`,
+        );
 
         if (!response.ok) {
           throw new Error(
-            'Arvostelujen haku epäonnistui (tarkista että elokuva on lisätty tietokantaan)'
-          )
+            "Arvostelujen haku epäonnistui (tarkista että elokuva on lisätty tietokantaan)",
+          );
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
-        setReviews(data)
+        setReviews(data);
       } catch (err) {
-        console.error(err)
-        setError(err.message)
+        console.error(err);
+        setError(err.message);
       }
-    }
+    };
 
-    fetchReviews()
-  }, [movieId])
+    fetchReviews();
+  }, [movieId]);
 
   // Lähetetään uusi arvostelu backendille
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     if (!token) {
-      return
+      return;
     }
 
     if (rating < 1 || rating > 5) {
-      setError('Valitse tähdet 1-5.')
-      return
+      setError("Valitse tähdet 1-5.");
+      return;
     }
 
     if (!description.trim()) {
-      setError('Kirjoita arvostelu.')
-      return
+      setError("Kirjoita arvostelu.");
+      return;
     }
 
-    setSending(true)
-    setError(null)
+    setSending(true);
+    setError(null);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/reviews`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            movieId,
-            rating,
-            description
-          })
-        }
-      )
-
-      if (!response.ok) {
-        const data = await response.json()
-
-        throw new Error(
-          data?.error?.message ||
-          'Arvostelun lähettäminen epäonnistui'
-        )
-      }
+      // Protected POST request using tokenHandler.js
+      await axios.post("/reviews", {
+        movieId,
+        rating,
+        description,
+      });
 
       // Tyhjennetään lomake onnistuneen lähetyksen jälkeen
-      setDescription('')
-      setRating(0)
-      setShowForm(false)
+      setDescription("");
+      setRating(0);
+      setShowForm(false);
 
-      // Haetaan arvostelut uudelleen, niin arvostelu näkyy heti listassa
+      // Public GET request to refresh reviews
       const reviewsResponse = await fetch(
-        `${import.meta.env.VITE_API_URL}/reviews/${movieId}`
-      )
+        `${import.meta.env.VITE_API_URL}/reviews/${movieId}`,
+      );
 
       if (!reviewsResponse.ok) {
-        throw new Error(
-          'Arvostelujen haku epäonnistui'
-        )
+        throw new Error("Arvostelujen haku epäonnistui");
       }
 
-      const data = await reviewsResponse.json()
+      const data = await reviewsResponse.json();
 
-      setReviews(data)
+      setReviews(data);
     } catch (err) {
-      console.error(err)
-      setError(err.message)
+      console.error(err);
+
+      setError(
+        err.response?.data?.error?.message ||
+          err.message ||
+          "Arvostelun lähettäminen epäonnistui",
+      );
     } finally {
-      setSending(false)
+      setSending(false);
     }
-  }
+  };
 
   return (
     <section className="reviews">
       <h3>Käyttäjien arvostelut</h3>
 
-      {error && (
-        <p>{error}</p>
-      )}
+      {error && <p>{error}</p>}
 
       {/* Pitää olla kirjautunut että voi antaa arvostelun */}
       {isAuthenticated && (
         <div className="review-form-section">
           {!showForm ? (
-            <button
-              type="button"
-              onClick={() => setShowForm(true)}
-            >
+            <button type="button" onClick={() => setShowForm(true)}>
               Arvostele
             </button>
           ) : (
@@ -156,9 +133,7 @@ export default function Reviews({
                       onClick={() => setRating(star)}
                       aria-label={`${star} tähteä`}
                     >
-                      {star <= rating
-                        ? '★'
-                        : '☆'}
+                      {star <= rating ? "★" : "☆"}
                     </button>
                   ))}
                 </div>
@@ -167,38 +142,28 @@ export default function Reviews({
               {/* Arvosteluteksti */}
               <label>
                 Arvostelu:
-
                 <textarea
                   value={description}
-                  onChange={(event) =>
-                    setDescription(event.target.value)
-                  }
+                  onChange={(event) => setDescription(event.target.value)}
                   maxLength={512}
                   placeholder="Kirjoita arvostelu... MAX 512 merkkiä"
                   required
                 />
-                <small>
-                 {description.length} / 512
-                </small>
+                <small>{description.length} / 512</small>
               </label>
 
               <div>
-                <button
-                  type="submit"
-                  disabled={sending}
-                >
-                  {sending
-                    ? 'Lähetetään...'
-                    : 'Lisää arvostelu'}
+                <button type="submit" disabled={sending}>
+                  {sending ? "Lähetetään..." : "Lisää arvostelu"}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => {
-                    setShowForm(false)
-                    setRating(0)
-                    setDescription('')
-                    setError(null)
+                    setShowForm(false);
+                    setRating(0);
+                    setDescription("");
+                    setError(null);
                   }}
                 >
                   Peruuta
@@ -209,39 +174,26 @@ export default function Reviews({
         </div>
       )}
 
-      {reviews.length === 0 && (
-        <p>Arvosteluja ei ole vielä annettu.</p>
-      )}
+      {reviews.length === 0 && <p>Arvosteluja ei ole vielä annettu.</p>}
 
       {reviews.map((review, index) => (
-        <article
-          key={index}
-          className="review"
-        >
+        <article key={index} className="review">
           {/* Arvostelun tähdet */}
           <div className="review-rating">
-            {'★'.repeat(review.rating)}
-            {'☆'.repeat(5 - review.rating)}
+            {"★".repeat(review.rating)}
+            {"☆".repeat(5 - review.rating)}
           </div>
 
           {/* Käyttäjänimi */}
-          <strong>
-            {review.username}
-          </strong>
+          <strong>{review.username}</strong>
 
           {/* Arvostelun teksti */}
-          <p>
-            {review.description}
-          </p>
+          <p>{review.description}</p>
 
           {/* Päivämäärä suomeksi */}
-          <small>
-            {new Date(
-              review.date
-            ).toLocaleString('fi-FI')}
-          </small>
+          <small>{new Date(review.date).toLocaleString("fi-FI")}</small>
         </article>
       ))}
     </section>
-  )
-}   
+  );
+}
