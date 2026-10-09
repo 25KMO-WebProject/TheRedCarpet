@@ -35,13 +35,7 @@ export default function Navbar({
       <ul>
         <li>
           <Link 
-            to={account ? "/groups" : "#"}
-            onClick={ (event) => {
-              if (!account) {
-                event.preventDefault()
-                onSignInClick()
-              }
-            }}
+            to="/groups"
           >
             Ryhmäsivu
           </Link>

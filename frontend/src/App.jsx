@@ -338,7 +338,7 @@ function App() {
 
           <Route
             path="/groups"
-            element={<Groups />}
+            element={<Groups isAuthenticated={isAuthenticated} />}
           />
         </Routes>
       </BrowserRouter>

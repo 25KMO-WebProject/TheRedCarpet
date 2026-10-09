@@ -108,6 +108,37 @@ color: white;
     font-size: 28px;
 }
 
+/*Groups-empty*/
+.groups-empty {
+  max-width: 520px;
+
+  margin: 70px auto;
+  padding: 40px;
+
+  text-align: center;
+
+  background: #202020;
+
+  border: 1px solid #555;
+  border-radius: 12px;
+}
+
+.groups-empty h2 {
+  margin-bottom: 12px;
+}
+
+.groups-empty p {
+  margin-bottom: 24px;
+
+  line-height: 1.5;
+  color: #d0d0d0;
+}
+
+.groups-empty,
+.groups-empty h2,
+.groups-empty .favorites-heart {
+  color: #f2f2f2;
+}
 
 /*MODAL eli GroupPage.jsx*/ 
 
@@ -135,6 +166,18 @@ color: white;
   border-radius: 16px;
   background: white;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.groupPage-restricted {
+  width: min(520px, 100%);
+  height: auto;
+  padding: 20px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.groupPage-restricted .groups-empty {
+  margin: 0;
 }
 
 .groupPage-content {
@@ -255,6 +298,10 @@ color: white;
 
 .close-button:hover {
   color: #111827;
+}
+
+.close-button-restricted:hover {
+  color: white;
 }
 
 .submit {
