@@ -13,7 +13,16 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     const [error, setError] = useState("");
     const [members, setMembers] = useState([])
     const [currentJoinRequests, setJoinrequests] = useState(joinRequest || [])
+    
     const OwnerActions = String(ownerId) === String(accountId);
+
+    const isMember = members.some(
+      (member) => String(member.id_account) === String(accountId)
+    )
+
+    const ViewGroup = OwnerActions || isMember
+
+
 
     //Suodatetaan vanhat ja uudet liittymispyynnöt
     const handleRequests = (idaccount) => {
@@ -96,6 +105,30 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     return null;
   }
 
+  if (!ViewGroup) {
+    return (
+    <div className="overlay-modal" onClick={onClose}>
+      <div
+       className="groupPage-modal groupPage-restricted"
+        onClick={(event) => event.stopPropagation()}
+      > 
+          <button
+            type="button"
+            className="close-button close-button-restricted"
+            onClick={onClose}
+            aria-label="Sulje"
+          >
+            X
+          </button>
+          
+          <div className="groups-empty">
+            <h2>{groupName}</h2>
+            <p>Liity ryhmään nähdäksesi sen tiedot.</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
   //stop.Propagation estää muitten modaaliesn aukeamisen
   //ownerid === piilotetaan ryhmänjäseniltä ryhmän omistajalle kuuluvat napit
    return (

@@ -6,7 +6,7 @@ import Join_Request from "./GroupJoin";
 import GroupPageModal from "./GroupPage";
 
 
-export default function Groups() {
+export default function Groups({ isAuthenticated }) {
 
     const [groups, setGroups] = useState([]);
 
@@ -37,8 +37,9 @@ export default function Groups() {
     }
 
     useEffect(() => {
+    if  (isAuthenticated)
         getGroups()
-    }, [])
+    }, [isAuthenticated])
 
     async function handleGroupCreated() {
         await getGroups()
@@ -58,6 +59,20 @@ export default function Groups() {
       const handleDeleted = () => {
         setSelectedGroup(null)
         window.location.reload()
+  }
+
+  if (!isAuthenticated) {
+    return (
+        <section>
+            <h1>Omat ryhmät</h1>
+            <div className="groups-empty">
+                <h2>Kirjaudu nähdäksesi ryhmät</h2>
+                <p>
+                    Kirjaudu sisään, niin voit nähdä omat ryhmäsi tai liittyä muihin ryhmiin.
+                </p>
+            </div>
+        </section>
+    )
   }
 
     return (
