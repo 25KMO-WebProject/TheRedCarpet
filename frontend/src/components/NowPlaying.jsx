@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./api/tokenHandler.js";
 import "./NowPlaying.css";
 
 function NowPlaying({ onMediaSelect }) {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/nowplaying`)
-      .then((response) => {
-        setMovies(response.data);
-      });
+    axios.get(`${import.meta.env.VITE_API_URL}/nowplaying`).then((response) => {
+      setMovies(response.data);
+    });
   }, []);
 
   return (
@@ -19,7 +17,11 @@ function NowPlaying({ onMediaSelect }) {
 
       <div className="movie-grid">
         {movies.map((movie) => (
-          <div className="movie-card" key={movie.id} onClick={() => onMediaSelect(movie)}>
+          <div
+            className="movie-card"
+            key={movie.id}
+            onClick={() => onMediaSelect(movie)}
+          >
             {movie.poster_path ? (
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

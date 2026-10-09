@@ -1,29 +1,27 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "./api/tokenHandler.js";
 import ConfirmCredentialsModal from "./ConfirmCredentialsModal.jsx";
 
 const DeleteAccountButton = ({ account, onLogout }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const deleteAccount = async (identifier, password) => {
-    await axios.delete(
-      `${import.meta.env.VITE_API_URL}/accounts/id/${account.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${account.token}`,
-        },
-
-        // Axios DELETE request can also contain a request body.
-        // The backend verifies these credentials before deleting the account.
+    try {
+      await axios.delete(`/accounts/id/${account.id}`, {
         data: {
           account: identifier,
           password,
         },
-      }
-    );
+      });
 
-    alert("Tili poistettu");
-    onLogout();
+      alert("Tili poistettu");
+      onLogout();
+    } catch (error) {
+      console.error("Tilin poistaminen epäonnistui:", error);
+      throw new Error("Tilin poistaminen epäonnistui", {
+        cause: error,
+      });
+    }
   };
 
   return (

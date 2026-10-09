@@ -5,17 +5,16 @@
   gap: 16px;
 }
 .group {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    border-radius: 12px;
-    border: 1px solid black;
-    border-radius: 12px;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid black;
+  border-radius: 12px;
+  overflow: hidden;
 
-    cursor: pointer;
-    transition:
-      border-color 0.2s ease,
+  cursor: pointer;
+  transition: border-color 0.2s ease;
 }
 
 .group:hover {
@@ -33,9 +32,9 @@
 }
 
 .group-content h2,
-.group-content p{
-	margin: 0;
-	word-wrap: anywhere;
+.group-content p {
+  margin: 0;
+  word-wrap: anywhere;
 }
 .group-content span {
   margin: 0;
@@ -54,7 +53,6 @@
   font-size: 30px;
 }
 
-
 .group img {
   width: 200px;
   height: 160px;
@@ -62,15 +60,15 @@
 
 /*Liittymis nappi*/
 .join_button {
-color: white;
+  color: white;
 }
 
 /*Ryhmän luomis nappi ja Ryhmän luomis modal*/
 
 .Create_Group {
-      margin-top: 20px;
-      color: white;
-      font-size: 18px;
+  margin-top: 20px;
+  color: white;
+  font-size: 18px;
 }
 
 .creategroup-modal {
@@ -142,7 +140,7 @@ color: white;
   color: #f2f2f2;
 }
 
-/*MODAL eli GroupPage.jsx*/ 
+/*MODAL eli GroupPage.jsx*/
 
 .overlay-modal {
   position: fixed;
@@ -158,7 +156,6 @@ color: white;
 }
 
 .groupPage-modal {
-  
   position: relative;
   width: 1050px;
   height: 650px;
@@ -191,7 +188,8 @@ color: white;
   height: 100%;
 }
 
-.delete-group-button, .Leave-group {
+.delete-group-button,
+.Leave-group {
   padding: 6px 10px;
   border: none;
   border-radius: 5px;
@@ -208,9 +206,7 @@ color: white;
   width: 100%;
 
   padding-bottom: 20px;
-  border-bottom:  1px solid black;
-  max-width: 95%;
-
+  border-bottom: 1px solid black;
 }
 
 .group-members ul {
@@ -236,7 +232,8 @@ color: white;
   flex: 1;
 }
 
-.group-members, .join-requests {
+.group-members,
+.join-requests {
   box-sizing: border-box;
 }
 
@@ -260,10 +257,10 @@ color: white;
 /*JOIN-Request*/
 
 .join-request-content {
-    margin-bottom: 12px;
-    position: relative;
-    padding-right: 175px;
-    min-height: 30px;
+  margin-bottom: 12px;
+  position: relative;
+  padding-right: 175px;
+  min-height: 30px;
 }
 
 .join-request-buttons {
@@ -280,8 +277,8 @@ color: white;
 }
 
 .join-requests ul {
-    padding-left: 18px;
-    margin: 0;
+  padding-left: 18px;
+  margin: 0;
 }
 
 .join-requests li {
@@ -339,25 +336,10 @@ color: white;
     gap: 12px;
     padding: 16px;
   }
-
-@media (max-width: 600px) {
-    .group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .group-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 16px;
-    }
-
-    .group img {
-        width: 100%;
-        height: 100%;
-    }
-
+  .group img {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 @media (max-width: 700px) {

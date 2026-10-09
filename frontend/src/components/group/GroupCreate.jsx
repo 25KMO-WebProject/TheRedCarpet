@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../api/tokenHandler.js";
 import { useEffect, useState } from "react";
 import "./Groups.css";
 
@@ -156,4 +156,3 @@ function CreategroupModal({ isOpen, onClose, onCreated }) {
 }
 
 export default CreategroupModal;
-
