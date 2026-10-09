@@ -1,11 +1,13 @@
-import axios from "axios"
+import axios from "axios";
 import { useEffect, useState } from "react";
-import "./Groups.css"
+import "./Groups.css";
 
 function CreategroupModal({ isOpen, onClose, onCreated }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const token = localStorage.getItem("token")
+  const [nameTooLong, setNameTooLong] = useState(false);
+  const [descrTooLong, setDescrTooLong] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     function handleEsc(event) {
@@ -29,6 +31,35 @@ function CreategroupModal({ isOpen, onClose, onCreated }) {
   if (!isOpen) {
     return null;
   }
+
+  // Follow if user writes too long description
+  function handleGroupDescrChange(event) {
+    const groupDescr = event.target.value;
+    const tooLong = groupDescr.length > 255;
+
+    setDescrTooLong(tooLong);
+
+    if (tooLong) {
+      setError("Ryhmän kuvailu voi olla enintään 255 merkkiä!");
+    } else {
+      clearError();
+    }
+  }
+
+  // Follow if user writes too long group name
+  function handleGroupNameChange(event) {
+    const groupName = event.target.value;
+    const tooLong = groupName.length > 64;
+
+    setNameTooLong(tooLong);
+
+    if (tooLong) {
+      setError("Ryhmän nimi voi olla enintään 64 merkkiä!");
+    } else {
+      clearError();
+    }
+  }
+
   async function handleCreategroup(event) {
     event.preventDefault();
 
@@ -37,26 +68,36 @@ function CreategroupModal({ isOpen, onClose, onCreated }) {
     const groupName = formData.get("group_name");
     const groupDesc = formData.get("group_descr");
 
+    // Validate actively group name length
+    if (groupName.length > 64) {
+      setError("Ryhmän nimi max 64!");
+      return; // stop execution until value is changed
+    }
+    // Clear previous errors
+    clearError();
+
     try {
+      setLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/groups`,
         {
           group_name: groupName,
-          group_descr: groupDesc
+          group_descr: groupDesc,
         },
         {
-          headers: { "Content-Type": "application/json", 
+          headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         },
       );
-      onCreated(response.data)
+      onCreated(response.data);
 
       onClose();
     } catch (err) {
-        setError("Ryhmän luominen epäonnistui");
-      console.log(err.response?.data)
-      console.log(err.message)
+      setError("Ryhmän luominen epäonnistui!");
+      console.log(err.response?.data);
+      console.log(err.message);
       console.log(err);
     } finally {
       setLoading(false);
@@ -87,6 +128,8 @@ function CreategroupModal({ isOpen, onClose, onCreated }) {
             name="group_name"
             type="text"
             placeholder="Ryhmän nimi"
+            className={nameTooLong ? "input-error" : ""}
+            onChange={handleGroupNameChange}
             onFocus={clearError}
             required
           />
@@ -96,6 +139,8 @@ function CreategroupModal({ isOpen, onClose, onCreated }) {
             name="group_descr"
             type="text"
             placeholder="Ryhmän kuvaus"
+            className={descrTooLong ? "input-error" : ""}
+            onChange={handleGroupDescrChange}
             onFocus={clearError}
             rows="4"
             required
@@ -110,4 +155,5 @@ function CreategroupModal({ isOpen, onClose, onCreated }) {
   );
 }
 
-export default CreategroupModal
+export default CreategroupModal;
+
