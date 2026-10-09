@@ -209,6 +209,8 @@ color: white;
 
   padding-bottom: 20px;
   border-bottom:  1px solid black;
+  max-width: 95%;
+
 }
 
 .group-members ul {
