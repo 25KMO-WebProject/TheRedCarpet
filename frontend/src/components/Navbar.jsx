@@ -15,12 +15,6 @@ export default function Navbar({
   ...searchProps
 }) {
   const [menuOpen, setMenu] = useState(false)
-<<<<<<< HEAD
-
-  console.log("Navbar ac: ", account)
-
-=======
->>>>>>> origin/main
   return (
     <nav>
       <div className="nav-left">
@@ -39,19 +33,8 @@ export default function Navbar({
 
       <ul>
         <li>
-<<<<<<< HEAD
-          <Link
-            to={account ? "/groups" : "#"}
-            onClick={(event) => {
-              if (!account) {
-                event.preventDefault()
-                onSignInClick()
-              }
-            }}
-=======
           <Link 
             to="/groups"
->>>>>>> origin/main
           >
             Ryhmäsivu
           </Link>
