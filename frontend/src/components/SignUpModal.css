@@ -60,15 +60,55 @@
   font-size: 15px;
 }
 
+.SignUp-modal .helper {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 10px;
+  border-radius: 15px;
+  background-color: lightyellow;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+  box-shadow: 2px 2px #8888;
+
+  ul {
+    display: table;
+    margin: 0 auto;
+    list-style-type: none;
+    padding: 10px;
+  }
+  &.error {
+    background-color: pink;
+  }
+}
+
+.SignUp-modal .error-helper {
+  border-radius: 15px;
+  box-shadow: 2px 2px #8888;
+  background-color: pink;
+  p {
+    padding: 12px;
+  }
+}
+
 .SignUp-modal input:focus {
   border-color: #2563eb;
   outline: none;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+.SignUp-modal input.input-error,
+.SignUp-modal input.input-error:focus {
+  background-color: pink;
+  border: 2px solid #dc2626;
+  box-shadow: 0 0 8px #dc2626;
+  outline: none;
 }
 
 .submit {
   color: white;
   margin-top: 20px;
   width: 100%;
-  
+}
+.submit:hover {
+  size: 110%;
 }

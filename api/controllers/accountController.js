@@ -104,10 +104,41 @@ const loginController = async (req, res, next) => {
     return next(error);
   }
 };
+// Logout checks that the request contains a valid JWT token.
+const logoutController = (req, res) => {
+  const authorization = req.headers.authorization;
+
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    return res.status(401).json({
+      error: {
+        message: "Authentication required",
+        status: 401,
+      },
+    });
+  }
+
+  const token = authorization.substring(7);
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+
+    return res.status(200).json({
+      message: "Logged out successfully",
+    });
+  } catch {
+    return res.status(401).json({
+      error: {
+        message: "Invalid or expired token",
+        status: 401,
+      },
+    });
+  }
+};
 
 export {
   getAllAccountsController,
   getAccountFromIdController,
   deleteAccountController,
   loginController,
+  logoutController,
 };
