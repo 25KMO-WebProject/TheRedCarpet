@@ -197,7 +197,7 @@ function SignUpModal({ isOpen, onClose, onSuccess }) {
             {error && <p className="error">{error}</p>}
           </div>
           {password.length > 0 && (
-            <div className="helper">
+            <div className={`helper ${password.length > 64 ? "error" : ""}`}>
               <ul>
                 <li>8–64 merkkiä: {checks.length ? "   ✅" : "❌"}</li>
                 <li>Iso kirjain: {checks.uppercase ? "   ✅" : "❌"}</li>

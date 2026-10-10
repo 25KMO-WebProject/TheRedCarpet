@@ -84,7 +84,7 @@
 
 .SignUp-modal .error-helper {
   border-radius: 15px;
-  box-shadow: 2px 2px #8888;
+  box-shadow: 3px 3px #8888;
   background-color: pink;
   p {
     padding: 12px;
