@@ -2,6 +2,7 @@
 -- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
 BEGIN;
 
+DROP TABLE IF EXISTS public.group_movies;
 
 ALTER TABLE IF EXISTS public."group" DROP CONSTRAINT IF EXISTS None;
 
@@ -92,6 +93,32 @@ CREATE TABLE IF NOT EXISTS public.join_request
 
 COMMENT ON TABLE public.join_request
     IS 'List of users, who have requested to join the group';
+
+-- Movies and TV shows added to groups are stored using TMDB identifiers.
+DROP TABLE IF EXISTS public.group_movies;
+
+CREATE TABLE IF NOT EXISTS public.group_movies
+(
+    id_group integer NOT NULL,
+    tmdb_id integer NOT NULL,
+    media_type character varying(5) NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT group_movies_pk
+        PRIMARY KEY (id_group, tmdb_id, media_type),
+
+    CONSTRAINT group_movies_media_type_check
+        CHECK (media_type IN ('movie', 'tv')),
+
+    CONSTRAINT group_movies_group_fk
+        FOREIGN KEY (id_group)
+        REFERENCES public."group" (id)
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+COMMENT ON TABLE public.group_movies
+    IS 'Stores TMDB movies and TV shows added to groups.';
 
 -- Favorites store TMDB identifiers directly instead of local movie ids.
 -- media_type is required because movie and TV ids can overlap in TMDB.
