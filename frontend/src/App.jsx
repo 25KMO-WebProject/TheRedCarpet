@@ -42,28 +42,25 @@ function App() {
     try {
       // Tell the backend that the user is logging out.
       if (token) {
-        await fetch(
-          `${import.meta.env.VITE_API_URL}/logout`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        )
+        await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       }
     } catch (error) {
-      console.error('Logout request failed:', error)
+      console.error("Logout request failed:", error);
     } finally {
       // Remove local login information even if the request fails.
-      localStorage.removeItem('token')
-      localStorage.removeItem('account')
+      localStorage.removeItem("token");
+      localStorage.removeItem("account");
 
-      setAccount(null)
-      setToken(null)
-      setFavorites([])
+      setAccount(null);
+      setToken(null);
+      setFavorites([]);
     }
-  }
+  };
 
   // Favorites use the token for authenticated API requests.
   const [token, setToken] = useState(() => localStorage.getItem("token"));

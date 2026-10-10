@@ -108,10 +108,7 @@ const loginController = async (req, res, next) => {
 const logoutController = (req, res) => {
   const authorization = req.headers.authorization;
 
-  if (
-    !authorization ||
-    !authorization.startsWith("Bearer ")
-  ) {
+  if (!authorization || !authorization.startsWith("Bearer ")) {
     return res.status(401).json({
       error: {
         message: "Authentication required",
@@ -123,10 +120,7 @@ const logoutController = (req, res) => {
   const token = authorization.substring(7);
 
   try {
-    jwt.verify(
-      token,
-      process.env.JWT_SECRET,
-    );
+    jwt.verify(token, process.env.JWT_SECRET);
 
     return res.status(200).json({
       message: "Logged out successfully",
