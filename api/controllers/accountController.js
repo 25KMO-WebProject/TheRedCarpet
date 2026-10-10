@@ -35,9 +35,7 @@ const deleteAccountController = async (req, res, next) => {
 
     // Account deletion requires the user's login credentials.
     if (!account || !password) {
-      const error = new Error(
-        "Email/Username and password are required"
-      );
+      const error = new Error("Email/Username and password are required");
       error.status = 400;
       return next(error);
     }
@@ -46,13 +44,8 @@ const deleteAccountController = async (req, res, next) => {
     const loginResult = await loginModel(account);
     const dbUser = loginResult.rows[0];
 
-    if (
-      !dbUser ||
-      !(await compare(password, dbUser.password))
-    ) {
-      const error = new Error(
-        "Invalid email/username or password"
-      );
+    if (!dbUser || !(await compare(password, dbUser.password))) {
+      const error = new Error("Invalid email/username or password");
       error.status = 401;
       return next(error);
     }
@@ -60,9 +53,7 @@ const deleteAccountController = async (req, res, next) => {
     // The entered credentials must belong to the account
     // that the user is trying to delete.
     if (Number(dbUser.id) !== Number(id)) {
-      const error = new Error(
-        "Credentials do not match this account"
-      );
+      const error = new Error("Credentials do not match this account");
       error.status = 403;
       return next(error);
     }
