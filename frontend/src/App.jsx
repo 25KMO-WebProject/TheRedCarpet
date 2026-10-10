@@ -60,11 +60,7 @@ function App() {
       setToken(null);
       setFavorites([]);
     }
-<<<<<<< HEAD
   };
-=======
-  }
->>>>>>> b848de1f56fa0973806e9944c383d44b28f233de
 
   // Favorites use the token for authenticated API requests.
   const [token, setToken] = useState(() => localStorage.getItem("token"));
