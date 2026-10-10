@@ -2,10 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import "./Groups.css"
 
-//const token = localStorage.getItem("token")
-
 const Join_Request = ({ idgroup }) => {
     const [message, setMessage] = useState("");
+    const [requestSent, setrequestSent] = useState(false);
 
     const sendRequest = async () => {
         try { 
@@ -19,19 +18,25 @@ const Join_Request = ({ idgroup }) => {
     );
 
         setMessage("Liittymispyyntö lähetetty")
+        setrequestSent(true)
         console.log(response.data)
     } catch (err) {
+        if (err.response?.status === 409) {
+            setMessage("Liittymispyyntö on jo lähetetty")
+            setrequestSent(true)
+        } else {
         setMessage(
          err.response?.data?.error?.message ||
          "Liittymispyyntö epäonnistui"
          )
         }
+      }
     }
 
     return (
         <div onClick={(event) => event.stopPropagation()}>
-            <button type="button" className="join_button" onClick={sendRequest}>
-                Liity
+            <button type="button" className="join_button" onClick={sendRequest} disabled={requestSent}>
+               {requestSent ? "Pyyntö lähetetty" : "Liity"}
             </button>
             {message && <p>{message}</p>}
         </div>

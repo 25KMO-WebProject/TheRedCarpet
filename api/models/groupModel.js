@@ -119,13 +119,18 @@ const removeMemberFromGroupModel = async (idgroup, idaccount, idowner) => {
 const createJoinRequestModel = async (idgroup, idaccount) => {
     const result = await pool.query(`INSERT INTO join_request (id_account, id_group, status)
         VALUES ($1, $2, 'PENDING')
+        ON CONFLICT (id_account, id_group) DO NOTHING
         RETURNING *
         `,
         [idaccount, idgroup]
     
     );
 
-    return result.rows[0]
+    if (result.rows.length === 0) {
+        return { itExistsAlready: true }
+    }
+
+    return { itExistsAlready: false, request: result.rows[0] }
 };
 
 const getAllJoinRequestsModel = async (id) => {

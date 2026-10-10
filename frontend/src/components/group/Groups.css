@@ -33,7 +33,7 @@
 }
 
 .group-content h2,
-.group-content p{
+.group-content p {
 	margin: 0;
 	word-wrap: anywhere;
 }
@@ -337,6 +337,7 @@ color: white;
     gap: 12px;
     padding: 16px;
   }
+}
 
 @media (max-width: 600px) {
     .group {

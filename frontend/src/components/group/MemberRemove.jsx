@@ -1,7 +1,7 @@
 import axios from "axios";
 import "./Groups.css"
 
-const RemoveMemberButton = ({ idgroup, idaccount, setMembers}) => {
+const RemoveMemberButton = ({ idgroup, idaccount, setMembers }) => {
     const removeMember = async () => {
         try {
             const response = await axios.delete(
@@ -20,7 +20,7 @@ const RemoveMemberButton = ({ idgroup, idaccount, setMembers}) => {
         
             onRemoved();
         } catch (error) {
-            console.error("Jäsenen poistaminen epäoonsitui:", error)
+            console.error("Jäsenen poistaminen epäonnsitui:", error)
         }
     };
 

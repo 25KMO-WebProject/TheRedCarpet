@@ -154,7 +154,17 @@ const createJoinRequestController = async (req, res, next) => {
     const idaccount = req.user.userId;
 
     const createdJoinRequest = await createJoinRequestModel(idgroup, idaccount);
-    res.status(201).json(createdJoinRequest);
+    
+    if (createdJoinRequest.itExistsAlready) {
+      return res.status(409).json({
+        message: "Liittymispyyntö on jo lähetetty",
+      })
+    }
+
+    return res.status(201).json({
+      message: "Liittymispyyntö on jo lähetetty",
+      request: createdJoinRequest.request,
+    });
   } catch (err) {
     next(err);
   }

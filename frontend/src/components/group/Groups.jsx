@@ -124,6 +124,7 @@ export default function Groups({ isAuthenticated }) {
         ownerId={selectedGroup?.id_owner}
         accountId={accountId}
         onDeleted={handleDeleted}
+        MembersChanged={getGroups}
         />
 
         </section>

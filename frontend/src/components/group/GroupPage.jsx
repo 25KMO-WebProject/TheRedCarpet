@@ -6,7 +6,7 @@ import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
 
-function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted, accountId}) {
+function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted, accountId, MembersChanged,}) {
 
 
     const [loading, setLoading] = useState(false);
@@ -25,11 +25,28 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
 
 
     //Suodatetaan vanhat ja uudet liittymispyynnöt
-    const handleRequests = (idaccount) => {
+    async function handleRequests (idaccount) {
       setJoinrequests((oldRequests) =>
       oldRequests.filter(
         (request) => request.id_account !== idaccount
       ))
+
+      //Jäsen lista
+    try {
+        const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
+        {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+        
+      );
+      setMembers(response.data)
+    } catch(err) {
+        console.error("Finding members has failed: ", err)
+        setError("Jäsenten hakeminen epäonnistui")
+      }
     }
   
   // Modal sulketuuu esc-näppäimestä tai X:sttä
@@ -61,9 +78,9 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     setLoading(true)
     setError("")
 
-    //Jäsen lista
+    //Haetaan jäsenlista
     try {
-        const response = await axios.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
         {
         headers: {
@@ -73,13 +90,9 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
         
       );
       setMembers(response.data)
-    } catch(err) {
-        console.error("Finding members has failed: ", err)
-        setError("Jäsenten hakeminen epäonnistui")
-    }
+      await MembersChanged?.();
 
     //Liittymispyynnöt
-    try {
       const joinRequestsResponse = await axios.get(
       `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
       {
