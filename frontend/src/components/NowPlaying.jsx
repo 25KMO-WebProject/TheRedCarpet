@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
-import axios from "axios";
+import axios from "./api/authAxios.js";
 import "./NowPlaying.css";
 
 function NowPlaying({ onMediaSelect }) {
@@ -71,14 +71,9 @@ function NowPlaying({ onMediaSelect }) {
 
   // Haetaan elokuvateattereissa olevat elokuvat.
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/nowplaying`)
-      .then((response) => {
-        setMovies(response.data);
-      })
-      .catch((error) => {
-        console.error("Elokuvien haku epäonnistui:", error);
-      });
+    axios.get(`${import.meta.env.VITE_API_URL}/nowplaying`).then((response) => {
+      setMovies(response.data);
+    });
   }, []);
 
   // Nappi vasemmalle
