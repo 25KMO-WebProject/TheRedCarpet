@@ -1,0 +1,90 @@
+name: theredcarpet-test
+
+services:
+
+  database-test:
+    build:
+      context: ./
+      dockerfile: ./database/Dockerfile
+
+    env_file:
+      - .env
+
+    environment:
+      # Tests use their own database.
+      POSTGRES_DB: TheRedCarpet_test
+
+    volumes:
+      - postgres_test_data:/var/lib/postgresql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d TheRedCarpet_test"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  backend-test:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: test
+
+      # Use the separate test database.
+      DB_HOST: database-test
+      DB_PORT: 5432
+      DB_NAME: TheRedCarpet_test
+
+      PORT: 3000
+
+      # Help file watching work reliably inside Docker.
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "1000"
+
+    ports:
+      - "3001:3000"
+
+    depends_on:
+      database-test:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:3000/api/health || exit 1"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+    develop:
+      watch:
+        # Sync backend source code into the running container.
+        - action: sync
+          path: ./api
+          target: /app
+          ignore:
+            - node_modules/
+
+        # Rebuild when dependencies change.
+        - action: rebuild
+          path: ./api/package.json
+
+        - action: rebuild
+          path: ./api/package-lock.json
+
+
+volumes:
+  postgres_test_data:

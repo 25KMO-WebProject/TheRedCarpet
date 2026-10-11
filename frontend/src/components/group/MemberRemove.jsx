@@ -1,5 +1,5 @@
-import axios from "axios";
-import "./Groups.css"
+import axios from "../api/authAxios.js";
+import "./Groups.css";
 
 const RemoveMemberButton = ({ idgroup, idaccount, setMembers }) => {
     const removeMember = async () => {
@@ -24,15 +24,15 @@ const RemoveMemberButton = ({ idgroup, idaccount, setMembers }) => {
         }
     };
 
-    return (
-        <button
-        type="button"
-        className="Remove-member-button"
-        onClick={removeMember}
-        >
-            Poista
-        </button>
-    );
-}
+  return (
+    <button
+      type="button"
+      className="Remove-member-button"
+      onClick={removeMember}
+    >
+      Poista
+    </button>
+  );
+};
 
-export default RemoveMemberButton
+export default RemoveMemberButton;

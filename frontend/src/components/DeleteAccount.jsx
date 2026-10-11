@@ -1,12 +1,12 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "./api/authAxios.js";
 import ConfirmCredentialsModal from "./ConfirmCredentialsModal.jsx";
 
 const DeleteAccountButton = ({ account, onLogout }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const deleteAccount = async (identifier, password) => {
-    await axios.delete(
+    await api.delete(
       `${import.meta.env.VITE_API_URL}/accounts/id/${account.id}`,
       {
         headers: {
@@ -19,7 +19,7 @@ const DeleteAccountButton = ({ account, onLogout }) => {
           account: identifier,
           password,
         },
-      }
+      },
     );
 
     alert("Tili poistettu");

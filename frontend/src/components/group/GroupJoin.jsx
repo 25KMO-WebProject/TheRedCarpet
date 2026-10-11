@@ -1,21 +1,23 @@
 import { useState } from "react";
-import axios from "axios";
-import "./Groups.css"
+import axios from "../api/authAxios.js";
+import "./Groups.css";
 
 const Join_Request = ({ idgroup }) => {
     const [message, setMessage] = useState("");
     const [requestSent, setrequestSent] = useState(false);
 
-    const sendRequest = async () => {
-        try { 
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/groups/${idgroup}/join-requests`,
-                {},
-                {
-                  headers: { "Content-Type": "application/json", 
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  const sendRequest = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/groups/${idgroup}/join-requests`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        },  
-    );
+        },
+      );
 
         setMessage("Liittymispyyntö lähetetty")
         setrequestSent(true)
@@ -43,4 +45,4 @@ const Join_Request = ({ idgroup }) => {
     )
 }
 
-export default Join_Request
+export default Join_Request;
