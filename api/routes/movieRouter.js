@@ -33,7 +33,7 @@ router.get("/nowplaying", async (req, res) => {
 
   const genresData = await genresResponse.json();
 
-  const movies = data.results.slice(0, 5).map((movie) => ({
+  const movies = data.results.slice(0, 15).map((movie) => ({
     ...movie,
     media_type: "movie",
     genres: movie.genre_ids.map((id) => {
