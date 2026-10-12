@@ -6,22 +6,15 @@ import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
 
-function GroupPageModal({
-  isOpen,
-  onClose,
-  groupId,
-  groupName,
-  joinRequest,
-  ownerId,
-  onDeleted,
-  accountId,
-}) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [members, setMembers] = useState([]);
-  const [currentJoinRequests, setJoinrequests] = useState(joinRequest || []);
+function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted, accountId, MembersChanged,}) {
 
-  const OwnerActions = String(ownerId) === String(accountId);
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [members, setMembers] = useState([])
+    const [currentJoinRequests, setJoinrequests] = useState(joinRequest || [])
+    
+    const OwnerActions = String(ownerId) === String(accountId);
 
   const isMember = members.some(
     (member) => String(member.id_account) === String(accountId),
@@ -29,13 +22,31 @@ function GroupPageModal({
 
   const ViewGroup = OwnerActions || isMember;
 
-  //Suodatetaan vanhat ja uudet liittymispyynnöt
-  const handleRequests = (idaccount) => {
-    setJoinrequests((oldRequests) =>
-      oldRequests.filter((request) => request.id_account !== idaccount),
-    );
-  };
+    //Suodatetaan vanhat ja uudet liittymispyynnöt
+    async function handleRequests (idaccount) {
+      setJoinrequests((oldRequests) =>
+      oldRequests.filter(
+        (request) => request.id_account !== idaccount
+      ))
 
+      //Jäsen lista
+    try {
+        const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
+        {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+        
+      );
+      setMembers(response.data)
+    } catch(err) {
+        console.error("Finding members has failed: ", err)
+        setError("Jäsenten hakeminen epäonnistui")
+      }
+    }
+  
   // Modal sulketuuu esc-näppäimestä tai X:sttä
   useEffect(() => {
     function handleEsc(event) {
@@ -65,38 +76,35 @@ function GroupPageModal({
       setLoading(true);
       setError("");
 
-      //Jäsen lista
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          },
-        );
-        setMembers(response.data);
-      } catch (err) {
-        console.error("Finding members has failed: ", err);
-        setError("Jäsenten hakeminen epäonnistui");
+    //Haetaan jäsenlista
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
+        {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
+        
+      );
+      setMembers(response.data)
+      await MembersChanged?.();
 
-      //Liittymispyynnöt
-      try {
-        const joinRequestsResponse = await axios.get(
-          `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          },
-        );
-        setJoinrequests(joinRequestsResponse.data);
-      } catch (err) {
-        console.error("Group infromation has failed: ", err);
-        setJoinrequests([]);
-        setError("Ryhmän tietojen hakeminen epäonnistui");
-      } finally {
+    //Liittymispyynnöt
+      const joinRequestsResponse = await axios.get(
+      `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      } 
+      )
+      setJoinrequests(joinRequestsResponse.data)
+    } catch (err) {
+        console.error("Group infromation has failed: ", err)
+        setJoinrequests([])
+        setError("Ryhmän tietojen hakeminen epäonnistui")
+    } finally {
         setLoading(false);
       }
     }
