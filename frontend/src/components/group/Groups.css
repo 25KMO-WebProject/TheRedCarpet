@@ -153,6 +153,32 @@
   background: rgba(0, 0, 0, 0.65);
 }
 
+.groupPage-body {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.groupPage-body .sections-groupPage {
+  flex: 0 0 250px;
+}
+
+.group-movie-area {
+  flex: 1;
+  min-width: 0;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+.group-movie-area .movie-search {
+  width: 100%;
+  max-width: 600px;
+}
+
 .groupPage-modal {
   position: relative;
   width: 1050px;
@@ -378,3 +404,4 @@
 
   cursor: pointer;
   transition: border-color 0.2s ease;
+}

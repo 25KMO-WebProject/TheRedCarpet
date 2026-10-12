@@ -5,7 +5,7 @@ import CreategroupModal from "./GroupCreate";
 import Join_Request from "./GroupJoin";
 import GroupPageModal from "./GroupPage";
 
-export default function Groups({ isAuthenticated }) {
+export default function Groups({ isAuthenticated, onMediaSelect }) {
   const [groups, setGroups] = useState([]);
 
   const [isCreateGroupOpen, setCreateGroup] = useState(false);
@@ -128,6 +128,8 @@ export default function Groups({ isAuthenticated }) {
         ownerId={selectedGroup?.id_owner}
         accountId={accountId}
         onDeleted={handleDeleted}
+        MembersChanged={getGroups}
+        onMediaSelect={onMediaSelect}
       />
     </section>
   );
