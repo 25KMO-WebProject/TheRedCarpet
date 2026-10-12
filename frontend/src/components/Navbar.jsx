@@ -1,9 +1,8 @@
-import DeleteAccountButton from "./DeleteAccount"
-import "./Navbar.css"
-import SearchBar from './search/SearchBar'
-import { useState } from "react"
-import { Link } from 'react-router-dom'
-
+import DeleteAccountButton from "./DeleteAccount";
+import "./Navbar.css";
+import SearchBar from "./search/SearchBar";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar({
   onSignUpClick,
@@ -14,17 +13,15 @@ export default function Navbar({
   onLogout,
   ...searchProps
 }) {
-  const [menuOpen, setMenu] = useState(false)
+  const [menuOpen, setMenu] = useState(false);
   return (
     <nav>
       <div className="nav-left">
-        <Link
-          to="/"
-          className="brand-button"
-          onClick={onHomeClick}
-        >
+        <Link to="/" className="brand-button" onClick={onHomeClick}>
           <h1>
-            The<br />RedCarpet
+            The
+            <br />
+            RedCarpet
           </h1>
         </Link>
 
@@ -33,18 +30,11 @@ export default function Navbar({
 
       <ul>
         <li>
-          <Link 
-            to="/groups"
-          >
-            Ryhmäsivu
-          </Link>
+          <Link to="/groups">Ryhmäsivu</Link>
         </li>
 
         <li>
-          <Link
-            to="/"
-            onClick={onFavoritesClick}
-          >
+          <Link to="/" onClick={onFavoritesClick}>
             Suosikit
           </Link>
         </li>
@@ -52,21 +42,13 @@ export default function Navbar({
         {!account && (
           <>
             <li>
-              <button
-                type="button"
-                className="signup"
-                onClick={onSignUpClick}
-              >
+              <button type="button" className="signup" onClick={onSignUpClick}>
                 Rekisteröidy
               </button>
             </li>
 
             <li>
-              <button
-                type="button"
-                className="signin"
-                onClick={onSignInClick}
-              >
+              <button type="button" className="signin" onClick={onSignInClick}>
                 Kirjaudu
               </button>
             </li>
@@ -86,23 +68,18 @@ export default function Navbar({
 
             {menuOpen && (
               <div className="dropdown">
+                <label>{account.username}</label>
                 {/* Profile actions are shown vertically below the button. */}
-                <button
-                  type="button"
-                  onClick={onLogout}
-                >
+                <button type="button" onClick={onLogout}>
                   Kirjaudu ulos
                 </button>
 
-                <DeleteAccountButton
-                  account={account}
-                  onLogout={onLogout}
-                />
+                <DeleteAccountButton account={account} onLogout={onLogout} />
               </div>
             )}
           </li>
         )}
       </ul>
     </nav>
-  )
+  );
 }

@@ -18,15 +18,14 @@ const deleteAccountModel = async (id) => {
 const loginModel = async (account, password) => {
   // Search with email
   let result = await pool.query(
-    "SELECT id, email, password FROM account WHERE email = $1",
+    "SELECT id, username, email, password FROM account WHERE email = $1",
     [account],
   );
 
   // If not found with email, try with username
   if (result.rowCount === 0) {
-    console.log("Row count 0!");
     result = await pool.query(
-      "SELECT id, email, password FROM account WHERE username = $1",
+      "SELECT id, username, email, password FROM account WHERE username = $1",
       [account],
     );
   }

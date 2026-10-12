@@ -364,8 +364,10 @@ function App() {
         isOpen={SignInOpen}
         onClose={() => setSignInOpen(false)}
         onLogin={(data) => {
+          console.log(data);
           const loggedInAccount = {
             id: data.id,
+            username: data.username,
             token: data.token,
           };
 

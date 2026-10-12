@@ -5,7 +5,9 @@
   color: var(--dark-foreground-color);
 }
 
-*,*::before,*::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -19,7 +21,6 @@ nav {
   gap: 30px;
   padding: 15px 0px;
   border-bottom: 2px solid black;
-
 }
 
 .nav-left {
@@ -31,7 +32,6 @@ nav {
 nav h1 {
   margin: 0;
   line-height: 1;
-
 }
 
 nav ul {
@@ -42,7 +42,7 @@ nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  }
+}
 
 nav li {
   display: flex;
@@ -106,7 +106,6 @@ nav li {
   cursor: pointer;
 }
 
-
 /* Filter button */
 
 .filter-wrapper {
@@ -150,7 +149,6 @@ nav li {
   background: #111;
   border-radius: 50%;
 }
-
 
 /* Search filters */
 
@@ -210,7 +208,6 @@ nav li {
   color: #f2f2f2;
 }
 
-
 /* Clear filters button */
 
 .search-filters .clear-filters {
@@ -264,7 +261,9 @@ article div img {
 }
 
 /*Kirjautumis ja rekisteröitymis napit*/
-.signup, .signin, .profile {
+.signup,
+.signin,
+.profile {
   background-color: grey;
   color: white;
   font-size: 20px;
@@ -283,7 +282,6 @@ article div img {
   border-radius: 5px;
   line-height: 1;
 }
-
 
 /* Profile dropdown */
 
@@ -311,6 +309,15 @@ article div img {
   border-radius: 6px;
 
   z-index: 100;
+}
+
+.dropdown label {
+  /*  font-size: 14px;*/
+  display: flex;
+  justify-content: center;
+  color: white;
+  border-bottom: 1px solid grey;
+  /*  border-radius: 4px;*/
 }
 
 .dropdown button {
@@ -348,22 +355,22 @@ article div img {
 
 /*Kannettavat*/
 @media only screen and (max-width: 1200px) {
-    nav {
-        gap: 30px;
-        padding: 15px 20px;
-    }
+  nav {
+    gap: 30px;
+    padding: 15px 20px;
+  }
 
-    .nav-left {
-        gap: 25px;
-    }
+  .nav-left {
+    gap: 25px;
+  }
 
-    nav ul {
-        gap: 20px;
-    }
+  nav ul {
+    gap: 20px;
+  }
 
-    .search input {
-        width: 220px;
-    }
+  .search input {
+    width: 220px;
+  }
 }
 /* tabletin näyttö*/
 @media only screen and (max-width: 992px) {
@@ -381,7 +388,7 @@ article div img {
     justify-content: center;
     flex-wrap: flex;
     margin: 0;
-    gap: 15px
+    gap: 15px;
   }
 }
 /*Puhelimen näyttö*/
@@ -393,7 +400,7 @@ article div img {
   nav ul {
     flex-direction: column;
     margin: 0;
-    gap: 15px; 
+    gap: 15px;
   }
   nav li {
     margin-left: 0;
@@ -409,7 +416,9 @@ article div img {
     margin-top: 5px;
   }
 
-  .signin, .signup {
+  .signin,
+  .signup {
     margin-left: 5px;
   }
 }
+
