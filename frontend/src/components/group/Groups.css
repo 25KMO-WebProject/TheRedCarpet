@@ -376,9 +376,9 @@
   }
 
   .sections-groupPage {
-    width: 100%;
+    width: 53%;
     min-height: 400px;
     box-sizing: border-box;
-    padding-right: 15px;
+    padding-right: 5px;
   }
 }
