@@ -77,7 +77,6 @@ const deleteAccountController = async (req, res, next) => {
 };
 const loginController = async (req, res, next) => {
   console.log("User trying to log in..");
-  console.log("Request body:", req.body);
   try {
     const account = req.body.account?.trim().toLowerCase();
     const password = req.body.password;
@@ -95,11 +94,16 @@ const loginController = async (req, res, next) => {
       return next(error);
     }
     const token = jwt.sign(
-      { userId: dbUser.id, email: dbUser.email },
+      { userId: dbUser.id, username: dbUser.username, email: dbUser.email },
       process.env.JWT_SECRET,
       { expiresIn: "1h" },
     );
-    return res.status(200).json({ id: dbUser.id, email: dbUser.email, token });
+    return res.status(200).json({
+      id: dbUser.id,
+      username: dbUser.username,
+      email: dbUser.email,
+      token,
+    });
   } catch (error) {
     return next(error);
   }
