@@ -366,6 +366,7 @@ function App() {
         onLogin={(data) => {
           const loggedInAccount = {
             id: data.id,
+            username: data.username,
             token: data.token,
           };
 
