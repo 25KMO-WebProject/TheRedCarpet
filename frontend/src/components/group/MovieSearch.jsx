@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { searchTmdb } from "../../services/movieSearchApi";
 import SearchBar from "../search/SearchBar";
-import SearchResults from "../search/SearchResults";
+import SearchResults from "../search/SearchResultsList.jsx";
 
 export default function MovieSearch({ onSelect }) {
   const [query, setQuery] = useState("");
