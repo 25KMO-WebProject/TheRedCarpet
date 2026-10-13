@@ -93,7 +93,7 @@ export default function Groups({ isAuthenticated }) {
             className="group"
             onClick={() => setSelectedGroup(group)}
           >
-            <img alt={`Ryhmän ${group.group_name} kuva`} />
+            {/*<img alt={`Ryhmän ${group.group_name} kuva`} />*/}
             <div className="group-content">
               <h2>{group.group_name}</h2>
               <p>{group.group_descr}</p>
@@ -103,14 +103,14 @@ export default function Groups({ isAuthenticated }) {
         ))
       )}
 
-      <h1> Katso muita ryhmiä: </h1>
+      <h1 className="other-groups"> Katso muita ryhmiä: </h1>
       {otherGroups.map((group) => (
         <article
           key={group.id}
           className="group"
           onClick={() => setSelectedGroup(group)}
         >
-          <img alt={`Ryhmän ${group.group_name} kuva`} />
+          {/*<img alt={`Ryhmän ${group.group_name} kuva`} />*/}
           <div className="group-content">
             <h2>{group.group_name}</h2>
             <p>{group.group_descr}</p>

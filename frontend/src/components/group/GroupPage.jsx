@@ -164,7 +164,6 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
               <DeleteGroupButton
                 idgroup={groupId}
                 idowner={ownerId}
-                token={localStorage.getItem("token")}
                 onDeleted={onDeleted}
               />
             )}
