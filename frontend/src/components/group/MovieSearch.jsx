@@ -3,7 +3,7 @@ import { searchTmdb } from "../../services/movieSearchApi";
 import SearchBar from "../search/SearchBar";
 import SearchResults from "../search/SearchResultsList.jsx";
 
-export default function MovieSearch({ onSelect }) {
+export default function MovieSearch({ onSelect, onAddMovie }) {
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
   const [year, setYear] = useState("");
@@ -129,7 +129,11 @@ export default function MovieSearch({ onSelect }) {
           {loading && <p>Haetaan...</p>}
 
           {!loading && results.length > 0 && (
-            <SearchResults results={results} onSelect={onSelect} />
+            <SearchResults
+              results={results}
+              onSelect={onSelect}
+              onAddMovie={onAddMovie}
+            />
           )}
 
           {!loading && results.length === 0 && <p>Hakutuloksia ei löytynyt</p>}

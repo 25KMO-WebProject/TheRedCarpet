@@ -1,6 +1,6 @@
-import axios from "../api/authAxios.js";
+async function onAddMovie(item) {}
 
-function SearchResult({ item, onSelect }) {
+function SearchResult({ item, onSelect, onAddMovie }) {
   const url = import.meta.env.VITE_API_URL;
 
   const name = item.title || item.name;
@@ -15,9 +15,10 @@ function SearchResult({ item, onSelect }) {
 
   const rating = item.vote_average ? (item.vote_average / 2).toFixed(1) : null;
 
-  async function handleAddMovie(event) {
+  function handleAddMovie(event) {
     // To not open movie details when pressing the "+" -button
     event.stopPropagation();
+    onAddMovie(item);
   }
 
   const openDetails = () => {

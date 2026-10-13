@@ -5,7 +5,9 @@ import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
+
 import MovieSearch from "./MovieSearch.jsx";
+import { addGroupMovie } from "../../services/groupMoviesApi.js";
 
 function GroupPageModal({
   isOpen,
@@ -54,6 +56,17 @@ function GroupPageModal({
       setError("Jäsenten hakeminen epäonnistui");
     }
   }
+
+  // Functionality to add movies to groups
+  async function handleAddMovie(movie) {
+    try {
+      const result = await addGroupMovie(groupId, movie);
+      console.log(`Movie ${movie.id} added to group ${groupId}`);
+    } catch (error) {
+      console.error("Adding movie failed:", error.message);
+    }
+  }
+
   // Modal sulketuuu esc-näppäimestä tai X:sttä
   useEffect(() => {
     function handleEsc(event) {
@@ -240,6 +253,7 @@ function GroupPageModal({
             <div className="group-movie-area">
               <MovieSearch
                 onSelect={(movie) => onMediaSelect(movie, groupId)}
+                onAddMovie={handleAddMovie}
               />
             </div>
           </div>
