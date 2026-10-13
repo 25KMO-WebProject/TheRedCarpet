@@ -232,16 +232,30 @@
 
 .sections-groupPage {
   display: flex;
-  flex-direction: column;
-  gap: 25px;
+  gap: 35px;
 
-  align-items: flex-start;
-  box-sizing: border-box;
-  width: min(250px, 100%);
+ 
+  width: min(225px, 100%);
   border-right: 1px solid black;
-  padding-right: 25px;
-  padding-top: 25px;
+  padding-top: 20px;
   flex: 1;
+}
+
+.sections-left-groupPage{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.group-movies {
+  min-width: 400px;
+}
+
+.movies-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0;
 }
 
 .group-members,
@@ -341,20 +355,6 @@
 }
 
 @media (max-width: 600px) {
-  .group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .group-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 16px;
-  }
-}
-
-@media (max-width: 600px) {
     .group {
         flex-direction: column;
         align-items: stretch;
@@ -388,11 +388,27 @@
   .group-info {
     width: 100%;
   }
+}
 
+@media (max-width: 700px) {
   .sections-groupPage {
-    width: 53%;
+    width: 100%;
     min-height: 400px;
     box-sizing: border-box;
     padding-right: 5px;
+    flex-direction: column;
+
   }
+
+  .sections-left-groupPage {
+    border-right: none;
+    border-bottom: 1px solid black;
+    padding: 0 0 16px;
+    width: 100%;
+  }
+
+  .group-movies {
+    width: 100%;
+  }
+
 }

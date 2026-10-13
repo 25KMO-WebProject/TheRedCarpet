@@ -5,6 +5,7 @@ import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
+import GroupMovies from "./GroupMovies.jsx";
 
 function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted, accountId, MembersChanged,}) {
 
@@ -172,12 +173,13 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
           </div>
 
           <div className="sections-groupPage">
-            <section className="group-members">
-              <h3>Ryhmän jäsenet:</h3>
+            <div className="sections-left-groupPage">
+              <section className="group-members">
+                <h3>Ryhmän jäsenet:</h3>
 
-              {members.length === 0 ? (
-                <p>Ryhmässä ei ole vielä jäseniä</p>
-              ) : (
+                {members.length === 0 ? (
+                  <p>Ryhmässä ei ole vielä jäseniä</p>
+                ) : (
                 <ul>
                   {members.map((member) => (
                     <li key={member.id_account}>
@@ -222,6 +224,10 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                 )}
               </section>
             )}
+          </div>
+            <section className="group-movies">
+                 <GroupMovies groupId={groupId}/>
+            </section>
           </div>
         </div>
       </div>
