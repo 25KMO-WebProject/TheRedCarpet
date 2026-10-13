@@ -1,15 +1,19 @@
-#root {
+#root:has(.nowplaying-page) {
   max-width: 1400px;
+  width: 100%;
+  min-width: 0;
   margin: 0 auto;
   padding: 2rem;
 }
 
-main {
+.nowplaying-page {
   width: 100%;
+  min-width: 0;
 }
 
-h1 {
-  margin-bottom: 2rem;
+.nowplaying-page > h1 {
+  margin-bottom: 5rem;
+  text-align: center;
 }
 
 /* Karusellin nuolet ja näkymä */
@@ -17,17 +21,19 @@ h1 {
   display: flex;
   align-items: center;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
 }
 
 .carousel-button {
-  flex-shrink: 0;
+  flex-shrink: 0 0 auto;
   cursor: pointer;
   font-size: 24px;
   padding: 8px 12px;
 }
 
 .movie-carousel-viewport {
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
   cursor: grab;
@@ -90,6 +96,14 @@ h1 {
   -webkit-user-drag: none;
 }
 
+/* Ikkunaa kun kavennetaan niin kortit pienenevät */
+.movie-card img,
+.movie-card .no-poster {
+height: auto;
+aspect-ratio: 2 / 3;
+object-fit: cover;
+}
+
 .movie-card-details h2,
 .movie-card-details p {
   margin-left: 15px;
@@ -115,13 +129,13 @@ h1 {
   color: #aaa;
 }
 
-/* Mobiili tai pieni tila pystykortit */
-@media (max-width: 900px) {
+/* Mobiili ja pieni tila */
+@media (max-width: 992px) {
   #root {
     padding: 0.75rem;
   }
 
-  h1 {
+  .nowplaying-page > h1 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
   }
@@ -135,23 +149,30 @@ h1 {
     width: 100%;
     height: 300px;
     flex: 0 0 300px;
-    touch-action: pan-x pinch-zoom;
+    min-height: 0;
+    overflow: hidden;
+    touch-action: pan-y pinch-zoom;
   }
 
   .movie-grid {
+    display: flex;
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    margin-left: 0;
-    touch-action: pan-x pinch-zoom;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    touch-action: pan-y pinch-zoom;
   }
 
   .movie-card {
     display: flex;
     flex: 0 0 140px;
     width: 100%;
+    height: 140px;
     min-height: 140px;
-    margin-left: 0;
+    box-sizing: border-box;
+    margin: 0;
     padding-bottom: 0;
     align-items: flex-start;
   }
@@ -159,14 +180,16 @@ h1 {
   .movie-card img,
   .movie-card .no-poster {
     width: 100px;
-    height: 140px;
+    height: 138px;
     flex: 0 0 100px;
+    aspect-ratio: auto;
     object-fit: cover;
   }
 
   .movie-card-details {
     min-width: 0;
     padding-bottom: 6px;
+    padding-left: 12px;
   }
 
   .movie-card-details h2,
