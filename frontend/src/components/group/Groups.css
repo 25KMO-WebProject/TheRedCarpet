@@ -405,3 +405,28 @@
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
+
+.group-movie-area .movie-search {
+  position: relative;
+}
+
+.group-movie-area .movie-search-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+  z-index: 10;
+
+  max-height: 350px;
+  overflow-y: auto;
+
+  background: #202020;
+  border: 1px solid #555;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.group-movie-area .movie-search-dropdown > p {
+  padding: 15px;
+  color: white;
+}

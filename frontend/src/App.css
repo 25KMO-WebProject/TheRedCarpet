@@ -113,13 +113,32 @@ nav li {
 
 .search-result-row {
   display: flex;
-  align-items: stretch;
+  align-items: center;
 
   min-height: 121px;
 
   background: #202020;
   color: #f2f2f2;
   width: 100%;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+
+    margin: 8px;
+
+    border-style: solid;
+    border-color: gray;
+  }
+
+  button:hover {
+    background-color: #303030;
+  }
 }
 .search-result-row:hover {
   background: #303030;

@@ -1,4 +1,8 @@
+import axios from "../api/authAxios.js";
+
 function SearchResult({ item, onSelect }) {
+  const url = import.meta.env.VITE_API_URL;
+
   const name = item.title || item.name;
 
   const year = (item.release_date || item.first_air_date || "").substring(0, 4);
@@ -10,6 +14,11 @@ function SearchResult({ item, onSelect }) {
     : null;
 
   const rating = item.vote_average ? (item.vote_average / 2).toFixed(1) : null;
+
+  async function handleAddMovie(event) {
+    // To not open movie details when pressing the "+" -button
+    event.stopPropagation();
+  }
 
   const openDetails = () => {
     onSelect(item);
@@ -50,6 +59,13 @@ function SearchResult({ item, onSelect }) {
 
         {rating && <p className="search-result-rating">⭐ {rating} / 5 </p>}
       </div>
+      <button
+        type="button"
+        onClick={handleAddMovie}
+        onKeyDown={(event) => event.stopPropagation()}
+      >
+        +
+      </button>
     </article>
   );
 }
