@@ -7,6 +7,7 @@ import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
 import FavoriteCard from "../favorites/FavoriteCard.jsx";
 import "../favorites/FavoritesPage.css";
+import GroupMovies from "./GroupMovies.jsx";
 
 import MovieSearch from "./MovieSearch.jsx";
 import { addGroupMovie } from "../../services/groupMoviesApi.js";
@@ -253,77 +254,77 @@ function GroupPageModal({
             {!OwnerActions && <LeaveGroupButton groupId={groupId} />}
           </div>
 
-            <div className="sections-groupPage">
-              <section className="group-members">
-                <h3>Ryhmän jäsenet:</h3>
+          <div className="sections-groupPage">
+            <section className="group-members">
+              <h3>Ryhmän jäsenet:</h3>
 
-                {members.length === 0 ? (
-                  <p>Ryhmässä ei ole vielä jäseniä</p>
+              {members.length === 0 ? (
+                <p>Ryhmässä ei ole vielä jäseniä</p>
+              ) : (
+                <ul>
+                  {members.map((member) => (
+                    <li key={member.id_account}>
+                      <div className="member-row">
+                        <span>{member.username}</span>
+
+                        {String(member.id_account) === String(ownerId) &&
+                          " (omistaja)"}
+
+                        {OwnerActions &&
+                          String(member.id_account) !== String(ownerId) && (
+                            <RemoveMemberButton
+                              idgroup={groupId}
+                              idaccount={member.id_account}
+                              setMembers={setMembers}
+                            />
+                          )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+
+            {OwnerActions && (
+              <section className="join-requests">
+                <h3>Liittymispyynnöt:</h3>
+                {currentJoinRequests.length === 0 ? (
+                  <p>Ei liittymispyyntöjä</p>
                 ) : (
                   <ul>
-                    {members.map((member) => (
-                      <li key={member.id_account}>
-                        <div className="member-row">
-                          <span>{member.username}</span>
-
-                          {String(member.id_account) === String(ownerId) &&
-                            " (omistaja)"}
-
-                          {OwnerActions &&
-                            String(member.id_account) !== String(ownerId) && (
-                              <RemoveMemberButton
-                                idgroup={groupId}
-                                idaccount={member.id_account}
-                                setMembers={setMembers}
-                              />
-                            )}
-                        </div>
-                      </li>
+                    {currentJoinRequests.map((request) => (
+                      <JoinRequest
+                        key={request.id_account}
+                        idaccount={request.id_account}
+                        groupId={groupId}
+                        username={request.username}
+                        handleRequest={handleRequests}
+                      />
                     ))}
                   </ul>
                 )}
               </section>
-
-              {OwnerActions && (
-                <section className="join-requests">
-                  <h3>Liittymispyynnöt:</h3>
-                  {currentJoinRequests.length === 0 ? (
-                    <p>Ei liittymispyyntöjä</p>
-                  ) : (
-                    <ul>
-                      {currentJoinRequests.map((request) => (
-                        <JoinRequest
-                          key={request.id_account}
-                          idaccount={request.id_account}
-                          groupId={groupId}
-                          username={request.username}
-                          handleRequest={handleRequests}
-                        />
-                      ))}
-                    </ul>
-                  )}
-                </section>
-              )}
-            </div>
-            <div className="group-movie-area">
-              <MovieSearch
-                onSelect={(movie) => onMediaSelect(movie, groupId)}
-                onAddMovie={handleAddMovie}
-                isMovieInGroup={isMovieInGroup}
-              />
-              <div className="group-movie-grid">
-                {groupMovieDetails.map((movie) => (
-                  <FavoriteCard
-                    key={`${movie.media_type}-${movie.id}`}
-                    item={movie}
-                    onSelect={(item) => onMediaSelect(item, groupId)}
-                  />
-                ))}
-              </div>
+            )}
+          </div>
+          <div className="group-movie-area">
+            <MovieSearch
+              onSelect={(movie) => onMediaSelect(movie, groupId)}
+              onAddMovie={handleAddMovie}
+              isMovieInGroup={isMovieInGroup}
+            />
+            <div className="group-movie-grid">
+              {groupMovieDetails.map((movie) => (
+                <FavoriteCard
+                  key={`${movie.media_type}-${movie.id}`}
+                  item={movie}
+                  onSelect={(item) => onMediaSelect(item, groupId)}
+                />
+              ))}
             </div>
           </div>
         </div>
       </div>
+    </div>
   );
 }
 
