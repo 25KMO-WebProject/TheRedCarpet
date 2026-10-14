@@ -1,29 +1,28 @@
-import { 
-    getAllGroupsModel,
-    getGroupFromIdModel,
-    getMembersFromGroupIdModel,
-    getCountofmembersModel,
-    getAllJoinRequestsModel,
-    getGroupJoinRequestsModel,
-    createGroupModel,
-    createJoinRequestModel,
-    deleteGroupModel,
-    leaveGroupModel,
-    removeMemberFromGroupModel,
-    approveJoinRequestModel,
-    rejectJoinRequestModel,
-
+import {
+  getAllGroupsModel,
+  getGroupFromIdModel,
+  getMembersFromGroupIdModel,
+  getCountofmembersModel,
+  getAllJoinRequestsModel,
+  getGroupJoinRequestsModel,
+  createGroupModel,
+  createJoinRequestModel,
+  deleteGroupModel,
+  leaveGroupModel,
+  removeMemberFromGroupModel,
+  approveJoinRequestModel,
+  rejectJoinRequestModel,
 } from "../models/groupModel.js";
 
-const getAllGroupsController = async (req, res, next ) => {
-    console.log("Searching all Groups..")
-    try {
-        const idaccount = req.user.userId
-        const result = await getAllGroupsModel(idaccount);
-        res.status(200).json(result || []);
-    } catch (err) {
-        next(err);
-    }
+const getAllGroupsController = async (req, res, next) => {
+  console.log("Searching all Groups..");
+  try {
+    const idaccount = req.user.userId;
+    const result = await getAllGroupsModel(idaccount);
+    res.status(200).json(result || []);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const getGroupFromIdController = async (req, res, next) => {
@@ -80,85 +79,85 @@ const createGroupController = async (req, res, next) => {
 };
 
 const deleteGroupController = async (req, res, next) => {
-    
-    try {
-        const idgroup = req.params.idgroup
-        const idowner = req.user.userId
+  try {
+    const idgroup = req.params.idgroup;
+    const idowner = req.user.userId;
 
-        const result = await deleteGroupModel(idgroup, idowner)
+    const result = await deleteGroupModel(idgroup, idowner);
 
-        if (result.rowCount === 0) {
-            const error = new Error("No group found or account is not the owner");
-            error.status = 404;
-            return next(error);
-        }
+    if (result.rowCount === 0) {
+      const error = new Error("No group found or account is not the owner");
+      error.status = 404;
+      return next(error);
+    }
 
     console.log(`Deleting group with id: ${idgroup}`);
 
-        return res.status(200).json({ id: Number(idgroup) });
-    } catch (err) {
-        next(err)
-    }
-}
+    return res.status(200).json({ id: Number(idgroup) });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const leaveGroupController = async (req, res, next) => {
-    console.log("Leaving group...")
-    try {
-        const idgroup = req.params.idgroup;
-        const idaccount = req.user.userId;
-        
-        const result = await leaveGroupModel(idgroup, idaccount)
+  console.log("Leaving group...");
+  try {
+    const idgroup = req.params.idgroup;
+    const idaccount = req.user.userId;
 
-        if (result.rowCount === 0) {
-            const error = new Error("Et voi poistua ryhmästä tai olet sen ryhmän omistaja")
-            error.status = 400
-            return next(error)
-        }
-        return res.status(200).json({
-            message: "Poistuit ryhmästä onnistuneesti"
-        })
-    } catch (err) {
-        next(err)
+    const result = await leaveGroupModel(idgroup, idaccount);
+
+    if (result.rowCount === 0) {
+      const error = new Error(
+        "Et voi poistua ryhmästä tai olet sen ryhmän omistaja",
+      );
+      error.status = 400;
+      return next(error);
     }
-}
+    return res.status(200).json({
+      message: "Poistuit ryhmästä onnistuneesti",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const removeMemberFromGroupController = async (req, res, next) => {
-    try {
-        const idgroup = req.params.idgroup
-        const idaccount = req.params.idaccount
-        const idowner = req.user.userId
+  try {
+    const idgroup = req.params.idgroup;
+    const idaccount = req.params.idaccount;
+    const idowner = req.user.userId;
 
-        const result = await removeMemberFromGroupModel(
-           idgroup,
-           idaccount,
-           idowner 
-        )
+    const result = await removeMemberFromGroupModel(
+      idgroup,
+      idaccount,
+      idowner,
+    );
 
-        if (result.rowCount === 0) {
-            const error = new Error("Tarkista käyttöoikeudet")
-            error.status = 403
-            return next(error)
-        }
-        return res.status(200).json({
-            message: "Jäsen poistettu onnistuneesti"
-        })
-    } catch (err) {
-        next(err)
+    if (result.rowCount === 0) {
+      const error = new Error("Tarkista käyttöoikeudet");
+      error.status = 403;
+      return next(error);
     }
-}
+    return res.status(200).json({
+      message: "Jäsen poistettu onnistuneesti",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 const createJoinRequestController = async (req, res, next) => {
   console.log("Sending a request...");
   try {
     const idgroup = req.params.id;
     const idaccount = req.user.userId;
-
     const createdJoinRequest = await createJoinRequestModel(idgroup, idaccount);
-    
+
     if (createdJoinRequest.itExistsAlready) {
       return res.status(409).json({
         message: "Liittymispyyntö on jo lähetetty",
-      })
+      });
     }
 
     return res.status(201).json({
@@ -180,55 +179,54 @@ const getAllJoinRequestsController = async (req, res, next) => {
 };
 
 const getGroupJoinRequestsController = async (req, res, next) => {
-    try {
-        const idgroup = req.params.id
+  try {
+    const idgroup = req.params.id;
 
-        const result = await getGroupJoinRequestsModel(idgroup);
-        res.status(200).json(result || [])
-    } catch (err) {
-        next(err)
-    }
-
-}
+    const result = await getGroupJoinRequestsModel(idgroup);
+    res.status(200).json(result || []);
+  } catch (err) {
+    next(err);
+  }
+};
 
 const approveJoinRequestController = async (req, res, next) => {
-    try {
-        const idaccount = req.params.idaccount
-        const idgroup = req.params.idgroup
-        const idowner = req.user.userId
+  try {
+    const idaccount = req.params.idaccount;
+    const idgroup = req.params.idgroup;
+    const idowner = req.user.userId;
 
-        const result = await approveJoinRequestModel(idaccount, idgroup, idowner);
-        res.status(200).json(result)
-    } catch (err) {
-        next(err)
-    }
-}
+    const result = await approveJoinRequestModel(idaccount, idgroup, idowner);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
 
 const rejectJoinRequestController = async (req, res, next) => {
-    try {
-        const idaccount = req.params.idaccount
-        const idgroup = req.params.idgroup
-        const idowner = req.user.userId
+  try {
+    const idaccount = req.params.idaccount;
+    const idgroup = req.params.idgroup;
+    const idowner = req.user.userId;
 
-        const result = await rejectJoinRequestModel(idaccount, idgroup, idowner);
-        res.status(200).json(result)
-    } catch (err) {
-        next(err)
-    }
-}
+    const result = await rejectJoinRequestModel(idaccount, idgroup, idowner);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
 
 export {
-    getAllGroupsController,
-    getGroupFromIdController,
-    getMembersFromGroupIdController,
-    getCountofmembersController,
-    getAllJoinRequestsController,
-    getGroupJoinRequestsController,
-    createGroupController,
-    createJoinRequestController,
-    deleteGroupController,
-    leaveGroupController,
-    removeMemberFromGroupController,
-    approveJoinRequestController,
-    rejectJoinRequestController,
-}
+  getAllGroupsController,
+  getGroupFromIdController,
+  getMembersFromGroupIdController,
+  getCountofmembersController,
+  getAllJoinRequestsController,
+  getGroupJoinRequestsController,
+  createGroupController,
+  createJoinRequestController,
+  deleteGroupController,
+  leaveGroupController,
+  removeMemberFromGroupController,
+  approveJoinRequestController,
+  rejectJoinRequestController,
+};

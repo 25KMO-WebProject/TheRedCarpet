@@ -5,17 +5,32 @@ import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
-import GroupMovies from "./GroupMovies.jsx";
 
-function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted, accountId, MembersChanged,}) {
+import MovieSearch from "./MovieSearch.jsx";
+import { addGroupMovie } from "../../services/groupMoviesApi.js";
+import { getGroupMovies } from "../../services/groupMoviesApi.js";
 
+function GroupPageModal({
+  isOpen,
+  onClose,
+  groupId,
+  groupName,
+  joinRequest,
+  ownerId,
+  onDeleted,
+  accountId,
+  MembersChanged,
+  onMediaSelect,
+}) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [members, setMembers] = useState([]);
+  const [currentJoinRequests, setJoinrequests] = useState(joinRequest || []);
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [members, setMembers] = useState([])
-    const [currentJoinRequests, setJoinrequests] = useState(joinRequest || [])
-    
-    const OwnerActions = String(ownerId) === String(accountId);
+  // List about movies that already are in the group_movies -table
+  const [groupMovies, setGroupMovies] = useState([]);
+
+  const OwnerActions = String(ownerId) === String(accountId);
 
   const isMember = members.some(
     (member) => String(member.id_account) === String(accountId),
@@ -23,31 +38,50 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
 
   const ViewGroup = OwnerActions || isMember;
 
-    //Suodatetaan vanhat ja uudet liittymispyynnöt
-    async function handleRequests (idaccount) {
-      setJoinrequests((oldRequests) =>
-      oldRequests.filter(
-        (request) => request.id_account !== idaccount
-      ))
+  //Suodatetaan vanhat ja uudet liittymispyynnöt
+  async function handleRequests(idaccount) {
+    setJoinrequests((oldRequests) =>
+      oldRequests.filter((request) => request.id_account !== idaccount),
+    );
 
-      //Jäsen lista
+    //Jäsen lista
     try {
-        const response = await axios.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
         {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      }
-        
       );
-      setMembers(response.data)
-    } catch(err) {
-        console.error("Finding members has failed: ", err)
-        setError("Jäsenten hakeminen epäonnistui")
-      }
+      setMembers(response.data);
+    } catch (err) {
+      console.error("Finding members has failed: ", err);
+      setError("Jäsenten hakeminen epäonnistui");
     }
-  
+  }
+
+  // Functionality to add movies to groups
+  async function handleAddMovie(movie) {
+    try {
+      const result = await addGroupMovie(groupId, movie);
+      console.log(result);
+      const updatedGroupMovies = await getGroupMovies(groupId);
+      setGroupMovies(updatedGroupMovies);
+    } catch (error) {
+      console.error("Adding movie failed:", error.message);
+    }
+  }
+
+  function isMovieInGroup(movie) {
+    return groupMovies.some((savedMovie) => {
+      return (
+        savedMovie.tmdb_id === movie.id &&
+        savedMovie.media_type === movie.media_type
+      );
+    });
+  }
+
   // Modal sulketuuu esc-näppäimestä tai X:sttä
   useEffect(() => {
     function handleEsc(event) {
@@ -77,35 +111,49 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
       setLoading(true);
       setError("");
 
-    //Haetaan jäsenlista
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
-        {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      //gets movies from group_movies db
+      try {
+        const result = await getGroupMovies(groupId);
+        setGroupMovies(result);
+        console.log("Group movies:", result);
+      } catch (error) {
+        console.error("Failed to fetch group movies:", error);
       }
-        
-      );
-      setMembers(response.data)
-      await MembersChanged?.();
 
-    //Liittymispyynnöt
-      const joinRequestsResponse = await axios.get(
-      `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      } 
-      )
-      setJoinrequests(joinRequestsResponse.data)
-    } catch (err) {
-        console.error("Group infromation has failed: ", err)
-        setJoinrequests([])
-        setError("Ryhmän tietojen hakeminen epäonnistui")
-    } finally {
+      //Jäsen lista
+      //Haetaan jäsenlista
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+        setMembers(response.data);
+        await MembersChanged?.();
+      } catch (err) {
+        console.error("Finding members has failed: ", err);
+        setError("Jäsenten hakeminen epäonnistui");
+      }
+
+      //Liittymispyynnöt
+      try {
+        const joinRequestsResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+        setJoinrequests(joinRequestsResponse.data);
+      } catch (err) {
+        console.error("Group infromation has failed: ", err);
+        setJoinrequests([]);
+        setError("Ryhmän tietojen hakeminen epäonnistui");
+      } finally {
         setLoading(false);
       }
     }
@@ -157,7 +205,6 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
         >
           X
         </button>
-
         <div className="groupPage-content">
           <div className="group-info">
             <h2>{groupName}</h2>
@@ -168,62 +215,73 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                 onDeleted={onDeleted}
               />
             )}
-
             {!OwnerActions && <LeaveGroupButton groupId={groupId} />}
           </div>
 
-          <div className="sections-groupPage">
-            <div className="sections-left-groupPage">
+          <div className="groupPage-body">
+            <div className="sections-groupPage">
               <section className="group-members">
                 <h3>Ryhmän jäsenet:</h3>
 
                 {members.length === 0 ? (
                   <p>Ryhmässä ei ole vielä jäseniä</p>
                 ) : (
-                <ul>
-                  {members.map((member) => (
-                    <li key={member.id_account}>
-                      <div className="member-row">
-                        <span>{member.username}</span>
-
-                        {String(member.id_account) === String(ownerId) &&
-                          " (omistaja)"}
-
-                        {OwnerActions &&
-                          String(member.id_account) !== String(ownerId) && (
-                            <RemoveMemberButton
-                              idgroup={groupId}
-                              idaccount={member.id_account}
-                              setMembers={setMembers}
-                            />
-                          )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-
-            {OwnerActions && (
-              <section className="join-requests">
-                <h3>Liittymispyynnöt:</h3>
-                {currentJoinRequests.length === 0 ? (
-                  <p>Ei liittymispyyntöjä</p>
-                ) : (
                   <ul>
-                    {currentJoinRequests.map((request) => (
-                      <JoinRequest
-                        key={request.id_account}
-                        idaccount={request.id_account}
-                        groupId={groupId}
-                        username={request.username}
-                        handleRequest={handleRequests}
-                      />
+                    {members.map((member) => (
+                      <li key={member.id_account}>
+                        <div className="member-row">
+                          <span>{member.username}</span>
+
+                          {String(member.id_account) === String(ownerId) &&
+                            " (omistaja)"}
+
+                          {OwnerActions &&
+                            String(member.id_account) !== String(ownerId) && (
+                              <RemoveMemberButton
+                                idgroup={groupId}
+                                idaccount={member.id_account}
+                                setMembers={setMembers}
+                              />
+                            )}
+                        </div>
+                      </li>
                     ))}
                   </ul>
                 )}
               </section>
-            )}
+
+              {OwnerActions && (
+                <section className="join-requests">
+                  <h3>Liittymispyynnöt:</h3>
+                  {currentJoinRequests.length === 0 ? (
+                    <p>Ei liittymispyyntöjä</p>
+                  ) : (
+                    <ul>
+                      {currentJoinRequests.map((request) => (
+                        <JoinRequest
+                          key={request.id_account}
+                          idaccount={request.id_account}
+                          groupId={groupId}
+                          username={request.username}
+                          handleRequest={handleRequests}
+                        />
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              )}
+            </div>
+            <div className="group-movie-area">
+              <MovieSearch
+                onSelect={(movie) => onMediaSelect(movie, groupId)}
+                onAddMovie={handleAddMovie}
+                isMovieInGroup={isMovieInGroup}
+              />
+            </div>
+          </div>
+            <section className="group-movies">
+                 <GroupMovies groupId={groupId}/>
+            </section>
           </div>
             <section className="group-movies">
                  <GroupMovies groupId={groupId}/>

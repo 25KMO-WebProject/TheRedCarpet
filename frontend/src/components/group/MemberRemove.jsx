@@ -2,27 +2,28 @@ import axios from "../api/authAxios.js";
 import "./Groups.css";
 
 const RemoveMemberButton = ({ idgroup, idaccount, setMembers }) => {
-    const removeMember = async () => {
-        try {
-            const response = await axios.delete(
-            `${import.meta.env.VITE_API_URL}/groups/${idgroup}/members/${idaccount}/remove`,
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              }
-            );
+  const removeMember = async () => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/groups/${idgroup}/members/${idaccount}/remove`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
 
-            setMembers((members) =>
-            members.filter(
-                (member) => String(member.id_account) !== String(idaccount)
-            ))
-        
-            onRemoved();
-        } catch (error) {
-            console.error("Jäsenen poistaminen epäonnsitui:", error)
-        }
-    };
+      setMembers((members) =>
+        members.filter(
+          (member) => String(member.id_account) !== String(idaccount),
+        ),
+      );
+
+      onRemoved();
+    } catch (error) {
+      console.error("Jäsenen poistaminen epäonnsitui:", error);
+    }
+  };
 
   return (
     <button

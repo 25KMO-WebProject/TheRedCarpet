@@ -4,13 +4,8 @@ import {
   addGroupMovieModel,
 } from "../models/groupMovieModel.js";
 
-
 // Return the saved TMDB identifiers for group.
-const getGroupMoviesController = async (
-  req,
-  res,
-  next,
-) => {
+const getGroupMoviesController = async (req, res, next) => {
   try {
     const groupId = Number(req.params.id);
 
@@ -20,8 +15,7 @@ const getGroupMoviesController = async (
       return next(error);
     }
 
-    const movies =
-      await getGroupMoviesModel(groupId);
+    const movies = await getGroupMoviesModel(groupId);
 
     return res.status(200).json(movies);
   } catch (error) {
@@ -29,13 +23,8 @@ const getGroupMoviesController = async (
   }
 };
 
-
 // Add a TMDB movie or TV show to group.
-const addGroupMovieController = async (
-  req,
-  res,
-  next,
-) => {
+const addGroupMovieController = async (req, res, next) => {
   try {
     const groupId = Number(req.params.id);
     const accountId = req.user.userId;
@@ -65,25 +54,15 @@ const addGroupMovieController = async (
     }
 
     // Only group member or owner may add movies.
-    const allowed =
-      await canAddGroupMovieModel(
-        groupId,
-        accountId,
-      );
+    const allowed = await canAddGroupMovieModel(groupId, accountId);
 
     if (!allowed) {
-      const error = new Error(
-        "Only group members can add movies",
-      );
+      const error = new Error("Only group members can add movies");
       error.status = 403;
       return next(error);
     }
 
-    const movie = await addGroupMovieModel(
-      groupId,
-      tmdbId,
-      mediaType,
-    );
+    const movie = await addGroupMovieModel(groupId, tmdbId, mediaType);
 
     // The same movie does not need to be added twice.
     if (!movie) {
@@ -100,8 +79,5 @@ const addGroupMovieController = async (
   }
 };
 
+export { getGroupMoviesController, addGroupMovieController };
 
-export {
-  getGroupMoviesController,
-  addGroupMovieController,
-};

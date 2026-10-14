@@ -17,19 +17,23 @@ async function main() {
   // Get available movie genres from API
   await getGenres();
 
-  await fetchMoviesFromApi(10);
+  await fetchMoviesFromApi(500);
   await importMovies(movieMap);
 }
 
 async function fetchMoviesFromApi(depth) {
-  for (let i = 1; i <= depth; i++) {
-    if (i % 5 == 0) {
-      await wait(2000);
-    }
-    custom_args.page = i;
+  for (let page = 1; page <= depth; page++) {
+    custom_args.page = page;
+
+    console.log(`\n\nCurrent page: ${page}/${depth}`);
+    console.log(`Movies in movieMap: ${movieMap.size}`);
+    console.log(`Details in detailsMap: ${detailsMap.size}`);
+
     await getMovies();
+    await manageDetails();
+
+    await wait(2000);
   }
-  await manageDetails();
 }
 
 // Get movies from the API stream with custom or default parameters
@@ -58,21 +62,31 @@ function getMovieDetails(id) {
 
 // Get details of every movie in movieMap
 async function manageDetails() {
-  // Array of promises
-  const promises = [];
+  const pendingIds = [...movieMap.keys()].filter((id) => !detailsMap.has(id));
 
+  const batchSize = 5;
   let count = 0;
 
-  movieMap.forEach((movie, id) => {
-    promises.push(
-      getMovieDetails(id).then((details) => {
+  for (let i = 0; i < pendingIds.length; i += batchSize) {
+    const batch = pendingIds.slice(i, i + batchSize);
+
+    await Promise.all(
+      batch.map(async (id) => {
+        const details = await getMovieDetails(id);
+
         detailsMap.set(id, details);
         count++;
-        process.stdout.write(`\rDetails loaded: ${count}/${movieMap.size}`);
+
+        process.stdout.write(`\rDetails loaded: ${count}/${pendingIds.length}`);
       }),
     );
-  });
-  await Promise.all(promises);
+
+    // Wait before the next batch
+    if (i + batchSize < pendingIds.length) {
+      await wait(500);
+    }
+  }
+
   assignDetails();
 }
 

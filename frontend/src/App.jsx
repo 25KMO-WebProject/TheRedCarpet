@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
+import { searchTmdb } from "./services/movieSearchApi.js";
 import NowPlaying from "./components/NowPlaying";
 import Navbar from "./components/Navbar.jsx";
 import SearchResults from "./components/search/SearchResults";
@@ -37,6 +38,8 @@ function App() {
     const savedAccount = localStorage.getItem("account");
     return savedAccount ? JSON.parse(savedAccount) : null;
   });
+
+  const [selectedMovieGroupId, setSelectedMovieGroupId] = useState(null);
 
   const handleLogout = async () => {
     try {
@@ -101,26 +104,8 @@ function App() {
     setHasSearched(true);
 
     try {
-      const params = new URLSearchParams({
-        query,
-        type,
-      });
-
-      if (year) {
-        params.set("year", year);
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/tmdb/search?${params}`,
-      );
-
-      if (!response.ok) {
-        throw new Error("Search failed");
-      }
-
-      const searchData = await response.json();
-
-      setMovies(searchData.results || []);
+      const results = await searchTmdb(query, type, year);
+      setMovies(results);
     } catch (err) {
       console.error("Search failed:", err);
       setMovies([]);
@@ -220,6 +205,12 @@ function App() {
     }
   };
 
+  // If user searches a movie for a group it will be added by pressing the '+' symbol
+  function handleGroupMediaSelect(movie, groupId) {
+    setSelectedMedia(movie);
+    setSelectedMovieGroupId(groupId);
+  }
+
   // Create a public share link and copy it to the clipboard.
   // Returns true when the link was copied, otherwise false,
   // so the share button knows whether to show a success message.
@@ -269,7 +260,6 @@ function App() {
       loadSharedFavorites();
     }
   }, []);
-  console.log("App: ", account);
 
   return (
     <>
@@ -346,7 +336,12 @@ function App() {
 
           <Route
             path="/groups"
-            element={<Groups isAuthenticated={isAuthenticated} />}
+            element={
+              <Groups
+                isAuthenticated={isAuthenticated}
+                onMediaSelect={handleGroupMediaSelect}
+              />
+            }
           />
         </Routes>
       </BrowserRouter>
@@ -381,11 +376,20 @@ function App() {
 
       <MediaDetailsModal
         item={selectedMedia}
-        onClose={() => setSelectedMedia(null)}
+        onClose={() => {
+          setSelectedMedia(null);
+          setSelectedMovieGroupId(null);
+        }}
         isAuthenticated={isAuthenticated}
         token={token}
         isFavorite={selectedMedia ? isFavorite(selectedMedia) : false}
         onToggleFavorite={() => toggleFavorite(selectedMedia)}
+        onAddToGroup={
+          selectedMovieGroupId !== null
+            ? (movie) =>
+                console.log("Add to group:", selectedMovieGroupId, movie)
+            : undefined
+        }
       />
     </>
   );

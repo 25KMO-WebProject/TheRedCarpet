@@ -32,8 +32,8 @@
 
 .group-content h2,
 .group-content p {
-	margin: 0;
-	word-wrap: anywhere;
+  margin: 0;
+  word-wrap: anywhere;
 }
 .group-content span {
   margin: 0;
@@ -165,6 +165,32 @@
 
   padding: 20px;
   background: rgba(0, 0, 0, 0.65);
+}
+
+.groupPage-body {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.groupPage-body .sections-groupPage {
+  flex: 0 0 250px;
+}
+
+.group-movie-area {
+  flex: 1;
+  min-width: 0;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+.group-movie-area .movie-search {
+  width: 100%;
+  max-width: 600px;
 }
 
 .groupPage-modal {
@@ -355,23 +381,21 @@
 }
 
 @media (max-width: 600px) {
-    .group {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .group {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .group-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 16px;
-    }
-
-    .group img {
-        width: 100%;
-        height: 100%;
-    }
-
+  .group-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+  .group img {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 @media (max-width: 700px) {
@@ -410,5 +434,42 @@
   .group-movies {
     width: 100%;
   }
+}
+/* Group.jsx*/
+.group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid black;
+  border-radius: 12px;
+  overflow: hidden;
 
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.group-movie-area .movie-search {
+  position: relative;
+}
+
+.group-movie-area .movie-search-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+  z-index: 10;
+
+  max-height: 350px;
+  overflow-y: auto;
+
+  background: #202020;
+  border: 1px solid #555;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.group-movie-area .movie-search-dropdown > p {
+  padding: 15px;
+  color: white;
 }
