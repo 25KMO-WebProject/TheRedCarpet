@@ -82,6 +82,24 @@ function GroupPageModal({
     });
   }
 
+      //Jäsen lista
+    try {
+        const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
+        {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+        
+      );
+      setMembers(response.data)
+    } catch(err) {
+        console.error("Finding members has failed: ", err)
+        setError("Jäsenten hakeminen epäonnistui")
+      }
+    }
+  
   // Modal sulketuuu esc-näppäimestä tai X:sttä
   useEffect(() => {
     function handleEsc(event) {
