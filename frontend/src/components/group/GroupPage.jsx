@@ -212,6 +212,7 @@ function GroupPageModal({
               <DeleteGroupButton
                 idgroup={groupId}
                 idowner={ownerId}
+                token={localStorage.getItem("token")}
                 onDeleted={onDeleted}
               />
             )}
@@ -278,14 +279,6 @@ function GroupPageModal({
                 isMovieInGroup={isMovieInGroup}
               />
             </div>
-          </div>
-            <section className="group-movies">
-                 <GroupMovies groupId={groupId}/>
-            </section>
-          </div>
-            <section className="group-movies">
-                 <GroupMovies groupId={groupId}/>
-            </section>
           </div>
         </div>
       </div>
