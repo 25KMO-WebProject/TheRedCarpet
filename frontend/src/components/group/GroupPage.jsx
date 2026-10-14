@@ -253,7 +253,6 @@ function GroupPageModal({
             {!OwnerActions && <LeaveGroupButton groupId={groupId} />}
           </div>
 
-          <div className="groupPage-body">
             <div className="sections-groupPage">
               <section className="group-members">
                 <h3>Ryhmän jäsenet:</h3>
@@ -325,7 +324,6 @@ function GroupPageModal({
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
