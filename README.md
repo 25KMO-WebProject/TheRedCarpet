@@ -28,80 +28,82 @@ Frontend - JS React\
 Database - PostgreSQL
 
 ## ERD
-
 ```mermaid
 erDiagram
 
-    ACCOUNT {
-        SERIAL id PK
-        VARCHAR_16 username
-        VARCHAR_64 email
-        VARCHAR_64 password
+    account {
+        serial id PK
+        varchar username UK "max 16"
+        varchar email "max 64"
+        varchar password "max 64"
+        varchar favorites_share_token UK "max 36, nullable"
     }
 
-    GROUP {
-        SERIAL id PK
-        INTEGER id_owner FK
-        VARCHAR_64 group_name
-        VARCHAR_255 group_descr
-        TIMESTAMPTZ creation_date
-
-        UNIQUE group_name_owner_id
+    group {
+        serial id PK
+        int id_owner FK
+        varchar group_name "max 64"
+        varchar group_descr "max 255, nullable"
+        timestamptz creation_date
     }
 
-    MEMBER_LIST {
-        INTEGER id_account PK,FK
-        INTEGER id_group PK,FK
-        TIMESTAMPTZ join_date
+    member_list {
+        int id_group PK, FK
+        int id_account PK, FK
+        timestamptz join_date "nullable"
     }
 
-    JOIN_REQUEST {
-        INTEGER id_account PK,FK
-        INTEGER id_group PK,FK
-        VARCHAR_8 status
+    join_request {
+        int id_group PK, FK
+        int id_account PK, FK
+        varchar status "max 8"
     }
 
-    MOVIE {
-        SERIAL id PK
-        VARCHAR_255 title
-        TEXT description
-        INTERVAL duration
-        VARCHAR_ARRAY genre
-        DATE release_date
+    group_movies {
+        int id_group PK, FK
+        int tmdb_id PK
+        varchar media_type PK "movie or tv"
+        timestamptz created_at
     }
 
-    FAVOURITE_MOVIES {
-        INTEGER id_account PK,FK
-        INTEGER id_movie PK,FK
+    favourite_movies {
+        int id_account PK, FK
+        int tmdb_id PK
+        varchar media_type PK "movie or tv"
+        timestamptz created_at
     }
 
-    REVIEW {
-        INTEGER id_account PK,FK
-        INTEGER id_movie PK,FK
-        SMALLINT rating
-        VARCHAR_512 description
-        TIMESTAMPTZ date
+    movie {
+        serial id PK
+        varchar tmdb_id UK "max 16"
+        varchar title "max 255"
+        text description "nullable"
+        interval duration
+        varchar_array genre
+        date release_date "nullable"
     }
 
+    review {
+        int id_account PK, FK
+        int id_movie PK, FK
+        smallint rating
+        varchar description "max 512"
+        timestamptz date
+    }
 
-    %% Group ownership
-    ACCOUNT ||--o{ GROUP : owns
+    account ||--o{ group : owns
+    account ||--o{ member_list : joins
+    group ||--o{ member_list : contains
 
-    %% Memberships
-    ACCOUNT ||--o{ MEMBER_LIST : has_membership
-    GROUP ||--o{ MEMBER_LIST : contains_member
+    account ||--o{ join_request : submits
+    group ||--o{ join_request : receives
 
-    %% Join requests
-    ACCOUNT ||--o{ JOIN_REQUEST : submits
-    GROUP ||--o{ JOIN_REQUEST : receives
+    group ||--o{ group_movies : contains
+    account ||--o{ favourite_movies : saves
 
-    %% Favourite movies
-    ACCOUNT ||--o{ FAVOURITE_MOVIES : favorites
-    MOVIE ||--o{ FAVOURITE_MOVIES : favorited_by
+    account ||--o{ review : writes
+    movie ||--o{ review : receives
 
-    %% Reviews
-    ACCOUNT ||--o{ REVIEW : writes
-    MOVIE ||--o{ REVIEW : receives
 ```
 
 ## API
