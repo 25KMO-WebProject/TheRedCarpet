@@ -1,30 +1,5 @@
-import pg from "pg";
-
-const { Pool } = pg;
-
-const pool = new Pool({
-  host: "127.0.0.1",
-  port: Number(process.env.DB_EXPOSED_PORT),
-
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
-
-async function testConnection() {
-  console.log("Testing db connection..");
-
-  try {
-    const result = await pool.query("SELECT 1 AS test");
-
-    console.log("Connection successful!");
-    console.log(result.rows);
-  } catch (error) {
-    console.error("Connection failed:", error.message);
-  } finally {
-    await pool.end();
-  }
-}
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
 
 async function importMovies(movieMap) {
   const movies = Array.from(movieMap.values());
@@ -32,12 +7,12 @@ async function importMovies(movieMap) {
   if (movies.length === 0) return 0;
 
   const batchSize = 500;
+  const sqlStatements = [
+    "-- Generated movie seed data",
+    "SET standard_conforming_strings = on;",
+    "BEGIN;",
+  ];
 
-  let processed = 0;
-  let inserted = 0;
-
-  // Retrieve the property names from our movie objects.
-  // Exclude the database-generated primary key.
   const columns = [
     ...new Set(movies.flatMap((movie) => Object.keys(movie))),
   ].filter((column) => column !== "id");
@@ -46,55 +21,56 @@ async function importMovies(movieMap) {
     throw new Error("Missing required tmdb_id property.");
   }
 
-  // Safely quote PostgreSQL column identifiers.
   const quoteIdentifier = (identifier) =>
     `"${identifier.replaceAll('"', '""')}"`;
 
-  // Generate the INSERT and SELECT column lists.
   const insertColumns = columns.map(quoteIdentifier).join(", ");
 
   const selectColumns = columns
     .map((column) => `m.${quoteIdentifier(column)}`)
     .join(", ");
 
-  const query = `
-        INSERT INTO public.movie (
-            ${insertColumns}
-        )
+  let processed = 0;
 
-        SELECT
-            ${selectColumns}
+  for (let i = 0; i < movies.length; i += batchSize) {
+    const batch = movies.slice(i, i + batchSize);
 
-        FROM jsonb_populate_recordset(
-            NULL::public.movie,
-            $1::jsonb
-        ) AS m
+    // Escape single quotes for PostgreSQL string literals.
+    const json = JSON.stringify(batch).replaceAll("'", "''");
 
-        ON CONFLICT (tmdb_id) DO NOTHING;
-    `;
+    const query = `
+INSERT INTO public.movie (
+    ${insertColumns}
+)
+SELECT
+    ${selectColumns}
+FROM jsonb_populate_recordset(
+    NULL::public.movie,
+    '${json}'::jsonb
+) AS m
+ON CONFLICT (tmdb_id) DO NOTHING;
+`;
 
-  process.stdout.write(`Movies processed: 0/${movies.length} (0%)`);
+    sqlStatements.push(query);
 
-  try {
-    for (let i = 0; i < movies.length; i += batchSize) {
-      const batch = movies.slice(i, i + batchSize);
+    processed += batch.length;
 
-      const result = await pool.query(query, [JSON.stringify(batch)]);
+    const percentage = ((processed / movies.length) * 100).toFixed(1);
 
-      processed += batch.length;
-      inserted += result.rowCount;
-
-      const percentage = ((processed / movies.length) * 100).toFixed(1);
-
-      process.stdout.write(
-        `\rMovies processed: ${processed}/${movies.length} (${percentage}%)`,
-      );
-    }
-
-    return inserted;
-  } finally {
-    process.stdout.write("\n");
+    process.stdout.write(
+      `\rMovies prepared: ${processed}/${movies.length} (${percentage}%)`,
+    );
   }
+
+  sqlStatements.push("COMMIT;");
+
+  const outputPath = path.resolve(process.cwd(), "seed2.sql");
+
+  await writeFile(outputPath, sqlStatements.join("\n\n"), "utf8");
+
+  console.log(`\nSeed file created: ${outputPath}`);
+
+  return processed;
 }
 
 export { importMovies };
