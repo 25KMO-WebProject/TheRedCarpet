@@ -17,7 +17,7 @@ async function main() {
   // Get available movie genres from API
   await getGenres();
 
-  await fetchMoviesFromApi(100);
+  await fetchMoviesFromApi(500);
   await importMovies(movieMap);
 }
 
