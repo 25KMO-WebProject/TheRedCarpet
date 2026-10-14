@@ -5,6 +5,7 @@ import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
+import GroupMovies from "./GroupMovies.jsx";
 
 import MovieSearch from "./MovieSearch.jsx";
 import { addGroupMovie } from "../../services/groupMoviesApi.js";
@@ -219,7 +220,6 @@ function GroupPageModal({
             {!OwnerActions && <LeaveGroupButton groupId={groupId} />}
           </div>
 
-          <div className="groupPage-body">
             <div className="sections-groupPage">
               <section className="group-members">
                 <h3>Ryhmän jäsenet:</h3>
@@ -278,11 +278,12 @@ function GroupPageModal({
                 onAddMovie={handleAddMovie}
                 isMovieInGroup={isMovieInGroup}
               />
+              <GroupMovies groupId={groupId} />
+              
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
