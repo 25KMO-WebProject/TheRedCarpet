@@ -1,5 +1,8 @@
 BEGIN;
 
+-- =====================================================
+-- ACCOUNTS
+-- =====================================================
 
 INSERT INTO public.account (id, username, email, password)
 VALUES
@@ -45,11 +48,7 @@ INSERT INTO public.movie
     description,
     duration,
     genre,
-    release_date,
-    backdrop_path,
-    poster_path,
-    small_backdrop_path,
-    small_poster_path
+    release_date
 )
 VALUES
 (
@@ -58,11 +57,7 @@ VALUES
     'Set in the 22nd century, The Matrix tells the story of a computer hacker who joins a group of underground insurgents fighting the vast and powerful computers who now rule the earth.',
     '02:16:00',
     ARRAY['Action', 'Sci-Fi'],
-    '1999-03-31',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/tlm8UkiQsitc8rSuIAscQDCnP8d.jpg',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg',
-    'https://image.tmdb.org/t/p/w342/tlm8UkiQsitc8rSuIAscQDCnP8d.jpg',
-    'https://image.tmdb.org/t/p/w342/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg'
+    '1999-03-31'
 ),
 (
     27205,
@@ -70,11 +65,7 @@ VALUES
     'Dreams within dreams.',
     '02:28:00',
     ARRAY['Sci-Fi', 'Thriller'],
-    '2010-07-16',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg',
-    'https://image.tmdb.org/t/p/w342/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg',
-    'https://image.tmdb.org/t/p/w342/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg'
+    '2010-07-16'
 ),
 (
     155,
@@ -82,11 +73,7 @@ VALUES
     'Batman joins forces with Lieutenant Jim Gordon and District Attorney Harvey Dent to dismantle organized crime in Gotham City. Their efforts are challenged by the Joker, a criminal mastermind who plunges the city into chaos.',
     '02:32:00',
     ARRAY['Drama', 'Action', 'Crime', 'Thriller'],
-    '2008-07-16',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/dqK9Hag1054tghRQSqLSfrkvQnA.jpg',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
-    'https://image.tmdb.org/t/p/w342/dqK9Hag1054tghRQSqLSfrkvQnA.jpg',
-    'https://image.tmdb.org/t/p/w342/qJ2tW6WMUDux911r6m7haRef0WH.jpg'
+    '2008-07-16'
 ),
 (
     157336,
@@ -94,11 +81,7 @@ VALUES
     'A group of explorers travels through a newly discovered wormhole in space, searching for a habitable planet as Earth faces an environmental catastrophe that threatens the survival of humanity.',
     '02:49:00',
     ARRAY['Adventure', 'Drama', 'Science Fiction'],
-    '2014-11-05',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/pbrkL804c8yAv3zBZR4QPEafpAR.jpg',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
-    'https://image.tmdb.org/t/p/w342/pbrkL804c8yAv3zBZR4QPEafpAR.jpg',
-    'https://image.tmdb.org/t/p/w342/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg'
+    '2014-11-05'
 ),
 (
     120,
@@ -106,11 +89,7 @@ VALUES
     'Young hobbit Frodo Baggins inherits a powerful and dangerous ring. Accompanied by a fellowship of companions, he embarks on a perilous journey toward Mount Doom, where the ring must be destroyed.',
     '02:59:00',
     ARRAY['Adventure', 'Fantasy', 'Action'],
-    '2001-12-18',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/dUVbWINfRMGojGZRcO6GF1Z2nV8.jpg',
-    'https://image.tmdb.org/t/p/w600_and_h900_face/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg',
-    'https://image.tmdb.org/t/p/w342/dUVbWINfRMGojGZRcO6GF1Z2nV8.jpg',
-    'https://image.tmdb.org/t/p/w342/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg'
+    '2001-12-18'
 );
 
 -- =====================================================
