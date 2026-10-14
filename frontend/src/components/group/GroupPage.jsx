@@ -5,6 +5,8 @@ import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
+import FavoriteCard from "../favorites/FavoriteCard.jsx";
+import "../favorites/FavoritesPage.css";
 
 import MovieSearch from "./MovieSearch.jsx";
 import { addGroupMovie } from "../../services/groupMoviesApi.js";
@@ -29,6 +31,9 @@ function GroupPageModal({
 
   // List about movies that already are in the group_movies -table
   const [groupMovies, setGroupMovies] = useState([]);
+
+  // List movie details that already are in the group_movies -table
+  const [groupMovieDetails, setGroupMovieDetails] = useState([]);
 
   const OwnerActions = String(ownerId) === String(accountId);
 
@@ -66,8 +71,8 @@ function GroupPageModal({
     try {
       const result = await addGroupMovie(groupId, movie);
       console.log(result);
-      const updatedGroupMovies = await getGroupMovies(groupId);
-      setGroupMovies(updatedGroupMovies);
+
+      await loadGroupMovies(groupId);
     } catch (error) {
       console.error("Adding movie failed:", error.message);
     }
@@ -80,6 +85,40 @@ function GroupPageModal({
         savedMovie.media_type === movie.media_type
       );
     });
+  }
+
+  async function loadGroupMovies(groupId) {
+    // Fetch details from API about group_movies
+    try {
+      const movies = await getGroupMovies(groupId);
+      setGroupMovies(movies);
+
+      const details = await Promise.all(
+        movies.map(async (group_movie) => {
+          try {
+            const url = `${import.meta.env.VITE_API_URL}/tmdb/details/${group_movie.media_type}/${group_movie.tmdb_id}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+              return null;
+            }
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            console.error("Fetch failed:", group_movie.tmdb_id, error);
+            return null;
+          }
+        }),
+      );
+
+      const validDetails = details.filter(Boolean);
+
+      setGroupMovieDetails(validDetails);
+
+      console.log("Group movie details:", validDetails);
+    } catch (error) {
+      console.error("Failed to fetch group movie details:", error);
+    }
   }
 
   // Modal sulketuuu esc-näppäimestä tai X:sttä
@@ -110,15 +149,10 @@ function GroupPageModal({
     async function handleGroupPage() {
       setLoading(true);
       setError("");
+      setGroupMovieDetails([]);
 
-      //gets movies from group_movies db
-      try {
-        const result = await getGroupMovies(groupId);
-        setGroupMovies(result);
-        console.log("Group movies:", result);
-      } catch (error) {
-        console.error("Failed to fetch group movies:", error);
-      }
+      // Fetch movies and their TMDB details
+      await loadGroupMovies(groupId);
 
       //Jäsen lista
       //Haetaan jäsenlista
@@ -278,6 +312,15 @@ function GroupPageModal({
                 onAddMovie={handleAddMovie}
                 isMovieInGroup={isMovieInGroup}
               />
+              <div className="group-movie-grid">
+                {groupMovieDetails.map((movie) => (
+                  <FavoriteCard
+                    key={`${movie.media_type}-${movie.id}`}
+                    item={movie}
+                    onSelect={(item) => onMediaSelect(item, groupId)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

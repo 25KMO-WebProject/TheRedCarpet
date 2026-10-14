@@ -10,7 +10,6 @@
   margin-bottom: 30px;
 }
 
-
 /* Empty favorites state */
 
 .favorites-empty {
@@ -67,18 +66,15 @@
   color: #f2f2f2;
 }
 
-
 /* Favorites grid */
 
 .favorites-grid {
   display: grid;
 
-  grid-template-columns:
-    repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
   gap: 24px;
 }
-
 
 /* One favorite movie / TV card */
 
@@ -127,7 +123,6 @@
   font-weight: 600;
 }
 
-
 /* Heading on the left, share button on the right */
 
 .favorites-header {
@@ -147,7 +142,6 @@
 .favorites-header h1 {
   margin: 0;
 }
-
 
 /* Share favorites button */
 
@@ -187,4 +181,12 @@
   cursor: default;
 
   border-color: transparent;
+}
+
+.group-movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+  padding: 12px;
+  margin-top: 20px;
 }

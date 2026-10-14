@@ -165,13 +165,19 @@
 }
 
 .group-movie-area {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+
   flex: 1;
   min-width: 0;
   padding: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   overflow-y: auto;
+}
+
+.group-movie-area .favorites-grid {
+  width: 100%;
 }
 
 .group-movie-area .movie-search {
