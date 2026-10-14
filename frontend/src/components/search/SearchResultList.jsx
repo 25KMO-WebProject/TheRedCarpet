@@ -1,6 +1,6 @@
-async function onAddMovie(item) {}
+function SearchResult({ item, onSelect, onAddMovie, isMovieInGroup }) {
+  const alreadyAdded = isMovieInGroup(item);
 
-function SearchResult({ item, onSelect, onAddMovie }) {
   const url = import.meta.env.VITE_API_URL;
 
   const name = item.title || item.name;
@@ -62,10 +62,12 @@ function SearchResult({ item, onSelect, onAddMovie }) {
       </div>
       <button
         type="button"
+        className={alreadyAdded ? "movie-added" : ""}
         onClick={handleAddMovie}
         onKeyDown={(event) => event.stopPropagation()}
+        disabled={alreadyAdded}
       >
-        +
+        {alreadyAdded ? "✓" : "+"}
       </button>
     </article>
   );

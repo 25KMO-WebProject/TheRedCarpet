@@ -139,6 +139,15 @@ nav li {
   button:hover {
     background-color: #303030;
   }
+
+  .movie-added {
+    background-color: green;
+    color: white;
+
+    &:hover {
+      background-color: #00a300;
+    }
+  }
 }
 .search-result-row:hover {
   background: #303030;

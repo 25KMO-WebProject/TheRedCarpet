@@ -1,6 +1,11 @@
 import { SearchResult } from "./SearchResultList.jsx";
 
-export default function SearchResults({ results, onSelect, onAddMovie }) {
+export default function SearchResults({
+  results,
+  onSelect,
+  onAddMovie,
+  isMovieInGroup,
+}) {
   return (
     <div className="search-results-list">
       {results.map((item) => (
@@ -9,6 +14,7 @@ export default function SearchResults({ results, onSelect, onAddMovie }) {
           item={item}
           onSelect={onSelect}
           onAddMovie={onAddMovie}
+          isMovieInGroup={isMovieInGroup}
         />
       ))}
     </div>

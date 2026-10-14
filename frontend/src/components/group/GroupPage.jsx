@@ -8,6 +8,7 @@ import RemoveMemberButton from "./MemberRemove";
 
 import MovieSearch from "./MovieSearch.jsx";
 import { addGroupMovie } from "../../services/groupMoviesApi.js";
+import { getGroupMovies } from "../../services/groupMoviesApi.js";
 
 function GroupPageModal({
   isOpen,
@@ -25,6 +26,9 @@ function GroupPageModal({
   const [error, setError] = useState("");
   const [members, setMembers] = useState([]);
   const [currentJoinRequests, setJoinrequests] = useState(joinRequest || []);
+
+  // List about movies that already are in the group_movies -table
+  const [groupMovies, setGroupMovies] = useState([]);
 
   const OwnerActions = String(ownerId) === String(accountId);
 
@@ -61,10 +65,21 @@ function GroupPageModal({
   async function handleAddMovie(movie) {
     try {
       const result = await addGroupMovie(groupId, movie);
-      console.log(`Movie ${movie.id} added to group ${groupId}`);
+      console.log(result);
+      const updatedGroupMovies = await getGroupMovies(groupId);
+      setGroupMovies(updatedGroupMovies);
     } catch (error) {
       console.error("Adding movie failed:", error.message);
     }
+  }
+
+  function isMovieInGroup(movie) {
+    return groupMovies.some((savedMovie) => {
+      return (
+        savedMovie.tmdb_id === movie.id &&
+        savedMovie.media_type === movie.media_type
+      );
+    });
   }
 
   // Modal sulketuuu esc-näppäimestä tai X:sttä
@@ -95,6 +110,15 @@ function GroupPageModal({
     async function handleGroupPage() {
       setLoading(true);
       setError("");
+
+      //gets movies from group_movies db
+      try {
+        const result = await getGroupMovies(groupId);
+        setGroupMovies(result);
+        console.log("Group movies:", result);
+      } catch (error) {
+        console.error("Failed to fetch group movies:", error);
+      }
 
       //Jäsen lista
       //Haetaan jäsenlista
@@ -254,6 +278,7 @@ function GroupPageModal({
               <MovieSearch
                 onSelect={(movie) => onMediaSelect(movie, groupId)}
                 onAddMovie={handleAddMovie}
+                isMovieInGroup={isMovieInGroup}
               />
             </div>
           </div>
