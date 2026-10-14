@@ -21,7 +21,7 @@ const RemoveMemberButton = ({ idgroup, idaccount, setMembers }) => {
 
       onRemoved();
     } catch (error) {
-      console.error("Jäsenen poistaminen epäoonsitui:", error);
+      console.error("Jäsenen poistaminen epäonnsitui:", error);
     }
   };
 

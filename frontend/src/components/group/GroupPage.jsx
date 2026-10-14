@@ -132,6 +132,7 @@ function GroupPageModal({
           },
         );
         setMembers(response.data);
+        await MembersChanged?.();
       } catch (err) {
         console.error("Finding members has failed: ", err);
         setError("Jäsenten hakeminen epäonnistui");
@@ -139,9 +140,6 @@ function GroupPageModal({
 
       //Liittymispyynnöt
       try {
-        await MembersChanged?.();
-
-        //Liittymispyynnöt
         const joinRequestsResponse = await axios.get(
           `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
           {
