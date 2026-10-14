@@ -1,19 +1,20 @@
-/* Group.jsx*/
+/* Group.jsx */
 .section {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
 .group {
   display: flex;
   align-items: center;
   width: 100%;
-  border-radius: 12px;
+  height: 150px;
   border: 1px solid black;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   transition: border-color 0.2s ease;
-  height: 150px;
 }
 
 .group:hover {
@@ -26,15 +27,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  padding: 24px;
   width: 100%;
+  padding: 24px;
 }
 
 .group-content h2,
 .group-content p {
   margin: 0;
-  word-wrap: anywhere;
+  overflow-wrap: anywhere;
 }
+
 .group-content span {
   margin: 0;
 }
@@ -54,33 +56,26 @@
 
 .no-groups {
   font-size: 30px;
+  margin: 30px 0;
 }
 
-/*Images Group-pääsivu*/
-/*
-.group img {
-  width: 200px;
-  height: 160px;
-}
-*/
-
-/*Liittymis nappi*/
+/* Join group button */
 .join_button {
   color: white;
 }
 
-/*Ryhmän luomis nappi ja Ryhmän luomis modal*/
-
+/* Create group button and modal */
 .Create_Group {
   margin-top: 30px;
+  margin-bottom: 30px;
   color: white;
   font-size: 18px;
-  margin-bottom: 30px;
 }
 
 .creategroup-modal {
   position: relative;
   width: min(420px, 100%);
+  box-sizing: border-box;
   padding: 32px;
   border-radius: 16px;
   background: white;
@@ -103,6 +98,7 @@
 
 .creategroup-modal input[type="text"] {
   width: 100%;
+  box-sizing: border-box;
   padding: 12px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -115,17 +111,34 @@
   font-size: 16px;
 }
 
-/*Groups-empty*/
+.creategroup-modal input:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.creategroup-modal input.input-error,
+.creategroup-modal input.input-error:focus,
+.creategroup-modal textarea.input-error,
+.creategroup-modal textarea.input-error:focus {
+  border: 2px solid #dc2626;
+  box-shadow: 0 0 8px #dc2626;
+  outline: none;
+}
+
+.submit {
+  width: 100%;
+  margin-top: 20px;
+  color: white;
+}
+
+/* Restricted/empty group state */
 .groups-empty {
   max-width: 520px;
-
   margin: 70px auto;
   padding: 40px;
-
   text-align: center;
-
   background: #202020;
-
   border: 1px solid #555;
   border-radius: 12px;
 }
@@ -136,7 +149,6 @@
 
 .groups-empty p {
   margin-bottom: 24px;
-
   line-height: 1.5;
   color: #d0d0d0;
 }
@@ -147,64 +159,37 @@
   color: #f2f2f2;
 }
 
-.no-groups {
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-
-/*MODAL eli GroupPage.jsx*/
-
+/* GroupPage.jsx modal */
 .overlay-modal {
   position: fixed;
   inset: 0;
   z-index: 1000;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  padding: 20px;
+  box-sizing: border-box;
+  padding: 12px;
   background: rgba(0, 0, 0, 0.65);
-}
-
-.group-movie-area {
-  display: flex;
-  flex-direction: column;
-
-  flex: 1;
-  min-width: 0;
-  padding: 25px;
-  gap: 20px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  overflow-y: auto;
-}
-
-.group-movie-area .favorites-grid {
-  width: 100%;
-}
-
-.group-movie-area .movie-search {
-  width: 100%;
-  max-width: 600px;
 }
 
 .groupPage-modal {
   position: relative;
-  width: 1050px;
-  height: 100%;
-  padding: 32px;
+  width: min(1050px, 100%);
+  height: min(650px, calc(100dvh - 24px));
   box-sizing: border-box;
-
+  padding: 32px;
+  overflow: hidden;
   border-radius: 16px;
   background: white;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.groupPage-restricted {
+/* More specific selector keeps the restricted modal compact. */
+.groupPage-modal.groupPage-restricted {
   width: min(520px, 100%);
   height: auto;
   padding: 20px;
+  overflow: visible;
   background: transparent;
   box-shadow: none;
 }
@@ -215,9 +200,24 @@
 
 .groupPage-content {
   display: grid;
-  grid-template-columns: 225px minmax(0, 1fr);
+  grid-template-columns: clamp(180px, 24%, 225px) minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
   height: 100%;
+  min-height: 0;
+}
+
+.group-info {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid black;
 }
 
 .delete-group-button,
@@ -229,52 +229,22 @@
   color: white;
 }
 
-.group-info {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  box-sizing: border-box;
-  padding-bottom: 20px;
-  border-bottom: 1px solid black;
-}
-
-.group-members ul {
-  padding-left: 20px;
-  margin-top: 10px;
-}
-
-.group-members li {
-  margin-bottom: 8px;
-}
-
 .sections-groupPage {
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  min-height: 500px;
+  min-height: 0;
   box-sizing: border-box;
-  padding-right: 10px;
+  padding: 20px 10px 0 0;
   overflow-y: auto;
-
-  width: min(225px, 100%);
   border-right: 1px solid black;
-  padding-top: 20px;
 }
 
 .sections-left-groupPage {
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.movies-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 0;
 }
 
 .group-members,
@@ -285,6 +255,15 @@
 .group-members h3,
 .join-requests h3 {
   margin-top: 0;
+}
+
+.group-members ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.group-members li {
+  margin-bottom: 8px;
 }
 
 .member-row {
@@ -299,21 +278,20 @@
   color: #f2f2f2;
 }
 
-/*JOIN-Request*/
-
+/* Join requests */
 .join-request-content {
-  margin-bottom: 12px;
   position: relative;
-  padding-right: 175px;
   min-height: 30px;
+  margin-bottom: 12px;
+  padding-right: 175px;
 }
 
 .join-request-buttons {
-  gap: 6px;
   position: absolute;
-  display: flex;
   top: 0;
   right: 0;
+  display: flex;
+  gap: 6px;
   color: #f2f2f2;
 }
 
@@ -322,19 +300,89 @@
 }
 
 .join-requests ul {
-  padding-left: 18px;
   margin: 0;
+  padding-left: 18px;
 }
 
 .join-requests li {
   display: list-item;
 }
 
+/* Movies and movie search */
+.group-movie-area {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 20px;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.group-movie-area .favorites-grid {
+  width: 100%;
+}
+
+.group-movie-area .movie-search {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  min-width: 0;
+}
+
+.group-movie-area .movie-search-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+  max-height: 350px;
+  overflow-y: auto;
+  background: #202020;
+  border: 1px solid #555;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.group-movie-area .movie-search-dropdown > p {
+  padding: 15px;
+  color: white;
+}
+
+.group-movie-area .group-movie-grid {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+  gap: 16px;
+  padding: 0;
+  margin-top: 0;
+}
+
+/* Prevent a single card from becoming a full-width poster. */
+.group-movie-area .group-movie-grid > .favorite-card {
+  width: 100%;
+  max-width: 220px;
+  justify-self: start;
+}
+
+.movies-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0;
+}
+
+/* Modal controls */
 .close-button {
   position: absolute;
   top: 10px;
   right: 14px;
-
   border: none;
   color: #6b7280;
   background: transparent;
@@ -350,29 +398,7 @@
   color: white;
 }
 
-.submit {
-  color: white;
-  margin-top: 20px;
-  width: 100%;
-}
-
-/* Normal input and textarea focus */
-.creategroup-modal input:focus {
-  border-color: #2563eb;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
-/* Input and textarea validation errors */
-.creategroup-modal input.input-error,
-.creategroup-modal input.input-error:focus,
-.creategroup-modal textarea.input-error,
-.creategroup-modal textarea.input-error:focus {
-  border: 2px solid #dc2626;
-  box-shadow: 0 0 8px #dc2626;
-  outline: none;
-}
-
+/* Group list on smaller screens */
 @media (max-width: 600px) {
   .group {
     flex-direction: column;
@@ -385,68 +411,14 @@
     gap: 12px;
     padding: 16px;
   }
+
   .group img {
     width: 100%;
     height: 100%;
   }
 }
 
-/* Fluid modal */
-.overlay-modal {
-  box-sizing: border-box;
-  padding: 12px;
-}
-
-.groupPage-modal {
-  width: min(1050px, 100%);
-  height: min(650px, calc(100dvh - 24px));
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* Desktop and tablet */
-.groupPage-content {
-  display: grid;
-  grid-template-columns: clamp(180px, 24%, 225px) minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
-  height: 100%;
-  min-height: 0;
-}
-
-.group-info {
-  grid-column: 1 / -1;
-  width: 100%;
-  box-sizing: border-box;
-  padding-right: 36px;
-  flex-wrap: wrap;
-}
-
-.sections-groupPage {
-  width: 100%;
-  min-height: 0;
-  box-sizing: border-box;
-  overflow-y: auto;
-}
-
-.group-movie-area {
-  min-width: 0;
-  min-height: 0;
-  box-sizing: border-box;
-  align-items: stretch;
-  overflow-y: auto;
-}
-
-.group-movie-area .group-movie-grid {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
-  gap: 16px;
-  padding: 0;
-  margin-top: 0;
-}
-
-/* Mobile */
+/* Mobile group modal: one scrolling column */
 @media (max-width: 700px) {
   .groupPage-modal {
     height: calc(100dvh - 24px);
@@ -460,91 +432,41 @@
     height: auto;
   }
 
+  .group-info {
+    width: 100%;
+  }
+
   .sections-groupPage {
+    width: 100%;
     min-height: 0;
+    flex-direction: column;
+    padding: 16px 0;
     overflow: visible;
     border-right: none;
     border-bottom: 1px solid black;
-    padding: 16px 0;
+  }
+
+  .sections-left-groupPage {
+    width: 100%;
+    padding: 0 0 16px;
+    border-right: none;
+    border-bottom: 1px solid black;
   }
 
   .group-movie-area {
     flex: none;
-    overflow: visible;
+    min-width: 0;
+    min-height: 0;
     padding: 16px 0 0;
+    overflow: visible;
   }
 
   .group-movie-area .group-movie-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 135px), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 135px), 1fr));
     gap: 12px;
   }
-}
 
-@media (max-width: 700px) {
-  .sections-groupPage {
-    width: 100%;
-    min-height: 400px;
-    box-sizing: border-box;
-    padding-right: 5px;
-    flex-direction: column;
-  }
-
-  .sections-left-groupPage {
-    border-right: none;
-    border-bottom: 1px solid black;
-    padding: 0 0 16px;
-    width: 100%;
-  }
-
-  /* Group.jsx*/
-  .group {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    border-radius: 12px;
-    border: 1px solid black;
-    border-radius: 12px;
-    overflow: hidden;
-
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-  }
-
-  .group-movie-area .movie-search {
-    position: relative;
-  }
-
-  .group-movie-area .movie-search-dropdown {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    width: 100%;
-    z-index: 10;
-
-    max-height: 350px;
-    overflow-y: auto;
-
-    background: #202020;
-    border: 1px solid #555;
-    border-radius: 8px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  }
-
-  .group-movie-area .movie-search-dropdown > p {
-    padding: 15px;
-    color: white;
-  }
-
-  .group-movie-area {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-    min-height: 0;
-    box-sizing: border-box;
-    padding: 25px;
-    gap: 20px;
-    align-items: stretch;
-    overflow-y: auto;
+  .group-movie-area .group-movie-grid > .favorite-card {
+    max-width: 180px;
   }
 }
