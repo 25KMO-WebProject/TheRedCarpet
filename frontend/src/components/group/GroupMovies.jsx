@@ -38,10 +38,12 @@ function GroupMovies({ groupId }) {
         return <p>Ryhmässä ei ole vielä elokuvia. Voit lisätä elokuvia Hakemalla ne hakukentästä ryhmä sivun sisällä.</p>
     }
 
+    console.log("Movies:", movies)
+
     return (
         <ul className="movies-list">
             {movies.map((movie) => (
-                <li key={movie.id}>{movie.title}</li>
+                <li key={movie.tmdb_id}>{movie.tmdb_id}</li>
             ))}
         </ul>
     )

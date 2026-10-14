@@ -112,6 +112,7 @@ function GroupPageModal({
       setLoading(true);
       setError("");
 
+      
       //gets movies from group_movies db
       try {
         const result = await getGroupMovies(groupId);

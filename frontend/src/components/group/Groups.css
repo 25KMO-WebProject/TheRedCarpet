@@ -248,10 +248,12 @@
 .sections-groupPage {
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 20px;
+  padding-right: 10px;
 
  
   width: min(225px, 100%);
+  min-height: 500px;
   border-right: 1px solid black;
   padding-top: 20px;
 }
