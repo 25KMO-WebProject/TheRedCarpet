@@ -62,6 +62,7 @@
 /* Join group button */
 .join_button {
   color: white;
+  background-color: grey;
 }
 
 /* Create group button and modal */
@@ -69,6 +70,7 @@
   margin-top: 30px;
   margin-bottom: 30px;
   color: white;
+  background-color: grey;
   font-size: 18px;
 }
 
@@ -130,6 +132,7 @@
   width: 100%;
   margin-top: 20px;
   color: white;
+  background-color: grey;
 }
 
 /* Restricted/empty group state */
@@ -276,6 +279,7 @@
   position: static;
   padding: 3px 7px;
   color: #f2f2f2;
+  background-color: grey;
 }
 
 /* Join requests */
@@ -297,6 +301,7 @@
 
 .join-request-buttons button {
   padding: 4px 8px;
+  background-color: grey;
 }
 
 .join-requests ul {
