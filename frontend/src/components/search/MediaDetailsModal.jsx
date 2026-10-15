@@ -113,16 +113,6 @@ export default function MediaDetailsModal({
                     isFavorite={isFavorite}
                     onToggle={onToggleFavorite}
                   />
-                  {onAddToGroup && (
-                    <button
-                      type="button"
-                      onClick={() => onAddToGroup(item)}
-                      title="Lisää ryhmään"
-                      arial-label="Lisää ryhmään"
-                    >
-                      +
-                    </button>
-                  )}
 
                   <button
                     type="button"
