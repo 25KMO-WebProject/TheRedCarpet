@@ -30,6 +30,11 @@
   cursor: pointer;
   font-size: 24px;
   padding: 8px 12px;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 8px;
+
 }
 
 .movie-carousel-viewport {
@@ -63,14 +68,14 @@
   min-width: 0;
   margin-left: 24px;
   box-sizing: border-box;
-  background-color: #2e2e2e;
+  background-color: #202020;
   color: white;
   border-radius: 10px;
   overflow: hidden;
   padding-bottom: 15px;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   user-select: none;
   -webkit-user-select: none;
 }
