@@ -108,22 +108,87 @@ erDiagram
 
 ## API
 
+### Index
+```mermaid
+graph TD
+    A("API (localhost:3000)")
+
+    A --> acc["/accounts"]
+    A --> fav["/favorites"]
+    A --> groups["/groups"]
+    A --> mov["/movies"]
+    A --> reg["/register"]
+    A --> review["/reviews"]
+    A --> search["/search"]
+```
+
+### /accounts
+
 ```mermaid
 graph TD
     A("API (localhost:3000)")
 
     A --> acc["/accounts"]
     acc --> accId["GET /accounts/id/:id"]
-    acc --> accAll["GET /accounts/"]
-    acc --> accLogin["POST /accounts/login/"]
-
-    A --> mov["/movies"]
-    mov --> movAll["GET /movies/"]
-
-    mov --> movId["GET /movies/title/:title"]
-
+    acc --> accDeleteId["DELETE /accounts/id/:id"]
+    acc --> accAll["GET /accounts"]
+    acc --> accLogin["POST /login"]
+    acc --> accLogin["POST /logout"]
 
 ```
+
+
+### /favorites
+
+```mermaid
+graph TD
+
+    A("API (localhost:3000)")
+    A --> fav["/favorites"]
+    fav --> allFav["GET /favorites"]
+    fav --> addFav["POST /favorites"]
+    fav --> delFav["DELETE /favorites/:mediaType/:tmdbId"]
+    fav --> createShareFavToken["POST /favorites/share"]
+    fav --> getShareFavToken["GET /favorites/shared/:shareToken"]
+```
+
+
+### /groups
+
+### Get Operations
+- **GET** `/groups` - Get all groups
+- **GET** `/groups/id/:id` - Get group by ID
+- **GET** `/groups/members/id/:id` - Get group members
+- **GET** `/groups/:id/member-count` - Get member count
+- **GET** `/join-requests` - Get all join requests
+- **GET** `/groups/:id/join-requests` - Get join requests for specific group
+- **GET** `/groups/:id/movies` - Get movies in group
+
+### Post Operations
+- **POST** `/groups` - Create new group
+- **POST** `/groups/:id/movies` - Add movie to group
+- **POST** `/groups/:id/join-requests` - Request to join group
+
+### Delete Operations
+- **DELETE** `/groups/id/:idgroup` - Delete group
+- **DELETE** `/groups/:idgroup/leave` - Leave group
+- **DELETE** `/groups/:idgroup/members/:idaccount/remove` - Remove member
+
+### Update Operations
+- **PATCH** `/groups/:idgroup/join-requests/:idaccount/approve` - Approve join request
+- **PATCH** `/groups/:idgroup/join-requests/:idaccount/reject` - Reject join request
+
+
+### Movie
+```mermaid
+graph TD
+    A("API (localhost:3000)")
+
+    A --> B[GET /movies]
+    A --> C[GET /movies/title/:title]
+    A --> D[GET /nowplaying]
+```
+
 
 ## Parser
 
