@@ -7,9 +7,8 @@ The open-data API to be used is [The Movie Database](https://developer.themovied
 
 
 # Tools
-- Swagger
 - pgAdmin
-- Github:
+- GitHub
 - Visual Studio Code:
 - PostgreSQL
 
@@ -190,25 +189,12 @@ graph TD
 ```
 
 
-## Parser
-
-To scrape some data from the API you need the necessary API key and access key.
-The default code will scrape 200 top rated movies from January 1st 1800 to current day.
-
-To catch more you need to replace ``fetchMoviesFromApi({value})``.
-The value represents pages, my testing resulted that around 100 pages API stream starts putting the break.
-
-```javascript
-  await fetchMoviesFromApi(10);
+## seed2.sql
+You can import some more movie data from `seed2.sql`:
 
 ```
-
-
-```javascript
-node scripts/parser/interface.js
-
+docker compose exec -T database psql -U postgres -d TheRedCarpet < seed2.sql
 ```
-
 
 
 ## Login requirements
