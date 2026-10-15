@@ -28,83 +28,101 @@ Frontend - JS React\
 Database - PostgreSQL
 
 ## ERD
-
 ```mermaid
 erDiagram
 
-    ACCOUNT {
-        SERIAL id PK
-        VARCHAR_16 username
-        VARCHAR_64 email
-        VARCHAR_64 password
+    account {
+        serial id PK
+        varchar username UK "max 16"
+        varchar email "max 64"
+        varchar password "max 64"
+        varchar favorites_share_token UK "max 36, nullable"
     }
 
-    GROUP {
-        SERIAL id PK
-        INTEGER id_owner FK
-        VARCHAR_64 group_name
-        VARCHAR_255 group_descr
-        TIMESTAMPTZ creation_date
-
-        UNIQUE group_name_owner_id
+    group {
+        serial id PK
+        int id_owner FK
+        varchar group_name "max 64"
+        varchar group_descr "max 255, nullable"
+        timestamptz creation_date
     }
 
-    MEMBER_LIST {
-        INTEGER id_account PK,FK
-        INTEGER id_group PK,FK
-        TIMESTAMPTZ join_date
+    member_list {
+        int id_group PK, FK
+        int id_account PK, FK
+        timestamptz join_date "nullable"
     }
 
-    JOIN_REQUEST {
-        INTEGER id_account PK,FK
-        INTEGER id_group PK,FK
-        VARCHAR_8 status
+    join_request {
+        int id_group PK, FK
+        int id_account PK, FK
+        varchar status "max 8"
     }
 
-    MOVIE {
-        SERIAL id PK
-        VARCHAR_255 title
-        TEXT description
-        INTERVAL duration
-        VARCHAR_ARRAY genre
-        DATE release_date
+    group_movies {
+        int id_group PK, FK
+        int tmdb_id PK
+        varchar media_type PK "movie or tv"
+        timestamptz created_at
     }
 
-    FAVOURITE_MOVIES {
-        INTEGER id_account PK,FK
-        INTEGER id_movie PK,FK
+    favourite_movies {
+        int id_account PK, FK
+        int tmdb_id PK
+        varchar media_type PK "movie or tv"
+        timestamptz created_at
     }
 
-    REVIEW {
-        INTEGER id_account PK,FK
-        INTEGER id_movie PK,FK
-        SMALLINT rating
-        VARCHAR_512 description
-        TIMESTAMPTZ date
+    movie {
+        serial id PK
+        varchar tmdb_id UK "max 16"
+        varchar title "max 255"
+        text description "nullable"
+        interval duration
+        varchar_array genre
+        date release_date "nullable"
     }
 
+    review {
+        int id_account PK, FK
+        int id_movie PK, FK
+        smallint rating
+        varchar description "max 512"
+        timestamptz date
+    }
 
-    %% Group ownership
-    ACCOUNT ||--o{ GROUP : owns
+    account ||--o{ group : owns
+    account ||--o{ member_list : joins
+    group ||--o{ member_list : contains
 
-    %% Memberships
-    ACCOUNT ||--o{ MEMBER_LIST : has_membership
-    GROUP ||--o{ MEMBER_LIST : contains_member
+    account ||--o{ join_request : submits
+    group ||--o{ join_request : receives
 
-    %% Join requests
-    ACCOUNT ||--o{ JOIN_REQUEST : submits
-    GROUP ||--o{ JOIN_REQUEST : receives
+    group ||--o{ group_movies : contains
+    account ||--o{ favourite_movies : saves
 
-    %% Favourite movies
-    ACCOUNT ||--o{ FAVOURITE_MOVIES : favorites
-    MOVIE ||--o{ FAVOURITE_MOVIES : favorited_by
+    account ||--o{ review : writes
+    movie ||--o{ review : receives
 
-    %% Reviews
-    ACCOUNT ||--o{ REVIEW : writes
-    MOVIE ||--o{ REVIEW : receives
 ```
 
 ## API
+
+### Index
+```mermaid
+graph TD
+    A("API (localhost:3000)")
+
+    A --> acc["/accounts"]
+    A --> fav["/favorites"]
+    A --> groups["/groups"]
+    A --> mov["/movies"]
+    A --> reg["/register"]
+    A --> review["/reviews"]
+    A --> search["/search"]
+```
+
+### /accounts
 
 ```mermaid
 graph TD
@@ -112,16 +130,65 @@ graph TD
 
     A --> acc["/accounts"]
     acc --> accId["GET /accounts/id/:id"]
-    acc --> accAll["GET /accounts/"]
-    acc --> accLogin["POST /accounts/login/"]
-
-    A --> mov["/movies"]
-    mov --> movAll["GET /movies/"]
-
-    mov --> movId["GET /movies/title/:title"]
-
+    acc --> accDeleteId["DELETE /accounts/id/:id"]
+    acc --> accAll["GET /accounts"]
+    acc --> accLogin["POST /login"]
+    acc --> accLogin["POST /logout"]
 
 ```
+
+
+### /favorites
+
+```mermaid
+graph TD
+
+    A("API (localhost:3000)")
+    A --> fav["/favorites"]
+    fav --> allFav["GET /favorites"]
+    fav --> addFav["POST /favorites"]
+    fav --> delFav["DELETE /favorites/:mediaType/:tmdbId"]
+    fav --> createShareFavToken["POST /favorites/share"]
+    fav --> getShareFavToken["GET /favorites/shared/:shareToken"]
+```
+
+
+### /groups
+
+### Get Operations
+- **GET** `/groups` - Get all groups
+- **GET** `/groups/id/:id` - Get group by ID
+- **GET** `/groups/members/id/:id` - Get group members
+- **GET** `/groups/:id/member-count` - Get member count
+- **GET** `/join-requests` - Get all join requests
+- **GET** `/groups/:id/join-requests` - Get join requests for specific group
+- **GET** `/groups/:id/movies` - Get movies in group
+
+### Post Operations
+- **POST** `/groups` - Create new group
+- **POST** `/groups/:id/movies` - Add movie to group
+- **POST** `/groups/:id/join-requests` - Request to join group
+
+### Delete Operations
+- **DELETE** `/groups/id/:idgroup` - Delete group
+- **DELETE** `/groups/:idgroup/leave` - Leave group
+- **DELETE** `/groups/:idgroup/members/:idaccount/remove` - Remove member
+
+### Update Operations
+- **PATCH** `/groups/:idgroup/join-requests/:idaccount/approve` - Approve join request
+- **PATCH** `/groups/:idgroup/join-requests/:idaccount/reject` - Reject join request
+
+
+### Movie
+```mermaid
+graph TD
+    A("API (localhost:3000)")
+
+    A --> B[GET /movies]
+    A --> C[GET /movies/title/:title]
+    A --> D[GET /nowplaying]
+```
+
 
 ## Parser
 

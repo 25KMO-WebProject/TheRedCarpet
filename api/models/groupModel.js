@@ -1,5 +1,6 @@
 import { pool } from "./db.js";
 
+//Fetching all groups with member-count and join-request status 
 const getAllGroupsModel = async (idaccount) => {
     const result = await pool.query(
         `SELECT 
@@ -27,11 +28,13 @@ const getAllGroupsModel = async (idaccount) => {
     return result.rows;
 }
 
+//Fetching group based by id
 const getGroupFromIdModel = async (id) => {
     const result = await pool.query('SELECT * FROM "group" WHERE id = $1', [id]);
     return result.rows;
 }
 
+//Fetching group-members based by group's id
 const getMembersFromGroupIdModel = async(idgroup) => {
     const result = await pool.query(
         `SELECT 
@@ -50,6 +53,7 @@ const getCountofmembersModel = async(id) => {
     return Number(result.rows[0].member_count);
 }
 
+//Creating new group and inserting group owner to said groups-memmberlist
 const createGroupModel = async(group_name, group_descr, id_owner, creation_date) => {
     const result = await pool.query(
         `INSERT INTO "group" (group_name, group_descr, id_owner, creation_date)
@@ -70,11 +74,13 @@ const createGroupModel = async(group_name, group_descr, id_owner, creation_date)
     return groupResult
 }
 
+//Deleting group (owner action)
 const deleteGroupModel = async (idgroup, idowner) => {
     const result = await pool.query('DELETE FROM "group" WHERE id = $1 AND id_owner = $2', [idgroup, idowner]);
     return result;
 };
 
+//Leaving group thus deleting own member-status
 const leaveGroupModel = async (idgroup, idaccount) => {
     const result = await pool.query(
         `
@@ -95,6 +101,7 @@ const leaveGroupModel = async (idgroup, idaccount) => {
     return result
 }
 
+//Owner action to remove a member from a group. Also group owner cannot remove ownself
 const removeMemberFromGroupModel = async (idgroup, idaccount, idowner) => {
     const result = await pool.query(
         `
@@ -116,6 +123,7 @@ const removeMemberFromGroupModel = async (idgroup, idaccount, idowner) => {
     return result
 }
 
+//Creating join-request and repeating same request does nothing
 const createJoinRequestModel = async (idgroup, idaccount) => {
     const result = await pool.query(`INSERT INTO join_request (id_account, id_group, status)
         VALUES ($1, $2, 'PENDING')
@@ -133,11 +141,13 @@ const createJoinRequestModel = async (idgroup, idaccount) => {
     return { itExistsAlready: false, request: result.rows[0] }
 };
 
+//Fetching all join-requests
 const getAllJoinRequestsModel = async (id) => {
     const result = await pool.query('SELECT * FROM join_request');
     return result.rows
 };
 
+//Fetching  join-request baseed on group's id (owner action)
 const getGroupJoinRequestsModel = async (idgroup) => {
     const result = await pool.query(
         `SELECT
@@ -158,6 +168,7 @@ const getGroupJoinRequestsModel = async (idgroup) => {
     return result.rows
 };
 
+//Owner action to approve incomming join request and adding said account to member-list (Including a check if owner or not)
 const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
     const result = await pool.query(`
         UPDATE join_request
@@ -195,6 +206,7 @@ const approveJoinRequestModel = async (idaccount, idgroup, idowner) => {
     return result.rows;
 };
 
+//Owner action to reject incoming join-request and checking if owner asked this query
 const rejectJoinRequestModel = async (idaccount, idgroup, idowner) => {
    
     const result = await pool.query(`

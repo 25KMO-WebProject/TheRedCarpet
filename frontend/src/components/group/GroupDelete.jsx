@@ -1,14 +1,14 @@
 import axios from "../api/authAxios.js";
 import "./Groups.css";
 
-const DeleteGroupButton = ({ idgroup, idowner, token, onDeleted }) => {
+const DeleteGroupButton = ({ idgroup, idowner, onDeleted }) => {
   const deleteGroup = async () => {
     try {
       const response = await axios.delete(
         `${import.meta.env.VITE_API_URL}/groups/id/${idgroup}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         },
       );

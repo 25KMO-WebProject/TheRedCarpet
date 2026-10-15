@@ -5,16 +5,38 @@ import JoinRequest from "./JoinRequests";
 import DeleteGroupButton from "./GroupDelete";
 import LeaveGroupButton from "./GroupLeave";
 import RemoveMemberButton from "./MemberRemove";
+import FavoriteCard from "../favorites/FavoriteCard.jsx";
+import "../favorites/FavoritesPage.css";
+import GroupMovies from "./GroupMovies.jsx";
 
-function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, ownerId, onDeleted, accountId, MembersChanged,}) {
+import MovieSearch from "./MovieSearch.jsx";
+import { addGroupMovie } from "../../services/groupMoviesApi.js";
+import { getGroupMovies } from "../../services/groupMoviesApi.js";
 
+function GroupPageModal({
+  isOpen,
+  onClose,
+  groupId,
+  groupName,
+  joinRequest,
+  ownerId,
+  onDeleted,
+  accountId,
+  MembersChanged,
+  onMediaSelect,
+}) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [members, setMembers] = useState([]);
+  const [currentJoinRequests, setJoinrequests] = useState(joinRequest || []);
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [members, setMembers] = useState([])
-    const [currentJoinRequests, setJoinrequests] = useState(joinRequest || [])
-    
-    const OwnerActions = String(ownerId) === String(accountId);
+  // List about movies that already are in the group_movies -table
+  const [groupMovies, setGroupMovies] = useState([]);
+
+  // List movie details that already are in the group_movies -table
+  const [groupMovieDetails, setGroupMovieDetails] = useState([]);
+
+  const OwnerActions = String(ownerId) === String(accountId);
 
   const isMember = members.some(
     (member) => String(member.id_account) === String(accountId),
@@ -22,31 +44,84 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
 
   const ViewGroup = OwnerActions || isMember;
 
-    //Suodatetaan vanhat ja uudet liittymispyynnöt
-    async function handleRequests (idaccount) {
-      setJoinrequests((oldRequests) =>
-      oldRequests.filter(
-        (request) => request.id_account !== idaccount
-      ))
+  //Suodatetaan vanhat ja uudet liittymispyynnöt
+  async function handleRequests(idaccount) {
+    setJoinrequests((oldRequests) =>
+      oldRequests.filter((request) => request.id_account !== idaccount),
+    );
 
-      //Jäsen lista
+    //Jäsen lista
     try {
-        const response = await axios.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
         {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      }
-        
       );
-      setMembers(response.data)
-    } catch(err) {
-        console.error("Finding members has failed: ", err)
-        setError("Jäsenten hakeminen epäonnistui")
-      }
+      setMembers(response.data);
+    } catch (err) {
+      console.error("Finding members has failed: ", err);
+      setError("Jäsenten hakeminen epäonnistui");
     }
-  
+  }
+
+  // Functionality to add movies to groups
+  async function handleAddMovie(movie) {
+    try {
+      const result = await addGroupMovie(groupId, movie);
+      console.log(result);
+
+      await loadGroupMovies(groupId);
+    } catch (error) {
+      console.error("Adding movie failed:", error.message);
+    }
+  }
+
+  function isMovieInGroup(movie) {
+    return groupMovies.some((savedMovie) => {
+      return (
+        savedMovie.tmdb_id === movie.id &&
+        savedMovie.media_type === movie.media_type
+      );
+    });
+  }
+
+  async function loadGroupMovies(groupId) {
+    // Fetch details from API about group_movies
+    try {
+      const movies = await getGroupMovies(groupId);
+      setGroupMovies(movies);
+
+      const details = await Promise.all(
+        movies.map(async (group_movie) => {
+          try {
+            const url = `${import.meta.env.VITE_API_URL}/tmdb/details/${group_movie.media_type}/${group_movie.tmdb_id}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+              return null;
+            }
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            console.error("Fetch failed:", group_movie.tmdb_id, error);
+            return null;
+          }
+        }),
+      );
+
+      const validDetails = details.filter(Boolean);
+
+      setGroupMovieDetails(validDetails);
+
+      console.log("Group movie details:", validDetails);
+    } catch (error) {
+      console.error("Failed to fetch group movie details:", error);
+    }
+  }
+
   // Modal sulketuuu esc-näppäimestä tai X:sttä
   useEffect(() => {
     function handleEsc(event) {
@@ -75,36 +150,45 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
     async function handleGroupPage() {
       setLoading(true);
       setError("");
+      setGroupMovieDetails([]);
 
-    //Haetaan jäsenlista
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
-        {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      // Fetch movies and their TMDB details
+      await loadGroupMovies(groupId);
+
+      //Jäsen lista
+      //Haetaan jäsenlista
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/groups/members/id/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+        setMembers(response.data);
+        await MembersChanged?.();
+      } catch (err) {
+        console.error("Finding members has failed: ", err);
+        setError("Jäsenten hakeminen epäonnistui");
       }
-        
-      );
-      setMembers(response.data)
-      await MembersChanged?.();
 
-    //Liittymispyynnöt
-      const joinRequestsResponse = await axios.get(
-      `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      } 
-      )
-      setJoinrequests(joinRequestsResponse.data)
-    } catch (err) {
-        console.error("Group infromation has failed: ", err)
-        setJoinrequests([])
-        setError("Ryhmän tietojen hakeminen epäonnistui")
-    } finally {
+      //Liittymispyynnöt
+      try {
+        const joinRequestsResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/groups/${groupId}/join-requests`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+        setJoinrequests(joinRequestsResponse.data);
+      } catch (err) {
+        console.error("Group infromation has failed: ", err);
+        setJoinrequests([]);
+        setError("Ryhmän tietojen hakeminen epäonnistui");
+      } finally {
         setLoading(false);
       }
     }
@@ -156,7 +240,6 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
         >
           X
         </button>
-
         <div className="groupPage-content">
           <div className="group-info">
             <h2>{groupName}</h2>
@@ -168,7 +251,6 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                 onDeleted={onDeleted}
               />
             )}
-
             {!OwnerActions && <LeaveGroupButton groupId={groupId} />}
           </div>
 
@@ -223,6 +305,22 @@ function GroupPageModal({ isOpen, onClose, groupId, groupName, joinRequest, owne
                 )}
               </section>
             )}
+          </div>
+          <div className="group-movie-area">
+            <MovieSearch
+              onSelect={(movie) => onMediaSelect(movie, groupId)}
+              onAddMovie={handleAddMovie}
+              isMovieInGroup={isMovieInGroup}
+            />
+            <div className="group-movie-grid">
+              {groupMovieDetails.map((movie) => (
+                <FavoriteCard
+                  key={`${movie.media_type}-${movie.id}`}
+                  item={movie}
+                  onSelect={(item) => onMediaSelect(item, groupId)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

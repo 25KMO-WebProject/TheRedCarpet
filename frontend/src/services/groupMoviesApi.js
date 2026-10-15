@@ -1,44 +1,28 @@
-
-const apiUrl = import.meta.env.VITE_API_URL;
+import axios from "../components/api/authAxios";
 
 // Get movies saved in a group.
-export async function getGroupMovies(groupId, token) {
-  const response = await fetch(
-    `${apiUrl}/groups/${groupId}/movies`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to get group movies");
+export async function getGroupMovies(groupId) {
+  try {
+    const response = await axios.get(`/groups/${groupId}/movies`);
+    return response.data;
+  } catch (error) {
+    const errMsg = error.response?.data?.error?.message;
+    throw new Error(errMsg || "Failed to get group movies", { cause: error });
   }
-
-  return response.json();
 }
 
 // Add a movie or TV show to a group.
-export async function addGroupMovie(groupId, item, token) {
-  const response = await fetch(
-    `${apiUrl}/groups/${groupId}/movies`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        tmdbId: item.id,
-        mediaType: item.media_type,
-      }),
-    }
-  );
+export async function addGroupMovie(groupId, item) {
+  try {
+    const response = await axios.post(`/groups/${groupId}/movies`, {
+      tmdbId: item.id,
+      mediaType: item.media_type,
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to add movie to group");
+    return response.data;
+  } catch (error) {
+    const errMsg = error.response?.data?.error?.message;
+
+    throw new Error(errMsg || "Failed to add movie to group", { cause: error });
   }
-
-  return response.json();
 }

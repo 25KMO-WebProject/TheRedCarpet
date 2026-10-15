@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import './MediaDetailsModal.css'
-import FavoriteButton from '../favorites/FavoriteButton.jsx'
-import Reviews from '../Review.jsx'
+import { useEffect, useState } from "react";
+import "./MediaDetailsModal.css";
+import FavoriteButton from "../favorites/FavoriteButton.jsx";
+import Reviews from "../Review.jsx";
 
 export default function MediaDetailsModal({
   item,
@@ -9,119 +9,97 @@ export default function MediaDetailsModal({
   isAuthenticated,
   token,
   isFavorite,
-  onToggleFavorite
+  onToggleFavorite,
+  onAddToGroup,
 }) {
-  const [details, setDetails] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Fetch details for the selected TMDB movie or TV show.
   useEffect(() => {
     if (!item) {
-      return
+      return;
     }
 
     const fetchDetails = async () => {
-      setLoading(true)
-      setError(null)
-      setDetails(null)
+      setLoading(true);
+      setError(null);
+      setDetails(null);
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/tmdb/details/${item.media_type}/${item.id}`
-        )
+          `${import.meta.env.VITE_API_URL}/tmdb/details/${item.media_type}/${item.id}`,
+        );
 
         if (!response.ok) {
-          throw new Error('Tietojen hakeminen epäonnistui')
+          throw new Error("Tietojen hakeminen epäonnistui");
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
-        setDetails(data)
+        setDetails(data);
       } catch (err) {
-        console.error(err)
-        setError(err.message)
+        console.error(err);
+        setError(err.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchDetails()
-  }, [item])
+    fetchDetails();
+  }, [item]);
 
   useEffect(() => {
     if (!item) {
-      return
+      return;
     }
 
     const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        onClose()
+      if (event.key === "Escape") {
+        onClose();
       }
-    }
+    };
 
-    document.addEventListener('keydown', handleEscape)
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener(
-        'keydown',
-        handleEscape
-      )
-    }
-  }, [item, onClose])
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [item, onClose]);
 
   if (!item) {
-    return null
+    return null;
   }
 
   const closeFromBackdrop = (event) => {
     if (event.target === event.currentTarget) {
-      onClose()
+      onClose();
     }
-  }
+  };
 
   const posterUrl = details?.poster_path
     ? `https://image.tmdb.org/t/p/w500${details.poster_path}`
-    : null
+    : null;
 
-  const year =
-    details?.release_date
-      ?.substring(0, 4) || 'Ei tiedossa'
+  const year = details?.release_date?.substring(0, 4) || "Ei tiedossa";
 
-  const providers =
-    details?.watch_providers?.flatrate || []
+  const providers = details?.watch_providers?.flatrate || [];
 
   return (
-    <div
-      className="media-modal-backdrop"
-      onMouseDown={closeFromBackdrop}
-    >
-      <div
-        className="media-modal"
-        role="dialog"
-        aria-modal="true"
-      >
+    <div className="media-modal-backdrop" onMouseDown={closeFromBackdrop}>
+      <div className="media-modal" role="dialog" aria-modal="true">
+        {loading && <p>Haetaan tietoja...</p>}
 
-        {loading && (
-          <p>Haetaan tietoja...</p>
-        )}
-
-        {error && (
-          <p>{error}</p>
-        )}
+        {error && <p>{error}</p>}
 
         {details && (
           <div className="media-modal-content">
             <div className="media-modal-poster">
               {posterUrl ? (
-                <img
-                  src={posterUrl}
-                  alt={`${details.title} poster`}
-                />
+                <img src={posterUrl} alt={`${details.title} poster`} />
               ) : (
-                <div className="media-modal-no-image">
-                  Ei kuvaa
-                </div>
+                <div className="media-modal-no-image">Ei kuvaa</div>
               )}
             </div>
 
@@ -149,53 +127,43 @@ export default function MediaDetailsModal({
               </div>
 
               <p>
-                <strong>Vuosi:</strong>{' '}
-                {year}
+                <strong>Vuosi:</strong> {year}
               </p>
 
               <p>
-                <strong>Tyyppi:</strong>{' '}
-                {details.media_type === 'tv'
-                  ? 'Sarja'
-                  : 'Elokuva'}
+                <strong>Tyyppi:</strong>{" "}
+                {details.media_type === "tv" ? "Sarja" : "Elokuva"}
               </p>
 
               <p>
-                <strong>Genret:</strong>{' '}
+                <strong>Genret:</strong>{" "}
                 {details.genres.length > 0
-                  ? details.genres
-                      .map(genre => genre.name)
-                      .join(', ')
-                  : 'Ei tiedossa'}
+                  ? details.genres.map((genre) => genre.name).join(", ")
+                  : "Ei tiedossa"}
               </p>
 
               <p>
-                <strong>Ikäraja:</strong>{' '}
-                {details.certification ||
-                  'Ei tiedossa'}
+                <strong>Ikäraja:</strong>{" "}
+                {details.certification || "Ei tiedossa"}
               </p>
 
               {details.runtime && (
                 <p>
-                  <strong>Kesto:</strong>{' '}
-                  {details.runtime} min
+                  <strong>Kesto:</strong> {details.runtime} min
                 </p>
               )}
 
               {details.vote_average > 0 && (
                 <p>
-                  <strong>Arvosana:</strong>{' '}
-                  ⭐ { (details.vote_average / 2).toFixed(1) }
+                  <strong>Arvosana:</strong> ⭐{" "}
+                  {(details.vote_average / 2).toFixed(1)}
                 </p>
               )}
 
               <div className="media-modal-description">
                 <h3>Kuvaus</h3>
 
-                <p>
-                  {details.overview ||
-                    'Kuvausta ei ole saatavilla.'}
-                </p>
+                <p>{details.overview || "Kuvausta ei ole saatavilla."}</p>
               </div>
 
               <div className="media-modal-providers">
@@ -203,11 +171,8 @@ export default function MediaDetailsModal({
 
                 {providers.length > 0 ? (
                   <div className="provider-list">
-                    {providers.map(provider => (
-                      <div
-                        key={provider.provider_id}
-                        className="provider"
-                      >
+                    {providers.map((provider) => (
+                      <div key={provider.provider_id} className="provider">
                         {provider.logo_path && (
                           <img
                             src={`https://image.tmdb.org/t/p/w92${provider.logo_path}`}
@@ -215,21 +180,15 @@ export default function MediaDetailsModal({
                           />
                         )}
 
-                        <span>
-                          {provider.provider_name}
-                        </span>
+                        <span>{provider.provider_name}</span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p>
-                    Suoratoistotietoja ei löytynyt.
-                  </p>
+                  <p>Suoratoistotietoja ei löytynyt.</p>
                 )}
 
-                <small>
-                  Katselupalvelutiedot: JustWatch
-                </small>
+                <small>Katselupalvelutiedot: JustWatch</small>
               </div>
               <Reviews
                 item={item}
@@ -241,5 +200,5 @@ export default function MediaDetailsModal({
         )}
       </div>
     </div>
-  )
+  );
 }

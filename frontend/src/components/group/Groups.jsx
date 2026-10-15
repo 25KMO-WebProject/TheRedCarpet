@@ -5,7 +5,7 @@ import CreategroupModal from "./GroupCreate";
 import Join_Request from "./GroupJoin";
 import GroupPageModal from "./GroupPage";
 
-export default function Groups({ isAuthenticated }) {
+export default function Groups({ isAuthenticated, onMediaSelect }) {
   const [groups, setGroups] = useState([]);
 
   const [isCreateGroupOpen, setCreateGroup] = useState(false);
@@ -93,7 +93,7 @@ export default function Groups({ isAuthenticated }) {
             className="group"
             onClick={() => setSelectedGroup(group)}
           >
-            <img alt={`Ryhmän ${group.group_name} kuva`} />
+            {/*<img alt={`Ryhmän ${group.group_name} kuva`} />*/}
             <div className="group-content">
               <h2>{group.group_name}</h2>
               <p>{group.group_descr}</p>
@@ -103,14 +103,14 @@ export default function Groups({ isAuthenticated }) {
         ))
       )}
 
-      <h1> Katso muita ryhmiä: </h1>
+      <h1 className="other-groups"> Katso muita ryhmiä: </h1>
       {otherGroups.map((group) => (
         <article
           key={group.id}
           className="group"
           onClick={() => setSelectedGroup(group)}
         >
-          <img alt={`Ryhmän ${group.group_name} kuva`} />
+          {/*<img alt={`Ryhmän ${group.group_name} kuva`} />*/}
           <div className="group-content">
             <h2>{group.group_name}</h2>
             <p>{group.group_descr}</p>
@@ -129,8 +129,8 @@ export default function Groups({ isAuthenticated }) {
         accountId={accountId}
         onDeleted={handleDeleted}
         MembersChanged={getGroups}
-        />
-
-        </section>
-    )
-  }
+        onMediaSelect={onMediaSelect}
+      />
+    </section>
+  );
+}

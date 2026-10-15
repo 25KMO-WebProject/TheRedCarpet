@@ -164,10 +164,6 @@ CREATE TABLE IF NOT EXISTS public.movie
     duration interval NOT NULL,
     genre character varying(255)[] NOT NULL,
     release_date date,
-    backdrop_path character varying(255) NOT NULL,
-    poster_path character varying(255) NOT NULL,
-    small_backdrop_path character varying(255) NOT NULL,
-    small_poster_path character varying(255) NOT NULL,
 
     PRIMARY KEY (id),
     CONSTRAINT uk_tmdb_id UNIQUE (tmdb_id)
