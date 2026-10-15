@@ -2,6 +2,7 @@
 -- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
 BEGIN;
 
+DROP TABLE IF EXISTS public.group_movies;
 
 ALTER TABLE IF EXISTS public."group" DROP CONSTRAINT IF EXISTS None;
 
@@ -31,6 +32,7 @@ CREATE TABLE IF NOT EXISTS public.account
     username character varying(16) NOT NULL,
     email character varying(64) NOT NULL,
     password character varying(64) NOT NULL,
+    favorites_share_token character varying(36) UNIQUE,
     PRIMARY KEY (id),
     UNIQUE (id),
 	UNIQUE (username)
@@ -92,29 +94,79 @@ CREATE TABLE IF NOT EXISTS public.join_request
 COMMENT ON TABLE public.join_request
     IS 'List of users, who have requested to join the group';
 
+-- Movies and TV shows added to groups are stored using TMDB identifiers.
+DROP TABLE IF EXISTS public.group_movies;
+
+CREATE TABLE IF NOT EXISTS public.group_movies
+(
+    id_group integer NOT NULL,
+    tmdb_id integer NOT NULL,
+    media_type character varying(5) NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT group_movies_pk
+        PRIMARY KEY (id_group, tmdb_id, media_type),
+
+    CONSTRAINT group_movies_media_type_check
+        CHECK (media_type IN ('movie', 'tv')),
+
+    CONSTRAINT group_movies_group_fk
+        FOREIGN KEY (id_group)
+        REFERENCES public."group" (id)
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+COMMENT ON TABLE public.group_movies
+    IS 'Stores TMDB movies and TV shows added to groups.';
+
+-- Favorites store TMDB identifiers directly instead of local movie ids.
+-- media_type is required because movie and TV ids can overlap in TMDB.
 DROP TABLE IF EXISTS public.favourite_movies;
 
 CREATE TABLE IF NOT EXISTS public.favourite_movies
 (
     id_account integer NOT NULL,
-    id_movie integer NOT NULL,
-    CONSTRAINT "Only 1 movie id per account id" PRIMARY KEY (id_account, id_movie)
+    tmdb_id integer NOT NULL,
+    media_type character varying(5) NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT favourite_movies_pk
+        PRIMARY KEY (id_account, tmdb_id, media_type),
+
+    CONSTRAINT favourite_movies_media_type_check
+        CHECK (media_type IN ('movie', 'tv')),
+
+    CONSTRAINT favourite_movies_account_fk
+        FOREIGN KEY (id_account)
+        REFERENCES public.account (id)
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
 );
 
-COMMENT ON CONSTRAINT "Only 1 movie id per account id" ON public.favourite_movies
-    IS 'User cannot add same movie to the favorite list twice. ';
+COMMENT ON TABLE public.favourite_movies
+    IS 'Stores users favourite TMDB movies and TV shows.';
+
+ALTER TABLE IF EXISTS public.favourite_movies
+    ADD FOREIGN KEY (id_account)
+    REFERENCES public.account (id)
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE;
 
 DROP TABLE IF EXISTS public.movie;
 
 CREATE TABLE IF NOT EXISTS public.movie
 (
     id serial NOT NULL,
+    tmdb_id character varying (16) NOT NULL,
     title character varying(255) NOT NULL,
     description text,
     duration interval NOT NULL,
     genre character varying(255)[] NOT NULL,
     release_date date,
-    PRIMARY KEY (id)
+
+    PRIMARY KEY (id),
+    CONSTRAINT uk_tmdb_id UNIQUE (tmdb_id)
 );
 
 DROP TABLE IF EXISTS public.review;
@@ -168,21 +220,6 @@ ALTER TABLE IF EXISTS public.join_request
     ON DELETE CASCADE
     NOT VALID;
 
-
-ALTER TABLE IF EXISTS public.favourite_movies
-    ADD FOREIGN KEY (id_account)
-    REFERENCES public.account (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.favourite_movies
-    ADD FOREIGN KEY (id_movie)
-    REFERENCES public.movie (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE
-    NOT VALID;
 
 
 ALTER TABLE IF EXISTS public.review
