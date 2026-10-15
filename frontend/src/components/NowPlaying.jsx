@@ -9,8 +9,9 @@ function NowPlaying({ onMediaSelect }) {
   const [isMobile, setIsMobile] = useState(false);
 
   // tarkistetaan käytetäänkö mobiilin vai tietokoneen asettelua.
+  // siirtyminen mobiilinäkymään säädä max-width:iä, nyt samassa kuin navbar.
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 900px)");
+    const mediaQuery = window.matchMedia("(max-width: 992px)");
 
     const updateScreenSize = () => {
       setIsMobile(mediaQuery.matches);
@@ -50,6 +51,7 @@ function NowPlaying({ onMediaSelect }) {
       containScroll: false,
       dragFree: true,
       watchSlides: true,
+      slidesToScroll:1,
     },
     isMobile ? [] : [autoScroll]
   );
@@ -95,7 +97,7 @@ function NowPlaying({ onMediaSelect }) {
   };
 
   return (
-    <main>
+    <main className="nowplaying-page">
       <h1>Nyt elokuvateattereissa</h1>
 
       <div className={`nowplaying-carousel ${isMobile ? "is-mobile" : ""}`}>
